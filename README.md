@@ -1,1 +1,1 @@
-# pdf-to-text
+# xpdf-utils
