@@ -1,12 +1,12 @@
-package model;
+package io.cfrehr.xpdfutils.pdftotext.model;
 
-import lombok.Data;
+import lombok.Builder;
 import lombok.val;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.ArrayList;
 
-@Data
+@Builder
 public class PdfToTextOptions {
     private Integer firstPage;						// -f <int> : first page to examine
     private Integer lastPage;						// -l <int> : last page to examine
@@ -17,7 +17,7 @@ public class PdfToTextOptions {
     private String ownerPassword;				// -opw <string> : owner password (for encrypted files)
     private String userPassword;				// -upw <string> : user password (for encrypted files)
 
-    public String getCommandLineArgs() {
+    protected String[] getCommandLineArgs() {
         val args = new ArrayList<String>();
 
         if (firstPage != null) args.add("-f %s".formatted(firstPage));
@@ -57,6 +57,6 @@ public class PdfToTextOptions {
         if (ownerPassword != null) args.add("-opw \"%s\"".formatted(ownerPassword));
         if (userPassword != null) args.add("-upw \"%s\"".formatted(userPassword));
 
-        return String.join(" ", args);
+        return args.toArray(new String[0]);
     }
 }
