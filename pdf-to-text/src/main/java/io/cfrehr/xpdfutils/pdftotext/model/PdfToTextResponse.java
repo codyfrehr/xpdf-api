@@ -1,10 +1,10 @@
 package io.cfrehr.xpdfutils.pdftotext.model;
 
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
+@Getter
 public class PdfToTextResponse {
-    public PdfText pdfText;
-    public int exitCode;
-    public String standardOutput;
+    private String pdfText;
 }
