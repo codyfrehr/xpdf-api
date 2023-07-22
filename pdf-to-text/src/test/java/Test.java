@@ -1,19 +1,16 @@
 import io.cfrehr.xpdfutils.common.XpdfException;
 import io.cfrehr.xpdfutils.pdftotext.model.PdfToTextEncoding;
 import io.cfrehr.xpdfutils.pdftotext.model.PdfToTextRequest;
-import io.cfrehr.xpdfutils.pdftotext.model.PdfToTextResponse;
 import io.cfrehr.xpdfutils.pdftotext.service.PdfToText;
 import lombok.val;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.concurrent.ExecutionException;
 
 public class Test {
-    public static void main(String[] args) throws XpdfException, URISyntaxException, IOException, InterruptedException {
+    public static void main(String[] args) throws XpdfException, URISyntaxException, IOException, InterruptedException, ExecutionException {
 
 //        val processArgs = new ArrayList<String>();
 ////        processArgs.add("C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text\\target\\classes\\xpdf\\windows\\64\\pdftotext");
@@ -22,38 +19,31 @@ public class Test {
 ////        processArgs.add("\"C:\\Users\\Cody\\Downloads\\xpdftest\\BlueShield.txt\"");
 //
 //        //works - must use full path and quotes around command and files
-////        processArgs.add("\"C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text\\src\\main\\resources\\xpdf\\windows\\64\\pdftotext.exe\" -verbose -enc UTF-8 \"C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text\\src\\main\\resources\\xpdf\\windows\\64\\test.pdf\" \"C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text\\src\\main\\resources\\xpdf\\windows\\64\\test.txt\"");
-////        processArgs.add("\"C:/Users/Cody/repos/xpdf-utils/pdf-to-text/src/main/resources/xpdf/windows/64/pdftotext.exe\" -verbose -enc UTF-8 \"C:/Users/Cody/repos/xpdf-utils/pdf-to-text/src/main/resources/xpdf/windows/64/test.pdf\" \"C:/Users/Cody/repos/xpdf-utils/pdf-to-text/src/main/resources/xpdf/windows/64/test.txt\"");
+//        processArgs.add("\"C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text\\src\\main\\resources\\xpdf\\windows\\64\\pdftotext.exe\" -verbose -enc Latin1 \"C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text\\src\\main\\resources\\xpdf\\windows\\64\\test.pdf\" \"C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text\\src\\main\\resources\\xpdf\\windows\\64\\test.txt\"");
+//
+//        // error 1
+////        processArgs.add("\"C:/Users/Cody/repos/xpdf-utils/pdf-to-text/src/main/resources/xpdf/windows/64/pdftotext.exe\" -verbose -enc UTF-8 \"test.pdf\" \"C:/Users/Cody/repos/xpdf-utils/pdf-to-text/src/main/resources/xpdf/windows/64/test.txt\"");
+//
+//        // error 2
+////        processArgs.add("\"C:/Users/Cody/repos/xpdf-utils/pdf-to-text/src/main/resources/xpdf/windows/64/pdftotext.exe\" -verbose -encUTF-8 \"C:/Users/Cody/repos/xpdf-utils/pdf-to-text/src/main/resources/xpdf/windows/64/test.pdf\" \"C:/Users/Cody/repos/xpdf-utils/pdf-to-text/src/main/resources/xpdf/windows/64/test.txt\"");
 //
 //        val builder = new ProcessBuilder(processArgs.toArray(new String[0]));
 //        val process = builder.start();
-//        watch(process);
-//        process.waitFor();
 //
-////        todo: log exitCode/standardOutput/errorOutput?
-////        todo: use instead IOUtils.toString(inputStream, StandardCharsets.UTF_8)
-//////            val standardOutput = new BufferedReader(new InputStreamReader(process.getInputStream()))
-//////                    .lines()
-//////                    .collect(Collectors.joining("\n"));
+//        val executorService = Executors.newSingleThreadExecutor();
+//        val futureStandardOutput = executorService.submit(new ReadInputStreamTask(process.getInputStream()));
+//        val futureErrorOutput = executorService.submit(new ReadInputStreamTask(process.getErrorStream()));
 //
-//        if (process.exitValue() == 0) {
+//        //todo: add configurable timeout
+//        val exitValue = process.waitFor();
+//
+//        if (exitValue == 0) {
 //            System.out.println("SUCCESS");
 //        } else {
 //            System.out.println("FAILURE");
-//
-//            //todo: log exitCode/standardOutput/errorOutput?
-//            //todo: use instead IOUtils.toString(inputStream, StandardCharsets.UTF_8)
-//            val standardOutput = new BufferedReader(new InputStreamReader(process.getInputStream()))
-//                    .lines()
-//                    .collect(Collectors.joining("\n"));
-//            System.out.println("standardOutput: " + standardOutput);
-//
-//            val errorOutput = new BufferedReader(new InputStreamReader(process.getInputStream()))
-//                    .lines()
-//                    .collect(Collectors.joining("\n"));
-//            System.out.println("errorOutput: " + errorOutput);
-//
-//            switch (process.exitValue()) {
+//            if (!StringUtils.isBlank(futureErrorOutput.get()))
+//                System.out.println("Error Output: " + futureErrorOutput.get());
+//            switch (exitValue) {
 //
 //                case 1 -> throw new XpdfException("Error opening the PDF file");
 //                case 2 -> throw new XpdfException("Error opening the output file");
@@ -63,6 +53,7 @@ public class Test {
 //            }
 //        }
 
+//        var file = new File("C:\\Users\\Cody\\Downloads\\xpdf test\\zzz.txt");
         //todo: figure out what the fuck is going on with encoding...
         // runs find from command line with all the different encoding options
         // but not programmatically with same options..
@@ -71,12 +62,12 @@ public class Test {
         //todo: in general, you need to understand encoding and how it works.
         // should probably be requirement that user specifies encoding, and that we have xpdfrc encoding map
         val request = PdfToTextRequest.builder()
+                .pdfFile(new File("C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text\\src\\main\\resources\\xpdf\\windows\\64\\test.pdf"))
+                .txtFile(new File("C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text\\src\\main\\resources\\xpdf\\windows\\64\\test.txt"))
                 .options(PdfToTextRequest.Options.builder()
-//                        .pageStart(1)
-//                        .encoding(PdfToTextEncoding.LATIN_1)
+                        .pageStart(0)
+                        .encoding(PdfToTextEncoding.LATIN_1)
                         .build())
-                .filePathPdf("C:\\Users\\Cody\\Downloads\\xpdftest\\test.pdf")
-                .filePathTxt("C:\\Users\\Cody\\Downloads\\xpdftest\\test.txt")
                 .build();
 
 //        val pdfToText = PdfToText.builder().build();
@@ -85,19 +76,4 @@ public class Test {
         val result = pdfToText.process(request);
     }
 
-    private static void watch(final Process process) {
-        new Thread() {
-            public void run() {
-                BufferedReader input = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                String line = null;
-                try {
-                    while ((line = input.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-    }
 }

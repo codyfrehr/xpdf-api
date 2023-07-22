@@ -7,6 +7,8 @@ import org.apache.commons.lang3.SystemUtils;
 
 @Getter
 @RequiredArgsConstructor
+//todo: are there other special methods i should override or anything, given that this is a pretty special type of enum..?
+//todo: ensure that all xpdf utilities, not just pdftotext, follow this pattern.
 public enum XpdfOperatingSystem {
     LINUX_32("linux", "32"),
     LINUX_64("linux", "64"),
@@ -17,12 +19,12 @@ public enum XpdfOperatingSystem {
     private final String operatingSystem;
     private final String bit;
 
-    public static XpdfOperatingSystem get() throws XpdfException {
+    public static XpdfOperatingSystem get() {
         val bit = System.getProperty("sun.arch.data.model");
 
         //todo: throw different exception type?
         if ("UNKNOWN".equals(bit)) {
-            throw new XpdfException("Unexpected error getting bit architecture during instantiation");
+            throw new XpdfRuntimeException("Unexpected error getting bit architecture during instantiation");
         }
 
         if (SystemUtils.IS_OS_LINUX) {
@@ -33,10 +35,11 @@ public enum XpdfOperatingSystem {
             if ("64".equals(bit)) {
                 return MAC_64;
             } else {
-                throw new XpdfException("Xpdf can only be run on 64-bit Mac operating system");
+                throw new XpdfRuntimeException("Xpdf can only be run on 64-bit Mac operating system");
             }
         } else {
-            throw new XpdfException("Xpdf can only be run on Linux, Mac, or Windows operating systems");
+            throw new XpdfRuntimeException("Xpdf can only be run on Linux, Mac, or Windows operating systems");
         }
     }
+
 }

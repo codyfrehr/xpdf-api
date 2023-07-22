@@ -7,4 +7,5 @@ import lombok.Getter;
 @Getter
 public class PdfToTextResponse {
     private String pdfText;
+    private String stdOut;
 }

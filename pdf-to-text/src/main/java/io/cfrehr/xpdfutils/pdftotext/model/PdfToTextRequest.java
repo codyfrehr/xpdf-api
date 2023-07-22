@@ -2,13 +2,18 @@ package io.cfrehr.xpdfutils.pdftotext.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
+
+import java.io.File;
 
 @Builder
 @Getter
 public class PdfToTextRequest {
+    @NonNull
+    private final File pdfFile;
+    @NonNull
+    private final File txtFile;
     private Options options;
-    private String filePathPdf;
-    private String filePathTxt;
 
     @Builder
     @Getter
