@@ -2,6 +2,7 @@ package io.cfrehr.xpdfutils.pdftotext;
 
 import io.cfrehr.xpdfutils.common.*;
 import lombok.val;
+import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +14,7 @@ import java.util.concurrent.Executors;
 
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
 public class PdfToText implements XpdfUtility<PdfToTextRequest, PdfToTextResponse> {
-    private final String exeCommand;
+    private final String binCommand;
     //todo: are threads managed correctly with process here?
     // should new singleton be declared, or retrieved
     // should you properly shutdown when done?
@@ -21,17 +22,41 @@ public class PdfToText implements XpdfUtility<PdfToTextRequest, PdfToTextRespons
 
     public PdfToText() {
         //todo: add unit tests to ensure all os/bit value combos have resource
-        //todo: cant reference resources from jar.. need plan to package binaries properly
-        //todo: can command args be wrapped in strings when running on linux/mac?
         val os = XpdfOperatingSystem.get();
-        val exeDirectory = getClass().getClassLoader().getResource("xpdf/%s/%s".formatted(os.getOperatingSystem(), os.getBit()));
-        if (exeDirectory == null)
+
+        //todo: whats the best way to distribute resources?
+        //      this solution copies binaries resource from inside jar to a directory outside of jar which accessible to client OS...
+        //      but is there a better way? this solution feels dirty
+        //      should we request client download the binaries themself, and configure path?
+        //todo: also, there is no way for the client to verify that we are including the authentic xpdf binaries in this solution...
+        //      how can you package the binaries with this solution in a credible way?
+        //      maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
+        //todo: instead of copying resource every time an instance is created, a check should first be performed to make sure it doesnt already exist
+        //      this same check should also be done in the process() method
+        //      maybe move some of this code into common..
+        val binName = "windows".equals(os.getOperatingSystem()) ? "pdftotext.exe" : "pdftotext";
+        val binResourceStream = getClass().getClassLoader().getResourceAsStream("xpdf/%s/%s/%s".formatted(os.getOperatingSystem(), os.getBit(), binName));
+        if (binResourceStream == null)
             throw new XpdfRuntimeException("Unable to locate pdftotext binaries");
+
         try {
-            exeCommand = Paths.get(Paths.get(exeDirectory.toURI()).toFile().getCanonicalPath(),"pdftotext").toFile().getCanonicalPath();
+            // copy bin resource to directory accessible to client OS
+            val binAccessiblePath = Paths.get(System.getProperty("java.io.tmpdir"), "xpdf", binName);
+            FileUtils.copyInputStreamToFile(binResourceStream, binAccessiblePath.toFile());
+            binCommand = binAccessiblePath.toFile().getCanonicalPath();
         } catch (Exception e) {
-            throw new XpdfRuntimeException("Unable to get path of pdftotext binaries");
+            throw new XpdfRuntimeException("Unable to copy pdftotext binaries to directory accessible by OS");
         }
+
+        // old approach
+//        val exeDirectory = getClass().getClassLoader().getResource("xpdf/%s/%s".formatted(os.getOperatingSystem(), os.getBit()));
+        //        if (exeDirectory == null)
+//            throw new XpdfRuntimeException("Unable to locate pdftotext binaries");
+//        try {
+//            exeCommand = Paths.get(Paths.get(exeDirectory.toURI()).toFile().getCanonicalPath(),"pdftotext").toFile().getCanonicalPath();
+//        } catch (Exception e) {
+//            throw new XpdfRuntimeException("Unable to get path of pdftotext binaries");
+//        }
     }
 
     //todo: is "process" really the most friendly name for this?
@@ -49,7 +74,7 @@ public class PdfToText implements XpdfUtility<PdfToTextRequest, PdfToTextRespons
             //todo: how can you be sure user is not injecting malicious arguments into file path..?
             // need to verify args better..
             val commands = new ArrayList<String>();
-            commands.add(exeCommand);
+            commands.add(binCommand);
             commands.addAll(getCommandOptions(request.getOptions()));
             commands.add(request.getPdfFile().getCanonicalPath());
             commands.add(request.getTxtFile().getCanonicalPath());
