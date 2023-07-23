@@ -1,8 +1,6 @@
-package io.cfrehr.xpdfutils.pdftotext.service;
+package io.cfrehr.xpdfutils.pdftotext;
 
 import io.cfrehr.xpdfutils.common.*;
-import io.cfrehr.xpdfutils.pdftotext.model.PdfToTextRequest;
-import io.cfrehr.xpdfutils.pdftotext.model.PdfToTextResponse;
 import lombok.val;
 
 import java.io.IOException;
