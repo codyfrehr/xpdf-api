@@ -1,8 +1,6 @@
-package io.cfrehr.xpdfutils.pdftotext.service;
+package io.cfrehr.xpdfutils.pdftotext;
 
 import io.cfrehr.xpdfutils.common.*;
-import io.cfrehr.xpdfutils.pdftotext.model.PdfToTextRequest;
-import io.cfrehr.xpdfutils.pdftotext.model.PdfToTextResponse;
 import lombok.val;
 
 import java.io.IOException;
@@ -66,6 +64,7 @@ public class PdfToText implements XpdfUtility<PdfToTextRequest, PdfToTextRespons
             val standardOutput = executorService.submit(new ReadInputStreamTask(process.getInputStream())).get();
             val errorOutput = executorService.submit(new ReadInputStreamTask(process.getErrorStream())).get();
 
+            //todo: configurable timeout?
             val exitCode = process.waitFor();
 
             // handle process result
