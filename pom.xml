@@ -11,6 +11,7 @@
     <modules>
         <module>common</module>
         <module>pdf-to-text</module>
+        <module>pdf-to-text-c</module>
     </modules>
 
     <properties>
