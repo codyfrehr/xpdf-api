@@ -1,4 +1,4 @@
-package io.cfrehr.xpdfutils.common;
+package io.xpdfutils.common;
 
 import lombok.Getter;
 

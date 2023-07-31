@@ -1,7 +1,6 @@
-package io.cfrehr.xpdfutils.pdftotextc;
+package io.xpdfutils.pdftotextc;
 
 import com.sun.jna.Native;
-import io.cfrehr.xpdfutils.pdftotextc.HelloWorld;
 
 public class Main {
 

@@ -1,7 +1,7 @@
 package jna;
 
 import com.sun.jna.Native;
-import io.cfrehr.xpdfutils.pdftotextc.HelloWorld;
+import io.xpdfutils.pdftotextc.HelloWorld;
 
 public class Main {
 

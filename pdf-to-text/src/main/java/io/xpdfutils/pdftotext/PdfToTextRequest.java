@@ -1,4 +1,4 @@
-package io.cfrehr.xpdfutils.pdftotext;
+package io.xpdfutils.pdftotext;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package io.cfrehr.xpdfutils.pdftotext;
+package io.xpdfutils.pdftotext;
 
 public enum PdfToTextEncoding {
     ASCII_7,
