@@ -1,7 +1,7 @@
 import io.xpdfutils.common.XpdfException;
+import io.xpdfutils.pdftotext.PdfToText;
 import io.xpdfutils.pdftotext.PdfToTextEncoding;
 import io.xpdfutils.pdftotext.PdfToTextRequest;
-import io.xpdfutils.pdftotext.PdfToText;
 import lombok.val;
 
 import java.io.File;
