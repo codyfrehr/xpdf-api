@@ -1,4 +1,4 @@
-package io.cfrehr.xpdfutils.pdftotextc;
+package io.xpdfutils.pdftotextc;
 
 public class HelloWorldJNI {
 

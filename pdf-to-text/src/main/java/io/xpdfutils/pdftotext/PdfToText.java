@@ -1,6 +1,6 @@
-package io.cfrehr.xpdfutils.pdftotext;
+package io.xpdfutils.pdftotext;
 
-import io.cfrehr.xpdfutils.common.*;
+import io.xpdfutils.common.*;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
 
