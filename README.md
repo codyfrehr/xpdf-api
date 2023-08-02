@@ -5,6 +5,9 @@ todo:
 - figure out best place to put xpdf binaries
 - configure Service to use correct binaries (windows/mac/linux) based on OS
 - read the xpdf utils readme for licensing/distribution info (ie, must include all docs?)
+- running list of things to do correctly when installing to maven repository:
+  - push sources
+  - write and push javadocs..? (is this mandatory for public sdks? or is this archaic stuff?)
 
 c++ stuff:
 - install Windows c++ compiler MinGW via MYSYS2: https://code.visualstudio.com/docs/cpp/config-mingw

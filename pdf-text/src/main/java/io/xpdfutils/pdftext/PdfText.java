@@ -132,14 +132,16 @@ public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
         }
 
         // verify options
-        val pageStart = request.getOptions().getPageStart();
-        val pageEnd = request.getOptions().getPageEnd();
-        if (pageStart != null && pageStart < 0)
-            throw new XpdfValidationException("PageStart cannot be less than zero");
-        if (pageEnd != null && pageEnd < 0)
-            throw new XpdfValidationException("PageEnd cannot be less than zero");
-        if (pageStart != null && pageEnd != null && pageStart > pageEnd)
-            throw new XpdfValidationException("PageStart must come before PageEnd");
+        if (request.getOptions() != null) {
+            val pageStart = request.getOptions().getPageStart();
+            val pageEnd = request.getOptions().getPageEnd();
+            if (pageStart != null && pageStart < 0)
+                throw new XpdfValidationException("PageStart cannot be less than zero");
+            if (pageEnd != null && pageEnd < 0)
+                throw new XpdfValidationException("PageEnd cannot be less than zero");
+            if (pageStart != null && pageEnd != null && pageStart > pageEnd)
+                throw new XpdfValidationException("PageStart must come before PageEnd");
+        }
 
         //todo: what other validation would be helpful?
     }
