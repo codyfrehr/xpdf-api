@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>common</artifactId>
-<!--    <name>common</name>-->
+    <artifactId>pdf-text</artifactId>
+<!--    <name>pdf-text</name>-->
 
     <parent>
         <groupId>io.xpdfutils</groupId>
@@ -14,8 +14,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.xpdfutils</groupId>
+            <artifactId>common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

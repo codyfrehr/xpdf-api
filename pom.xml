@@ -10,8 +10,8 @@
 
     <modules>
         <module>common</module>
-        <module>pdf-to-text</module>
-        <module>pdf-to-text-c</module>
+        <module>pdf-text</module>
+        <module>pdf-text-c</module>
     </modules>
 
     <properties>
