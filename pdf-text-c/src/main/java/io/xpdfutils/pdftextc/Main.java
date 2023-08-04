@@ -14,7 +14,7 @@ public class Main {
     public static void main(String argv[])
     {
 //        var cosh = CMath.INSTANCE.cosh(3);
-        var helloWorld = HelloWorld.INSTANCE.sayHello();
+        int helloWorld = HelloWorld.INSTANCE.sayHello();
 //        System.out.println("Called C+, returned: " + cosh);
     }
 }

@@ -21,6 +21,7 @@ public enum XpdfOperatingSystem {
     private final String bit;
 
     public static XpdfOperatingSystem get() {
+        // get JVM bit architecture
         val bit = System.getProperty("sun.arch.data.model");
 
         //todo: throw different exception type?

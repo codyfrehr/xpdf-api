@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -35,7 +37,7 @@ public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
         //      this same check should also be done in the process() method
         //      maybe move some of this code into common..
         val binName = "windows".equals(os.getOperatingSystem()) ? "pdftotext.exe" : "pdftotext";
-        val binResourceStream = getClass().getClassLoader().getResourceAsStream("xpdf/%s/%s/%s".formatted(os.getOperatingSystem(), os.getBit(), binName));
+        val binResourceStream = getClass().getClassLoader().getResourceAsStream(String.format("xpdf/%s/%s/%s", os.getOperatingSystem(), os.getBit(), binName));
         if (binResourceStream == null)
             throw new XpdfRuntimeException("Unable to locate pdftotext binaries");
 
@@ -101,11 +103,21 @@ public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
             } else {
                 final String message;
                 switch (exitCode) {
-                    case 1 -> message = "Error opening the PDF file";
-                    case 2 -> message = "Error opening the output file";
-                    case 3 -> message = "Error related to PDF permissions";
-                    case 99 -> message = "Other Xpdf error";
-                    default -> message = "Unknown Xpdf error";
+                    case 1:
+                        message = "Error opening the PDF file";
+                        break;
+                    case 2:
+                        message = "Error opening the output file";
+                        break;
+                    case 3:
+                        message = "Error related to PDF permissions";
+                        break;
+                    case 99:
+                        message = "Other Xpdf error";
+                        break;
+                    default:
+                        message = "Unknown Xpdf error";
+                        break;
                 }
 
                 throw new XpdfProcessingException(standardOutput, errorOutput, message);
@@ -148,7 +160,7 @@ public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
 
     protected List<String> getCommandOptions(PdfTextOptions options) {
         if (options == null)
-            return List.of();
+            return Collections.emptyList();
 
         val args = new ArrayList<String>();
 
@@ -157,44 +169,75 @@ public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
 
         val pageStart = options.getPageStart();
         if (pageStart != null)
-            args.addAll(List.of("-f", pageStart.toString()));
+            args.addAll(Arrays.asList("-f", pageStart.toString()));
 
         val pageEnd = options.getPageEnd();
         if (pageEnd != null)
-            args.addAll(List.of("-l", pageEnd.toString()));
+            args.addAll(Arrays.asList("-l", pageEnd.toString()));
 
         val format = options.getFormat();
         if (format != null) {
             switch (format) {
-                case RAW -> args.add("-raw");
-                case SIMPLE -> args.add("-simple");
-                case TABLE -> args.add("-table");
-                case LAYOUT -> args.add("-layout");
-                case LINE_PRINTER -> args.add("-lineprinter");
-                default -> throw new XpdfRuntimeException("Format case %s is missing from command options switch statement".formatted(format.name()));
+                case RAW:
+                    args.add("-raw");
+                    break;
+                case SIMPLE:
+                    args.add("-simple");
+                    break;
+                case TABLE:
+                    args.add("-table");
+                    break;
+                case LAYOUT:
+                    args.add("-layout");
+                    break;
+                case LINE_PRINTER:
+                    args.add("-lineprinter");
+                    break;
+                default:
+                    throw new XpdfRuntimeException(String.format("Format case %s is missing from command options switch statement", format.name()));
             }
         }
 
         val encoding = options.getEncoding();
         if (encoding != null) {
             switch (encoding) {
-                case ASCII_7 -> args.addAll(List.of("-enc", "ASCII7"));
-                case LATIN_1 ->args.addAll(List.of("-enc", "Latin1"));
-                case SYMBOL -> args.addAll(List.of("-enc", "Symbol"));
-                case UCS_2 -> args.addAll(List.of("-enc", "UCS-2"));
-                case UTF_8 -> args.addAll(List.of("-enc", "UTF-8"));
-                case ZAPF_DINGBATS -> args.addAll(List.of("-enc", "ZapfDingbats"));
-                default -> throw new XpdfRuntimeException("Encoding case %s is missing from command options switch statement".formatted(encoding.name()));
+                case ASCII_7:
+                    args.addAll(Arrays.asList("-enc", "ASCII7"));
+                    break;
+                case LATIN_1:
+                    args.addAll(Arrays.asList("-enc", "Latin1"));
+                    break;
+                case SYMBOL:
+                    args.addAll(Arrays.asList("-enc", "Symbol"));
+                    break;
+                case UCS_2:
+                    args.addAll(Arrays.asList("-enc", "UCS-2"));
+                    break;
+                case UTF_8:
+                    args.addAll(Arrays.asList("-enc", "UTF-8"));
+                    break;
+                case ZAPF_DINGBATS:
+                    args.addAll(Arrays.asList("-enc", "ZapfDingbats"));
+                    break;
+                default:
+                    throw new XpdfRuntimeException(String.format("Encoding case %s is missing from command options switch statement", encoding.name()));
             }
         }
 
         val endOfLine = options.getEndOfLine();
         if (endOfLine != null) {
             switch (endOfLine) {
-                case DOS -> args.addAll(List.of("-eol", "dos"));
-                case MAC -> args.addAll(List.of("-eol", "mac"));
-                case UNIX -> args.addAll(List.of("-eol", "unix"));
-                default -> throw new XpdfRuntimeException("EndOfLine case %s is missing from command options switch statement".formatted(endOfLine.name()));
+                case DOS:
+                    args.addAll(Arrays.asList("-eol", "dos"));
+                    break;
+                case MAC:
+                    args.addAll(Arrays.asList("-eol", "mac"));
+                    break;
+                case UNIX:
+                    args.addAll(Arrays.asList("-eol", "unix"));
+                    break;
+                default:
+                    throw new XpdfRuntimeException(String.format("EndOfLine case %s is missing from command options switch statement", endOfLine.name()));
             }
         }
 
@@ -204,11 +247,11 @@ public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
 
         val ownerPassword = options.getOwnerPassword();
         if (ownerPassword != null)
-            args.addAll(List.of("-opw", "\"%s\"".formatted(ownerPassword)));
+            args.addAll(Arrays.asList("-opw", String.format("\"%s\"", ownerPassword)));
 
         val userPassword = options.getUserPassword();
         if (userPassword != null)
-            args.addAll(List.of("-upw", "\"%s\"".formatted(userPassword)));
+            args.addAll(Arrays.asList("-upw", String.format("\"%s\"", userPassword)));
 
         return args;
     }
