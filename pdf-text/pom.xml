@@ -28,31 +28,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <!--
-            todo: figure out how to deploy/install sources
-                  just used the following commands to do manually, for time being...
-                  mvnw source:jar
-                  mvnw install:install-file -Dfile=pdf-text/target/pdf-text-4.04.0-SNAPSHOT.jar -Dsources=pdf-text/target/pdf-text-4.04.0-SNAPSHOT-sources.jar
-                  (i think you need the both the maven-source-plugin and maven-install-plugin....)
-            -->
-        </plugins>
-    </build>
-
 </project>
