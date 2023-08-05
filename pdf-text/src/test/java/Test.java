@@ -1,5 +1,5 @@
 import io.xpdfutils.common.XpdfException;
-import io.xpdfutils.pdftext.PdfText;
+import io.xpdfutils.pdftext.PdfTextTool;
 import io.xpdfutils.pdftext.PdfTextEncoding;
 import io.xpdfutils.pdftext.PdfTextOptions;
 import io.xpdfutils.pdftext.PdfTextRequest;
@@ -27,7 +27,7 @@ public class Test {
                         .build())
                 .build();
 
-        val pdfText = new PdfText();
+        val pdfText = new PdfTextTool();
 
         val result = pdfText.process(request);
     }

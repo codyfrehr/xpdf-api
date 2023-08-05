@@ -7,7 +7,7 @@ import java.util.List;
 // kind of overkill, and sort of confusing.
 // there are only like 6 or 7 possible implementations of interface - this could be unnecessary (but not sure)
 //todo: come back to this later and decide if something like this needs to be implemented...
-public abstract class XpdfProcess<Request, Response> implements XpdfUtility<Request, Response> {
+public abstract class XpdfProcess<Request, Response> implements XpdfTool<Request, Response> {
     protected abstract List<String> getCommandOptions(Request request);
     protected abstract void validate(Request request) throws XpdfException;
 }
