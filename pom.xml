@@ -3,6 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <!--todo: should this be named xpdf "utils"?
+            you are not providing they are referred to as "xpdf command line tools" on their website, and the zip you download is called xpdf-tools.
+            "xpdftools" may be a better name for artifact..
+            -->
     <groupId>io.xpdfutils</groupId>
     <artifactId>xpdf-utils</artifactId>
     <version>4.04.0-SNAPSHOT</version>
@@ -17,6 +21,8 @@
     <properties>
         <lombok.version>1.18.28</lombok.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <maven.javadoc.plugin.version>3.5.0</maven.javadoc.plugin.version>
+        <maven.source.plugin.version>3.3.0</maven.source.plugin.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,18 +58,19 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <!--todo: intellij understands how to execute maven wrapper against correct java version.
+                               but when running wrapper from command line, wrapper thinks java home is 17, and you get a warning.
+                               before running maven on command line, you must set correct java home:
+                               set JAVA_HOME=C:\Program Files\Semeru\jdk-8.0.372.7-openj9
+                               but honestly, this hardly matters...
+                               just install java 8 only on the build system and you wont have to do any weird javac configurations, like bootclasspath
+                       -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven.compiler.plugin.version}</version>
                     <configuration>
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
-                        <!--todo: intellij understands how to execute maven wrapper with correct java version.
-                                but when running wrapper from command line, wrapper thinks java home is 17, and you get a warning.
-                                read more here about why that warning matters: https://stackoverflow.com/a/12050087/8784215
-                                and then figure out how to properly configure javac bootclasspath via call to maven wrapper or from compilerArgs in pom
-                                ....question: if you only have java 8 installed on vm which builds/deploys final artifacts, does this even matter? (just a local issue, right?)
-                        -->
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
@@ -73,13 +80,44 @@
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
-                <!--
-                todo: figure out how to deploy/install sources
-                  just used the following commands to do manually, for time being...
-                  mvnw source:jar
-                  mvnw install:install-file -Dfile=pdf-text/target/pdf-text-4.04.0-SNAPSHOT.jar -Dsources=pdf-text/target/pdf-text-4.04.0-SNAPSHOT-sources.jar
-                  (i think you need the both the maven-source-plugin and maven-install-plugin....)
-                  -->
+                <!--todo: editors like IDEA/eclipse already give you nice hover-features with just the inclusion of sources - so is this plugin really needed?
+                        not sure if this plugin helps to build an api documentation website, but at a later stage, you should figure out how to generate html webpages for javadocs.
+                        it could be hosted on official xpdfutils website, looking something like this: https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
+                        -->
+<!--                <plugin>-->
+<!--                    <groupId>org.apache.maven.plugins</groupId>-->
+<!--                    <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--                    <version>${maven.javadoc.plugin.version}</version>-->
+<!--                    <configuration>-->
+<!--                        &lt;!&ndash;todo: any other configs we should include here?&ndash;&gt;-->
+<!--                        <source>${maven.compiler.source}</source>-->
+<!--                    </configuration>-->
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <id>attach-javadocs</id>-->
+<!--                            <goals>-->
+<!--                                <goal>jar</goal>-->
+<!--                            </goals>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
+<!--                </plugin>-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven.source.plugin.version}</version>
+                    <configuration>
+                        <!--todo: any other configs we should include here?-->
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
