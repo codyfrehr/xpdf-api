@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.SystemUtils;
 
+/**
+ *
+ */
 @Getter
 @RequiredArgsConstructor
 //todo: are there other special methods i should override or anything, given that this is a pretty special type of enum..?

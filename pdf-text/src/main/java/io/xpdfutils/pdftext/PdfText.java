@@ -15,6 +15,16 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
+//todo: rename to PdfTextTool and interface to XpdfTool?
+/**
+ * A wrapper of the Xpdf command line tool <em>pdftotext</em>.
+ *
+ * <p> Upon instantiation, <code>PdfText</code> automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
+ * The {@link #process process} method invokes the native library to retrieve text from your PDF file.
+ *
+ * @author Cody Frehr
+ * @since 4.04.0
+ */
 public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
     private final String binCommand;
     //todo: are threads managed correctly with process here?
@@ -49,21 +59,24 @@ public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
         } catch (Exception e) {
             throw new XpdfRuntimeException("Unable to copy pdftotext binaries to directory accessible by OS");
         }
-
-        // old approach
-//        val exeDirectory = getClass().getClassLoader().getResource("xpdf/%s/%s".formatted(os.getOperatingSystem(), os.getBit()));
-        //        if (exeDirectory == null)
-//            throw new XpdfRuntimeException("Unable to locate pdftotext binaries");
-//        try {
-//            exeCommand = Paths.get(Paths.get(exeDirectory.toURI()).toFile().getCanonicalPath(),"pdftotext").toFile().getCanonicalPath();
-//        } catch (Exception e) {
-//            throw new XpdfRuntimeException("Unable to get path of pdftotext binaries");
-//        }
     }
 
     //todo: is "process" really the most friendly name for this?
     // maybe you should just drop the interface and simplify this
     //todo: add @NotNull to public method parameters
+    //todo: is PdfTextRequest the best
+    /**
+     * Gets text from a PDF file.
+     *
+     * <p> This method invokes the <em>pdftotext</em> command with a given set of arguments.
+     * Once processing is complete, it reads and returns the text from the generated text file.
+     *
+     * @param request the command arguments
+     * @return the PDF text
+     * @throws XpdfValidationException if <code>PdfTextRequest</code> is invalid
+     * @throws XpdfProcessingException if <em>pdftotext</em> command returns non-zero exit code
+     * @since 4.04.0
+     */
     @Override
     public PdfTextResponse process(PdfTextRequest request) throws XpdfProcessingException, XpdfValidationException {
         val executorService = Executors.newSingleThreadExecutor();
@@ -261,6 +274,7 @@ public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
         // when you specify encoding to xpdf, that helps it understand how to read the document.
         // but how does it decide to encode the data into the text file? does it retain same specified encoding?
         // run some tests...
+        //todo: should i be manually rejoining lines with \n? what about \r for windows?
         return String.join("\n", Files.readAllLines(request.getTxtFile().toPath(), StandardCharsets.UTF_8));
     }
 }
