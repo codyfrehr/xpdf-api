@@ -1,4 +1,4 @@
-package io.xpdfutils.pdftext;
+package io.xpdftools.pdftext;
 
 public enum PdfTextFormat {
     LAYOUT,

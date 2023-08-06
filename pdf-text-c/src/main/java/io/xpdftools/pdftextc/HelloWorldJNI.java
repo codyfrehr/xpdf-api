@@ -1,4 +1,4 @@
-package io.xpdfutils.pdftextc;
+package io.xpdftools.pdftextc;
 
 public class HelloWorldJNI {
 

@@ -1,6 +1,6 @@
-package io.xpdfutils.pdftext;
+package io.xpdftools.pdftext;
 
-import io.xpdfutils.common.*;
+import io.xpdftools.common.*;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
 
@@ -15,26 +15,30 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
-//todo: rename to PdfTextTool and interface to XpdfTool?
 /**
  * A wrapper of the Xpdf command line tool <em>pdftotext</em>.
  *
- * <p> Upon instantiation, <code>PdfText</code> automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
+ * <p> Upon instantiation, <code>PdfTextTool</code> automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
  * The {@link #process process} method invokes the native library to retrieve text from your PDF file.
  *
  * @author Cody Frehr
  * @since 4.04.0
  */
-public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
+public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
+
+    /**
+     * The complete command path to be invoked
+     */
     private final String binCommand;
+
     //todo: are threads managed correctly with process here?
     // should new singleton be declared, or retrieved
     // should you properly shutdown when done?
 //    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public PdfText() {
+    public PdfTextTool() {
         //todo: add unit tests to ensure all os/bit value combos have resource
-        val os = XpdfOperatingSystem.get();
+        val targetSystem = XpdfUtils.getTargetSystem();
 
         //todo: whats the best way to distribute resources?
         //      this solution copies binaries resource from inside jar to a directory outside of jar which accessible to client OS...
@@ -46,8 +50,8 @@ public class PdfText implements XpdfUtility<PdfTextRequest, PdfTextResponse> {
         //todo: instead of copying resource every time an instance is created, a check should first be performed to make sure it doesnt already exist
         //      this same check should also be done in the process() method
         //      maybe move some of this code into common..
-        val binName = "windows".equals(os.getOperatingSystem()) ? "pdftotext.exe" : "pdftotext";
-        val binResourceStream = getClass().getClassLoader().getResourceAsStream(String.format("xpdf/%s/%s/%s", os.getOperatingSystem(), os.getBit(), binName));
+        val binName = targetSystem.contains("windows") ? "pdftotext.exe" : "pdftotext";
+        val binResourceStream = getClass().getClassLoader().getResourceAsStream(String.format("xpdf/%s/%s", targetSystem, binName));
         if (binResourceStream == null)
             throw new XpdfRuntimeException("Unable to locate pdftotext binaries");
 

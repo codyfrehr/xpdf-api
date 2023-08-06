@@ -1,13 +1,13 @@
 package jna;
 
 import com.sun.jna.Native;
-import io.xpdfutils.pdftextc.HelloWorld;
+import io.xpdftools.pdftextc.HelloWorld;
 
 public class Main {
 
     static {
-//        System.setProperty("java.library.path", "C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text-c\\src\\main\\resources");
-        System.setProperty("jna.library.path", "C:\\Users\\Cody\\repos\\xpdf-utils\\pdf-to-text-c\\src\\main\\java\\jna");
+//        System.setProperty("java.library.path", "C:\\Users\\Cody\\repos\\xpdf-tools\\pdf-to-text-c\\src\\main\\resources");
+        System.setProperty("jna.library.path", "C:\\Users\\Cody\\repos\\xpdf-tools\\pdf-to-text-c\\src\\main\\java\\jna");
         Native.register(HelloWorld.class, "native");
     }
 
