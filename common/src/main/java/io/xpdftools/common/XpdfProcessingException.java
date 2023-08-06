@@ -2,6 +2,7 @@ package io.xpdftools.common;
 
 import lombok.Getter;
 
+//todo: add some kind of javadoc
 @Getter
 public class XpdfProcessingException extends XpdfException {
     private final String standardOutput;

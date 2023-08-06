@@ -1,8 +1,5 @@
 import io.xpdftools.common.XpdfException;
-import io.xpdftools.pdftext.PdfTextEncoding;
-import io.xpdftools.pdftext.PdfTextOptions;
-import io.xpdftools.pdftext.PdfTextRequest;
-import io.xpdftools.pdftext.PdfTextTool;
+import io.xpdftools.pdftext.*;
 import lombok.val;
 
 import java.io.File;
@@ -24,6 +21,7 @@ public class Test {
                 .options(PdfTextOptions.builder()
                         .pageStart(0)
                         .encoding(PdfTextEncoding.LATIN_1)
+                        .format(PdfTextFormat.LAYOUT)
                         .build())
                 .build();
 
