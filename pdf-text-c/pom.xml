@@ -9,7 +9,7 @@
     <parent>
         <groupId>io.xpdftools</groupId>
         <artifactId>xpdf-tools</artifactId>
-        <version>4.04.0-SNAPSHOT</version>
+        <version>4.4.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>

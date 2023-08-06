@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
+//todo: add some kind of javadoc
 @RequiredArgsConstructor
 public class ReadInputStreamTask implements Callable<String> {
     private final InputStream inputStream;

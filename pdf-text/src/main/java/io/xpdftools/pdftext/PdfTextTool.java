@@ -18,16 +18,16 @@ import java.util.concurrent.Executors;
 /**
  * A wrapper of the Xpdf command line tool <em>pdftotext</em>.
  *
- * <p> Upon instantiation, <code>PdfTextTool</code> automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
- * The {@link #process process} method invokes the native library to retrieve text from your PDF file.
+ * <p> {@code PdfTextTool} automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
+ * The {@link #process process} method invokes the native library to extract text from your PDF file.
  *
  * @author Cody Frehr
- * @since 4.04.0
+ * @since 4.4.0
  */
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
     /**
-     * The complete command path to be invoked
+     * The complete command path to be invoked.
      */
     private final String binCommand;
 
@@ -36,6 +36,11 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     // should you properly shutdown when done?
 //    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+    /**
+     * Creates an instance of {@code PdfTextTool} and configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
+     *
+     * @since 4.4.0
+     */
     public PdfTextTool() {
         //todo: add unit tests to ensure all os/bit value combos have resource
         val targetSystem = XpdfUtils.getTargetSystem();
@@ -77,9 +82,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      *
      * @param request the command arguments
      * @return the PDF text
-     * @throws XpdfValidationException if <code>PdfTextRequest</code> is invalid
+     * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
      * @throws XpdfProcessingException if <em>pdftotext</em> command returns non-zero exit code
-     * @since 4.04.0
+     * @since 4.4.0
      */
     @Override
     public PdfTextResponse process(PdfTextRequest request) throws XpdfProcessingException, XpdfValidationException {
@@ -149,6 +154,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         }
     }
 
+    //todo: add some kind of javadoc
     protected void validate(PdfTextRequest request) throws XpdfValidationException {
         // verify files
         if (!request.getPdfFile().exists())
@@ -175,6 +181,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         //todo: what other validation would be helpful?
     }
 
+    //todo: add some kind of javadoc
     protected List<String> getCommandOptions(PdfTextOptions options) {
         if (options == null)
             return Collections.emptyList();
@@ -273,12 +280,14 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         return args;
     }
 
+    //todo: add some kind of javadoc
     protected String getPdfText(PdfTextRequest request) throws IOException {
         //todo: need to figure out encoding stuff...
         // when you specify encoding to xpdf, that helps it understand how to read the document.
         // but how does it decide to encode the data into the text file? does it retain same specified encoding?
         // run some tests...
-        //todo: should i be manually rejoining lines with \n? what about \r for windows?
+        //todo: you should not assume lines joined only by \n, especially since "endOfLine" is an options specified by user.
+        //  you need to find another way to read file completely, and not assume line endings
         return String.join("\n", Files.readAllLines(request.getTxtFile().toPath(), StandardCharsets.UTF_8));
     }
 }

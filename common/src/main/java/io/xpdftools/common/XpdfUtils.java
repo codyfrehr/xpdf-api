@@ -6,10 +6,10 @@ import lombok.val;
 import org.apache.commons.lang3.SystemUtils;
 
 /**
- * Helpers for <code>XpdfTool</code>.
+ * Helpers for {@code XpdfTool}.
  *
  * @author Cody Frehr
- * @since 4.04.0
+ * @since 4.4.0
  */
 @Getter
 @RequiredArgsConstructor
@@ -26,11 +26,11 @@ public class XpdfUtils {
     private static final String WINDOWS_64 = "windows-64";
 
     /**
-     * Gets the OS and JVM bit architecture that a <code>XpdfTool</code> should target.
+     * Gets the OS and JVM bit architecture that a {@code XpdfTool} should target.
      *
      * @return a string representation of OS and bits
      * @throws XpdfRuntimeException if incompatible OS or JVM bit architecture
-     * @since 4.04.0
+     * @since 4.4.0
      */
     public static String getTargetSystem() {
         // get JVM bit architecture
