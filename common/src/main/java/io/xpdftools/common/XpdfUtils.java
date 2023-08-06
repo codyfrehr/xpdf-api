@@ -1,4 +1,4 @@
-package io.xpdfutils.common;
+package io.xpdftools.common;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

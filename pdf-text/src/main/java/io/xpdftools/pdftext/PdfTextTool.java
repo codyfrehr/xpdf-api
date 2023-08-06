@@ -1,6 +1,6 @@
-package io.xpdfutils.pdftext;
+package io.xpdftools.pdftext;
 
-import io.xpdfutils.common.*;
+import io.xpdftools.common.*;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
 

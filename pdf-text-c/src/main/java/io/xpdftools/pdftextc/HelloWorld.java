@@ -1,4 +1,4 @@
-package io.xpdfutils.pdftextc;
+package io.xpdftools.pdftextc;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;

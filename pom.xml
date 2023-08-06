@@ -3,12 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--todo: should this be named xpdf "utils"?
-            you are not providing they are referred to as "xpdf command line tools" on their website, and the zip you download is called xpdf-tools.
-            "xpdftools" may be a better name for artifact..
-            -->
-    <groupId>io.xpdfutils</groupId>
-    <artifactId>xpdf-utils</artifactId>
+    <groupId>io.xpdftools</groupId>
+    <artifactId>xpdf-tools</artifactId>
     <version>4.04.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -36,7 +32,7 @@
                 <version>2.13.0</version>
             </dependency>
             <dependency>
-                <groupId>io.xpdfutils</groupId>
+                <groupId>io.xpdftools</groupId>
                 <artifactId>common</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -82,7 +78,7 @@
                 </plugin>
                 <!--todo: editors like IDEA/eclipse already give you nice hover-features with just the inclusion of sources - so is this plugin really needed?
                         not sure if this plugin helps to build an api documentation website, but at a later stage, you should figure out how to generate html webpages for javadocs.
-                        it could be hosted on official xpdfutils website, looking something like this: https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
+                        it could be hosted on official xpdftools website, looking something like this: https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
                         -->
 <!--                <plugin>-->
 <!--                    <groupId>org.apache.maven.plugins</groupId>-->

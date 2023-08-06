@@ -1,8 +1,8 @@
-import io.xpdfutils.common.XpdfException;
-import io.xpdfutils.pdftext.PdfTextTool;
-import io.xpdfutils.pdftext.PdfTextEncoding;
-import io.xpdfutils.pdftext.PdfTextOptions;
-import io.xpdfutils.pdftext.PdfTextRequest;
+import io.xpdftools.common.XpdfException;
+import io.xpdftools.pdftext.PdfTextEncoding;
+import io.xpdftools.pdftext.PdfTextOptions;
+import io.xpdftools.pdftext.PdfTextRequest;
+import io.xpdftools.pdftext.PdfTextTool;
 import lombok.val;
 
 import java.io.File;
