@@ -45,7 +45,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      *
      * @since 4.4.0
      */
-    public PdfTextTool() {
+    public PdfTextTool(PdfTextToolConfig pdfTextToolConfig) {
         //todo: add unit tests to ensure all os/bit value combos have resource
         val targetSystem = XpdfUtils.getTargetSystem();
 
