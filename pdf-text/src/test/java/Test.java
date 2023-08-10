@@ -25,7 +25,7 @@ public class Test {
                         .build())
                 .build();
 
-        val pdfText = new PdfTextTool();
+        val pdfText = new PdfTextTool(null);
 
         val result = pdfText.process(request);
     }

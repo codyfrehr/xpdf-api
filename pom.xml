@@ -12,16 +12,19 @@
         <module>common</module>
         <module>pdf-text</module>
         <module>pdf-text-c</module>
+        <module>pdf-text-spring-boot-starter</module>
+        <module>pdf-text-spring-boot-autoconfigure</module>
     </modules>
 
     <properties>
         <lombok.version>1.18.28</lombok.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-        <maven.javadoc.plugin.version>3.5.0</maven.javadoc.plugin.version>
-        <maven.source.plugin.version>3.3.0</maven.source.plugin.version>
+        <maven.javadoc-plugin.version>3.5.0</maven.javadoc-plugin.version>
+        <maven.source-plugin.version>3.3.0</maven.source-plugin.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>3.1.2</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -37,6 +40,16 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.xpdftools</groupId>
+                <artifactId>pdf-text</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.xpdftools</groupId>
+                <artifactId>pdf-text-spring-boot-autoconfigure</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.12.0</version>
@@ -46,6 +59,33 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <version>${spring-boot.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -83,7 +123,7 @@
 <!--                <plugin>-->
 <!--                    <groupId>org.apache.maven.plugins</groupId>-->
 <!--                    <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--                    <version>${maven.javadoc.plugin.version}</version>-->
+<!--                    <version>${maven.javadoc-plugin.version}</version>-->
 <!--                    <configuration>-->
 <!--                        &lt;!&ndash;todo: any other configs we should include here?&ndash;&gt;-->
 <!--                        <source>${maven.compiler.source}</source>-->
@@ -100,7 +140,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>${maven.source.plugin.version}</version>
+                    <version>${maven.source-plugin.version}</version>
                     <configuration>
                         <!--todo: any other configs we should include here?-->
                     </configuration>

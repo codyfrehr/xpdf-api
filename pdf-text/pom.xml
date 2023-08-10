@@ -4,9 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>pdf-text</artifactId>
-<!--    <name>pdf-text</name>-->
 
-<!--todo: pick a repository to host your artifacts for maven central.
+    <!--todo: pick a repository to host your artifacts for maven central.
         take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/ -->
     <parent>
         <groupId>io.xpdftools</groupId>
@@ -30,7 +29,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
