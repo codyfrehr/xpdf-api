@@ -8,7 +8,12 @@ todo:
 - running list of things to do correctly when installing to maven repository:
   - push sources
   - write and push javadocs..? (is this mandatory for public sdks? or is this archaic stuff?)
-
+- make project spring configurable
+  - https://docs.spring.io/spring-boot/docs/1.5.11.RELEASE/reference/html/boot-features-developing-auto-configuration.html
+  - 3 packages
+    - core (non-spring stuff)
+    - autoconfigure (all auto-config stuff with conditional bean to override. create bean, but give user option to override)
+    - starter (springboot and all spring dependencies)
 c++ stuff:
 - install Windows c++ compiler MinGW via MYSYS2: https://code.visualstudio.com/docs/cpp/config-mingw
 - JNI: https://www.baeldung.com/jni

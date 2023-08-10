@@ -17,7 +17,7 @@ public class Test {
         // should probably be requirement that user specifies encoding, and that we have xpdfrc encoding map
         val request = PdfTextRequest.builder()
                 .pdfFile(new File("C:\\Users\\Cody\\Downloads\\xpdf test\\dummy.pdf"))
-                .txtFile(new File("C:\\Users\\Cody\\Downloads\\xpdf test\\dummy.txt"))
+//                .textFile(new File("C:\\Users\\Cody\\Downloads\\xpdf test\\dummy.txt"))
                 .options(PdfTextOptions.builder()
                         .pageStart(0)
                         .encoding(PdfTextEncoding.LATIN_1)
