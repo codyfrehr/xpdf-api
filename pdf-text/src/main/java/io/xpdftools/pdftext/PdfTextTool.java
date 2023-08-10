@@ -4,14 +4,11 @@ import io.xpdftools.common.*;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
@@ -24,12 +21,19 @@ import java.util.concurrent.Executors;
  * @author Cody Frehr
  * @since 4.4.0
  */
+//todo: can you make this a component, with injectable values?
+//  https://docs.spring.io/spring-boot/docs/1.5.11.RELEASE/reference/html/boot-features-developing-auto-configuration.html
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
     /**
-     * The complete command path to be invoked.
+     * The <em>pdftotext</em> command {@code File}.
      */
-    private final String binCommand;
+    private final File binCommandFile;
+
+    /**
+     * The temporary path to which output text {@code Files} may be written.
+     */
+    private final Path tempTextDirectory;
 
     //todo: are threads managed correctly with process here?
     // should new singleton be declared, or retrieved
@@ -62,26 +66,34 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
         try {
             // copy bin resource to directory accessible to client OS
-            val binAccessiblePath = Paths.get(System.getProperty("java.io.tmpdir"), "xpdf", binName);
+            val binAccessiblePath = Paths.get(System.getProperty("java.io.tmpdir"), "xpdf", "bin", binName);
             FileUtils.copyInputStreamToFile(binResourceStream, binAccessiblePath.toFile());
-            binCommand = binAccessiblePath.toFile().getCanonicalPath();
+            binCommandFile = binAccessiblePath.toFile();
         } catch (Exception e) {
             throw new XpdfRuntimeException("Unable to copy pdftotext binaries to directory accessible by OS");
+        }
+
+        try {
+            // create temp output directory for text files
+            tempTextDirectory = Paths.get(System.getProperty("java.io.tmpdir"), "xpdf", "pdftext");
+            tempTextDirectory.toFile().mkdir();
+        } catch (Exception e) {
+            throw new XpdfRuntimeException("Unable to create temporary directory for output text files");
         }
     }
 
     //todo: is "process" really the most friendly name for this?
     // maybe you should just drop the interface and simplify this
     //todo: add @NotNull to public method parameters
-    //todo: is PdfTextRequest the best
+    //todo: break out logic into smaller methods
     /**
      * Gets text from a PDF file.
      *
      * <p> This method invokes the <em>pdftotext</em> command with a given set of arguments.
-     * Once processing is complete, it reads and returns the text from the generated text file.
+     * Once processing is complete, it returns the text {@code File} that the text was extracted into.
      *
      * @param request the command arguments
-     * @return the PDF text
+     * @return the PDF text {@code File}
      * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
      * @throws XpdfProcessingException if <em>pdftotext</em> command returns non-zero exit code
      * @since 4.4.0
@@ -94,14 +106,22 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             // validate request
             validate(request);
 
+            // configure text file
+            final File textFile;
+            if (request.getTextFile() != null) {
+                textFile = request.getTextFile();
+            } else {
+                textFile = Paths.get(tempTextDirectory.toFile().getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
+            }
+
             // get commands
             //todo: how can you be sure user is not injecting malicious arguments into file path..?
             // need to verify args better..
             val commands = new ArrayList<String>();
-            commands.add(binCommand);
+            commands.add(binCommandFile.getCanonicalPath());
             commands.addAll(getCommandOptions(request.getOptions()));
             commands.add(request.getPdfFile().getCanonicalPath());
-            commands.add(request.getTxtFile().getCanonicalPath());
+            commands.add(textFile.getCanonicalPath());
 
             // process commands
             val processBuilder = new ProcessBuilder(commands.toArray(new String[0]));
@@ -119,8 +139,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             // handle process result
             if (exitCode == 0) {
                 return PdfTextResponse.builder()
-                        .pdfText(getPdfText(request))
-                        .stdOut(standardOutput)
+                        .textFile(textFile)
+                        .standardOutput(standardOutput)
                         .build();
             } else {
                 final String message;
@@ -160,10 +180,12 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         if (!request.getPdfFile().exists())
             throw new XpdfValidationException("PdfFile does not exist");
 
-        try {
-            request.getTxtFile().getCanonicalPath();
-        } catch (IOException e) {
-            throw new XpdfValidationException("TxtFile does not have a valid path");
+        if (request.getTextFile() != null) {
+            try {
+                request.getTextFile().getCanonicalPath();
+            } catch (IOException e) {
+                throw new XpdfValidationException("TxtFile does not have a valid path");
+            }
         }
 
         // verify options
@@ -278,16 +300,5 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             args.addAll(Arrays.asList("-upw", String.format("\"%s\"", userPassword)));
 
         return args;
-    }
-
-    //todo: add some kind of javadoc
-    protected String getPdfText(PdfTextRequest request) throws IOException {
-        //todo: need to figure out encoding stuff...
-        // when you specify encoding to xpdf, that helps it understand how to read the document.
-        // but how does it decide to encode the data into the text file? does it retain same specified encoding?
-        // run some tests...
-        //todo: you should not assume lines joined only by \n, especially since "endOfLine" is an options specified by user.
-        //  you need to find another way to read file completely, and not assume line endings
-        return String.join("\n", Files.readAllLines(request.getTxtFile().toPath(), StandardCharsets.UTF_8));
     }
 }

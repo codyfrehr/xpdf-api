@@ -6,9 +6,15 @@
     <artifactId>pdf-text</artifactId>
 <!--    <name>pdf-text</name>-->
 
+<!--todo: pick a repository to host your artifacts for maven central.
+        take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/ -->
     <parent>
         <groupId>io.xpdftools</groupId>
         <artifactId>xpdf-tools</artifactId>
+        <!--todo: think about versioning scheme...
+                should you be trying to match xpdf lib versions..?
+                in doing so, you are relinquishing the meaning and purpose of your version numbers..
+                for example, what if you have a major change? you would be unable to convey that because you are trying to match xpdfs major version-->
         <version>4.4.0-SNAPSHOT</version>
     </parent>
 

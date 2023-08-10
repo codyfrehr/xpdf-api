@@ -3,6 +3,8 @@ package io.xpdftools.pdftext;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.File;
+
 /**
  * Contains the {@code PdfTextTool} process output.
  *
@@ -14,18 +16,17 @@ import lombok.Getter;
 public class PdfTextResponse {
 
     /**
-     * PDF text.
+     * Text {@code File} containing the text extracted from input PDF {@code File}.
      *
-     * @implNote This value should be retrieved by reading the text file output by the <em>pdftotext</em> command.
      * @since 4.4.0
      */
-    private String pdfText;
+    private File textFile;
 
     /**
      * Standard output streamed from execution of <em>pdftotext</em> command.
      *
      * @since 4.4.0
      */
-    private String stdOut;
+    private String standardOutput;
 
 }

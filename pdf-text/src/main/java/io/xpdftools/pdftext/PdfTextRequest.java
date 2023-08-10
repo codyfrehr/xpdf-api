@@ -12,9 +12,9 @@ import java.io.File;
  * <br><br> Example usage:
  * <blockquote><pre>
  *  PdfTextRequest.builder()
- *      .pdfFile(new File("/home/cody/docs/some.pdf"))  //required
- *      .txtFile(new File("/home/cody/docs/some.txt"))  //required
- *      .options(PdfTextOptions.builder().encoding(PdfTextEncoding.UTF_8).build())
+ *      .pdfFile(new File("/home/cody/docs/some.pdf"))
+ *      .textFile(new File("/home/cody/docs/some.txt"))
+ *      .options(PdfTextOptions.builder().format(PdfTextFormat.RAW).build())
  *      .build();
  * </pre></blockquote>
  *
@@ -38,11 +38,10 @@ public class PdfTextRequest {
     /**
      * Output text {@code File}.
      *
-     * @implNote Required.
+     * @implNote If {@code null}, a temporary {@code File} will get created.
      * @since 4.4.0
      */
-    @NonNull
-    private final File txtFile;
+    private final File textFile;
 
     /**
      * Command options to customize processing.
