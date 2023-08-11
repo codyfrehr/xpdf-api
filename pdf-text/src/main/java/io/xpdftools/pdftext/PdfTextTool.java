@@ -2,11 +2,9 @@ package io.xpdftools.pdftext;
 
 import io.xpdftools.common.*;
 import lombok.val;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -21,64 +19,57 @@ import java.util.concurrent.Executors;
  * @author Cody Frehr
  * @since 4.4.0
  */
-//todo: can you make this a component, with injectable values?
-//  https://docs.spring.io/spring-boot/docs/1.5.11.RELEASE/reference/html/boot-features-developing-auto-configuration.html
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
     /**
-     * The <em>pdftotext</em> command {@code File}.
+     * The command type.
      */
-    private final File binCommandFile;
+    private static final XpdfCommandType XPDF_COMMAND_TYPE = XpdfCommandType.PDF_TEXT;
 
     /**
-     * The temporary path to which output text {@code Files} may be written.
+     * The directory to which output text {@code Files} will be written if {@code textFile} is not provided in {@code PdfTextRequest}.
      */
-    private final Path tempTextDirectory;
+    private final File defaultOutputDirectory;
 
     //todo: are threads managed correctly with process here?
     // should new singleton be declared, or retrieved
     // should you properly shutdown when done?
 //    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+    //todo: add proper javadoc
+    public PdfTextTool() {
+        this.defaultOutputDirectory = XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
+    }
+
+    //todo: should throw better exception type for constructor, not runtime exception?
+    //todo: whats the best way to distribute resources?
+    //      this solution copies binaries resource from inside jar to a directory outside of jar which accessible to client OS...
+    //      but is there a better way? this solution feels dirty
+    //      should we request client download the binaries themself, and configure path?
+    //todo: also, there is no way for the client to verify that we are including the authentic xpdf binaries in this solution...
+    //      how can you package the binaries with this solution in a credible way?
+    //      maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
+    //todo: instead of copying resource every time an instance is created, a check should first be performed to make sure it doesnt already exist
+    //      this same check should also be done in the process() method
+    //      maybe move some of this code into common..
+    //todo: add unit tests to ensure all os/bit value combos have resource
+    //todo: add proper javadoc (fix description, add params, etc)
+    //todo: clean up exception handling in all constructors
     /**
      * Creates an instance of {@code PdfTextTool} and configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
      *
      * @since 4.4.0
      */
-    public PdfTextTool(PdfTextToolConfig pdfTextToolConfig) {
-        //todo: add unit tests to ensure all os/bit value combos have resource
-        val targetSystem = XpdfUtils.getTargetSystem();
-
-        //todo: whats the best way to distribute resources?
-        //      this solution copies binaries resource from inside jar to a directory outside of jar which accessible to client OS...
-        //      but is there a better way? this solution feels dirty
-        //      should we request client download the binaries themself, and configure path?
-        //todo: also, there is no way for the client to verify that we are including the authentic xpdf binaries in this solution...
-        //      how can you package the binaries with this solution in a credible way?
-        //      maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
-        //todo: instead of copying resource every time an instance is created, a check should first be performed to make sure it doesnt already exist
-        //      this same check should also be done in the process() method
-        //      maybe move some of this code into common..
-        val binName = targetSystem.contains("windows") ? "pdftotext.exe" : "pdftotext";
-        val binResourceStream = getClass().getClassLoader().getResourceAsStream(String.format("xpdf/%s/%s", targetSystem, binName));
-        if (binResourceStream == null)
-            throw new XpdfRuntimeException("Unable to locate pdftotext binaries");
-
+    public PdfTextTool(String defaultOutputDirectory) {
+        //todo: what if provided default output directory is null??
         try {
-            // copy bin resource to directory accessible to client OS
-            val binAccessiblePath = Paths.get(System.getProperty("java.io.tmpdir"), "xpdf", "bin", binName);
-            FileUtils.copyInputStreamToFile(binResourceStream, binAccessiblePath.toFile());
-            binCommandFile = binAccessiblePath.toFile();
-        } catch (Exception e) {
-            throw new XpdfRuntimeException("Unable to copy pdftotext binaries to directory accessible by OS");
-        }
+            this.defaultOutputDirectory = Paths.get(defaultOutputDirectory).toFile();
 
-        try {
-            // create temp output directory for text files
-            tempTextDirectory = Paths.get(System.getProperty("java.io.tmpdir"), "xpdf", "pdftext");
-            tempTextDirectory.toFile().mkdir();
+            if (!this.defaultOutputDirectory.isDirectory()) {
+                throw new XpdfRuntimeException("The default output directory must be a directory");
+            }
         } catch (Exception e) {
-            throw new XpdfRuntimeException("Unable to create temporary directory for output text files");
+            throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
         }
     }
 
@@ -106,19 +97,25 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             // validate request
             validate(request);
 
-            // configure text file
+            // configure output text file
             final File textFile;
             if (request.getTextFile() != null) {
                 textFile = request.getTextFile();
             } else {
-                textFile = Paths.get(tempTextDirectory.toFile().getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
+                textFile = Paths.get(defaultOutputDirectory.getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
             }
+
+            // create output directory if not exists
+            textFile.getParentFile().mkdir();
+
+            // create temp bin if not exists
+            XpdfUtils.createTemporaryBin(XPDF_COMMAND_TYPE);
 
             // get commands
             //todo: how can you be sure user is not injecting malicious arguments into file path..?
             // need to verify args better..
             val commands = new ArrayList<String>();
-            commands.add(binCommandFile.getCanonicalPath());
+            commands.add(XpdfUtils.getBinCommand(XPDF_COMMAND_TYPE));
             commands.addAll(getCommandOptions(request.getOptions()));
             commands.add(request.getPdfFile().getCanonicalPath());
             commands.add(textFile.getCanonicalPath());

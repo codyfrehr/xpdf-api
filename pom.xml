@@ -16,6 +16,10 @@
         <module>pdf-text-spring-boot-autoconfigure</module>
     </modules>
 
+<!--todo: you currently have ibm semeru runtime installed.
+        whichjdk.com say you should only use this if you need OpenJ9 VM.
+        what is OpenJ9 VM, and why would it be needed.
+        -->
     <properties>
         <lombok.version>1.18.28</lombok.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>

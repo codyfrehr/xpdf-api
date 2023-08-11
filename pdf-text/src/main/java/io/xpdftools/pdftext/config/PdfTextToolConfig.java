@@ -1,4 +1,4 @@
-package io.xpdftools.pdftext;
+package io.xpdftools.pdftext.config;
 
 import java.util.Properties;
 
