@@ -4,10 +4,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties(prefix = "xpdftools.pdftext")
+@ConfigurationProperties(prefix = "xpdftools.pdf-text")
 public class PdfTextToolProperties {
 
-    private String binaryPath;
-    private String outputDirectory;
+    private String defaultOutputDirectory;
 
 }
