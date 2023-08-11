@@ -1,6 +1,7 @@
 package io.xpdftools.pdftext;
 
 import io.xpdftools.common.*;
+import lombok.Builder;
 import lombok.val;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import java.util.concurrent.Executors;
  * @author Cody Frehr
  * @since 4.4.0
  */
+@Builder
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
     /**
@@ -36,10 +38,34 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     // should you properly shutdown when done?
 //    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    //todo: add proper javadoc
-    public PdfTextTool() {
-        this.defaultOutputDirectory = XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
+    //todo: javadoc
+    public static class PdfTextToolBuilder {
+
+        //todo: javadoc
+        public PdfTextTool build() {
+            // configure defaultOutputDirectory
+            final File defaultOutputDirectoryBuilder;
+            if (defaultOutputDirectory == null) {
+                defaultOutputDirectoryBuilder = XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
+            } else {
+                try {
+                    if (!defaultOutputDirectory.isDirectory()) {
+                        throw new XpdfRuntimeException("The default output directory must be a directory");
+                    }
+                } catch (Exception e) {
+                    throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
+                }
+                defaultOutputDirectoryBuilder = defaultOutputDirectory;
+            }
+
+            return new PdfTextTool(defaultOutputDirectoryBuilder);
+        }
     }
+
+    //todo: add proper javadoc
+//    public PdfTextTool() {
+//        this.defaultOutputDirectory = XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
+//    }
 
     //todo: should throw better exception type for constructor, not runtime exception?
     //todo: whats the best way to distribute resources?
@@ -60,18 +86,18 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      *
      * @since 4.4.0
      */
-    public PdfTextTool(String defaultOutputDirectory) {
-        //todo: what if provided default output directory is null??
-        try {
-            this.defaultOutputDirectory = Paths.get(defaultOutputDirectory).toFile();
-
-            if (!this.defaultOutputDirectory.isDirectory()) {
-                throw new XpdfRuntimeException("The default output directory must be a directory");
-            }
-        } catch (Exception e) {
-            throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
-        }
-    }
+//    public PdfTextTool(String defaultOutputDirectory) {
+//        //todo: what if provided default output directory is null??
+//        try {
+//            this.defaultOutputDirectory = Paths.get(defaultOutputDirectory).toFile();
+//
+//            if (!this.defaultOutputDirectory.isDirectory()) {
+//                throw new XpdfRuntimeException("The default output directory must be a directory");
+//            }
+//        } catch (Exception e) {
+//            throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
+//        }
+//    }
 
     //todo: is "process" really the most friendly name for this?
     // maybe you should just drop the interface and simplify this

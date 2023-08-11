@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.File;
 import java.io.IOException;
 
 import static io.xpdftools.pdftext.config.PdfTextToolConfigParams.DEFAULT_OUTPUT_DIRECTORY;
@@ -28,6 +29,7 @@ import static io.xpdftools.pdftext.config.PdfTextToolConfigParams.DEFAULT_OUTPUT
 //todo: then once configs decided on, need to cleanup PdfTextTool autoconfig constructor logic to properly handle config inputs, like so:
 //      https://github.com/eugenp/tutorials/blob/master/spring-boot-modules/spring-boot-custom-starter/greeter-library/src/main/java/com/baeldung/greeter/library/Greeter.java
 //todo: need PdfTextTool constructor for non-autoconfiguration
+//todo: make PdfTextTool use builder pattern
 @Configuration
 @ConditionalOnClass(PdfTextTool.class)
 @EnableConfigurationProperties(PdfTextToolProperties.class)
@@ -53,7 +55,9 @@ public class PdfTextToolAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public PdfTextTool pdfTextTool(PdfTextToolConfig pdfTextToolConfig) {
-        return new PdfTextTool((String) pdfTextToolConfig.get(DEFAULT_OUTPUT_DIRECTORY));
+        return PdfTextTool.builder()
+                .defaultOutputDirectory(new File((String) pdfTextToolConfig.get(DEFAULT_OUTPUT_DIRECTORY)))
+                .build();
     }
 
 }

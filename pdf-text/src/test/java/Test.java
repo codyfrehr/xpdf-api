@@ -25,7 +25,9 @@ public class Test {
                         .build())
                 .build();
 
-        val pdfText = new PdfTextTool();
+        val pdfText = PdfTextTool.builder()
+                .defaultOutputDirectory(new File("C:\\Users\\Cody.txt"))
+                .build();
 
         val result = pdfText.process(request);
     }
