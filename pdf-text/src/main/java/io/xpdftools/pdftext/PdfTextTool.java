@@ -6,6 +6,7 @@ import lombok.val;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -44,18 +45,18 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         //todo: javadoc
         public PdfTextTool build() {
             // configure defaultOutputDirectory
-            final File defaultOutputDirectoryBuilder;
-            if (defaultOutputDirectory == null) {
-                defaultOutputDirectoryBuilder = XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
-            } else {
-                try {
-                    if (!defaultOutputDirectory.isDirectory()) {
-                        throw new XpdfRuntimeException("The default output directory must be a directory");
-                    }
-                } catch (Exception e) {
-                    throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
+            val defaultOutputDirectoryBuilder = defaultOutputDirectory == null
+                    ? XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile()
+                    : defaultOutputDirectory;
+            try {
+                if (!Files.exists(defaultOutputDirectoryBuilder.toPath())) {
+                    defaultOutputDirectoryBuilder.mkdirs();
                 }
-                defaultOutputDirectoryBuilder = defaultOutputDirectory;
+                if (!defaultOutputDirectoryBuilder.isDirectory()) {
+                    throw new XpdfRuntimeException("The default output directory must be a directory");
+                }
+            } catch (Exception e) {
+                throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
             }
 
             return new PdfTextTool(defaultOutputDirectoryBuilder);
