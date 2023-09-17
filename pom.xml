@@ -18,7 +18,7 @@
 
 <!--todo: you currently have ibm semeru runtime installed.
         whichjdk.com say you should only use this if you need OpenJ9 VM.
-        what is OpenJ9 VM, and why would it be needed.
+        what is OpenJ9 VM, and why would it be needed?
         -->
     <properties>
         <lombok.version>1.18.28</lombok.version>
@@ -28,7 +28,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot.version>3.1.2</spring-boot.version>
+        <spring-boot.version>2.7.15</spring-boot.version>
     </properties>
 
     <dependencyManagement>
