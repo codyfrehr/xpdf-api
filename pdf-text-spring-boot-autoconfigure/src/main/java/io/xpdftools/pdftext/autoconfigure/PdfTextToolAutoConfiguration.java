@@ -1,7 +1,7 @@
 package io.xpdftools.pdftext.autoconfigure;
 
 import io.xpdftools.common.XpdfCommandType;
-import io.xpdftools.common.XpdfUtils;
+import io.xpdftools.common.util.XpdfUtils;
 import io.xpdftools.pdftext.PdfTextTool;
 import io.xpdftools.pdftext.config.PdfTextToolConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +30,7 @@ import static io.xpdftools.pdftext.config.PdfTextToolConfigParams.DEFAULT_OUTPUT
 //      https://github.com/eugenp/tutorials/blob/master/spring-boot-modules/spring-boot-custom-starter/greeter-library/src/main/java/com/baeldung/greeter/library/Greeter.java
 //todo: need PdfTextTool constructor for non-autoconfiguration
 //todo: make PdfTextTool use builder pattern
+//todo: javadoc
 @Configuration
 @ConditionalOnClass(PdfTextTool.class)
 @EnableConfigurationProperties(PdfTextToolProperties.class)

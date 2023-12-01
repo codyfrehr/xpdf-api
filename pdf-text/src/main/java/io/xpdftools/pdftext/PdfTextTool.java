@@ -1,12 +1,15 @@
 package io.xpdftools.pdftext;
 
-import io.xpdftools.common.*;
+import io.xpdftools.common.XpdfCommandType;
+import io.xpdftools.common.XpdfTool;
+import io.xpdftools.common.exception.*;
+import io.xpdftools.common.util.ReadInputStreamTask;
+import io.xpdftools.common.util.XpdfUtils;
 import lombok.Builder;
 import lombok.val;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -22,7 +25,7 @@ import java.util.concurrent.Executors;
  * @since 4.4.0
  */
 @Builder
-public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
+public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     /**
      * The command type.
@@ -56,24 +59,25 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     //todo: javadoc
     public static class PdfTextToolBuilder {
 
-        //todo: javadoc
         public PdfTextTool build() {
-            // configure defaultOutputDirectory
-            val defaultOutputDirectoryBuilder = defaultOutputDirectory == null
-                    ? XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile()
-                    : defaultOutputDirectory;
-            try {
-                if (!Files.exists(defaultOutputDirectoryBuilder.toPath())) {
-                    defaultOutputDirectoryBuilder.mkdirs();
-                }
-                if (!defaultOutputDirectoryBuilder.isDirectory()) {
-                    throw new XpdfRuntimeException("The default output directory must be a directory");
-                }
-            } catch (Exception e) {
-                throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
-            }
+            val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
 
             return new PdfTextTool(defaultOutputDirectoryBuilder);
+        }
+
+        protected File configureDefaultOutputDirectory() {
+            if (defaultOutputDirectory == null) {
+                return XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
+            } else {
+                try {
+                    if (!defaultOutputDirectory.isDirectory()) {
+                        throw new XpdfRuntimeException("The default output directory must be a directory");
+                    }
+                } catch (Exception e) {
+                    throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
+                }
+                return defaultOutputDirectory;
+            }
         }
     }
 
@@ -89,7 +93,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      * @param request the command arguments
      * @return the PDF text {@code File}
      * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
-     * @throws XpdfProcessingException if <em>pdftotext</em> command returns non-zero exit code
+     * @throws XpdfExecutionException if <em>pdftotext</em> command returns non-zero exit code
+     * @throws XpdfProcessingException if any other exception occurs during processing
      * @since 4.4.0
      */
     @Override
@@ -115,16 +120,14 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             XpdfUtils.createTemporaryBin(XPDF_COMMAND_TYPE);
 
             // get commands
-            //todo: how can you be sure user is not injecting malicious arguments into file path..?
-            // need to verify if possible to do this, and prevent..
-            val commands = new ArrayList<String>();
-            commands.add(XpdfUtils.getBinCommand(XPDF_COMMAND_TYPE));
-            commands.addAll(getCommandOptions(request.getOptions()));
-            commands.add(request.getPdfFile().getCanonicalPath());
-            commands.add(textFile.getCanonicalPath());
+            val commandParts = new ArrayList<String>();
+            commandParts.add(XpdfUtils.getBinCommand(XPDF_COMMAND_TYPE));
+            commandParts.addAll(getCommandOptions(request.getOptions()));
+            commandParts.add(request.getPdfFile().getCanonicalPath());
+            commandParts.add(textFile.getCanonicalPath());
 
             // process commands
-            val processBuilder = new ProcessBuilder(commands.toArray(new String[0]));
+            val processBuilder = new ProcessBuilder(commandParts.toArray(new String[0]));
             val process = processBuilder.start();
 
             //todo: log output
@@ -173,7 +176,13 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         }
     }
 
-    //todo: add some kind of javadoc
+    /**
+     * Gets the options which can be invoked alongside the command.
+     *
+     * @param request the command arguments
+     * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
+     * @since 4.4.0
+     */
     protected void validate(PdfTextRequest request) throws XpdfValidationException {
         // verify files
         if (!request.getPdfFile().exists())
@@ -200,9 +209,18 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         }
 
         //todo: what other validation would be helpful?
+
+        //todo: how can you be sure user is not injecting malicious arguments into file path, or other string fields on request?
+        // need to verify if possible to do this, and prevent..
     }
 
-    //todo: add some kind of javadoc
+    /**
+     * Gets the options to be invoked alongside the command.
+     *
+     * @param options the command options as {@code PdfTextOptions}
+     * @return the command options as {@code List<String>}
+     * @since 4.4.0
+     */
     protected List<String> getCommandOptions(PdfTextOptions options) {
         if (options == null)
             return Collections.emptyList();
@@ -300,4 +318,5 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
         return args;
     }
+
 }

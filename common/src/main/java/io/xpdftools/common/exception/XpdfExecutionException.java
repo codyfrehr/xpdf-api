@@ -1,9 +1,9 @@
-package io.xpdftools.common;
+package io.xpdftools.common.exception;
 
 import lombok.Getter;
 
 /**
- * An {@code Exception} thrown when the executed Xpdf command returns a non-zero exit code.
+ * A {@code XpdfException} thrown when the executed Xpdf command returns a non-zero exit code.
  *
  * @author Cody Frehr
  * @since 4.4.0
