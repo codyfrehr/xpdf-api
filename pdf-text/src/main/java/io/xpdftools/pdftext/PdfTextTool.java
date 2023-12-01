@@ -15,8 +15,8 @@ import java.util.concurrent.Executors;
 /**
  * A wrapper of the Xpdf command line tool <em>pdftotext</em>.
  *
- * <p> {@code PdfTextTool} automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
- * The {@link #process process} method invokes the native library to extract text from your PDF file.
+ * <p> {@code PdfTextTool} automatically configures itself to target the <em>pdftotext</em> executable native to your OS and JVM architecture.
+ * The {@link #process process} method invokes the command to extract text from your PDF file.
  *
  * @author Cody Frehr
  * @since 4.4.0
@@ -39,6 +39,20 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     // should you properly shutdown when done?
 //    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+    //todo: should throw better exception type for constructor, not runtime exception?
+    //todo: whats the best way to distribute resources?
+    //      this solution copies binaries resource from inside jar to a directory outside of jar which accessible to client OS...
+    //      but is there a better way? this solution feels dirty
+    //      should we request client download the binaries themself, and configure path?
+    //todo: also, there is no way for the client to verify that we are including the authentic xpdf binaries in this solution...
+    //      how can you package the binaries with this solution in a credible way?
+    //      maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
+    //todo: instead of copying resource every time an instance is created, a check should first be performed to make sure it doesnt already exist
+    //      this same check should also be done in the process() method
+    //      maybe move some of this code into common..
+    //todo: add unit tests to ensure all os/bit value combos have resource
+    //todo: add proper javadoc (fix description, add params, etc)
+    //todo: clean up exception handling in all constructors
     //todo: javadoc
     public static class PdfTextToolBuilder {
 
@@ -63,51 +77,13 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         }
     }
 
-    //todo: add proper javadoc
-//    public PdfTextTool() {
-//        this.defaultOutputDirectory = XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
-//    }
-
-    //todo: should throw better exception type for constructor, not runtime exception?
-    //todo: whats the best way to distribute resources?
-    //      this solution copies binaries resource from inside jar to a directory outside of jar which accessible to client OS...
-    //      but is there a better way? this solution feels dirty
-    //      should we request client download the binaries themself, and configure path?
-    //todo: also, there is no way for the client to verify that we are including the authentic xpdf binaries in this solution...
-    //      how can you package the binaries with this solution in a credible way?
-    //      maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
-    //todo: instead of copying resource every time an instance is created, a check should first be performed to make sure it doesnt already exist
-    //      this same check should also be done in the process() method
-    //      maybe move some of this code into common..
-    //todo: add unit tests to ensure all os/bit value combos have resource
-    //todo: add proper javadoc (fix description, add params, etc)
-    //todo: clean up exception handling in all constructors
-    /**
-     * Creates an instance of {@code PdfTextTool} and configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
-     *
-     * @since 4.4.0
-     */
-//    public PdfTextTool(String defaultOutputDirectory) {
-//        //todo: what if provided default output directory is null??
-//        try {
-//            this.defaultOutputDirectory = Paths.get(defaultOutputDirectory).toFile();
-//
-//            if (!this.defaultOutputDirectory.isDirectory()) {
-//                throw new XpdfRuntimeException("The default output directory must be a directory");
-//            }
-//        } catch (Exception e) {
-//            throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
-//        }
-//    }
-
-    //todo: is "process" really the most friendly name for this?
-    // maybe you should just drop the interface and simplify this
+    //todo: maybe you should just drop the interface and simplify this
     //todo: add @NotNull to public method parameters
     //todo: break out logic into smaller methods
     /**
      * Gets text from a PDF file.
      *
-     * <p> This method invokes the <em>pdftotext</em> command with a given set of arguments.
+     * <p> This method executes the <em>pdftotext</em> command with a given set of arguments.
      * Once processing is complete, it returns the text {@code File} that the text was extracted into.
      *
      * @param request the command arguments
@@ -117,7 +93,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      * @since 4.4.0
      */
     @Override
-    public PdfTextResponse process(PdfTextRequest request) throws XpdfProcessingException, XpdfValidationException {
+    public PdfTextResponse process(PdfTextRequest request) throws XpdfException {
         val executorService = Executors.newSingleThreadExecutor();
 
         try {
@@ -140,7 +116,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
             // get commands
             //todo: how can you be sure user is not injecting malicious arguments into file path..?
-            // need to verify args better..
+            // need to verify if possible to do this, and prevent..
             val commands = new ArrayList<String>();
             commands.add(XpdfUtils.getBinCommand(XPDF_COMMAND_TYPE));
             commands.addAll(getCommandOptions(request.getOptions()));
@@ -186,13 +162,12 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                         break;
                 }
 
-                throw new XpdfProcessingException(standardOutput, errorOutput, message);
+                throw new XpdfExecutionException(standardOutput, errorOutput, message);
             }
-        } catch (XpdfProcessingException | XpdfValidationException | XpdfRuntimeException e) {
+        } catch (XpdfException | XpdfRuntimeException e) {
             throw e;
         } catch (Exception e) {
-            //todo: should we be throwing checked or unchecked exceptions?
-            throw new XpdfRuntimeException(e);
+            throw new XpdfProcessingException(e);
         } finally {
             executorService.shutdown();
         }

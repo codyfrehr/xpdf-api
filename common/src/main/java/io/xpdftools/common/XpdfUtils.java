@@ -104,7 +104,13 @@ public class XpdfUtils {
         }
     }
 
-    //todo: add proper javadoc
+    /**
+     * Gets the shell command to execute for a given {@code XpdfCommandType}.
+     *
+     * @param xpdfCommandType the {@code XpdfCommandType} to get command for
+     * @return a {@code Path}
+     * @since 4.4.0
+     */
     public static String getBinCommand(XpdfCommandType xpdfCommandType) throws IOException {
         switch (xpdfCommandType) {
             case PDF_TEXT:
@@ -114,9 +120,14 @@ public class XpdfUtils {
         }
     }
 
-    //todo: add proper javadoc
-    //      this is the method that makes bin accessible to OS
-    public static void createTemporaryBin(XpdfCommandType xpdfCommandType) {
+    /**
+     * Extracts the bin resource for a given {@code XpdfCommandType} to an OS-accessible directory.
+     *
+     * @param xpdfCommandType the {@code XpdfCommandType} to extract bin resource for
+     * @return a {@code Path}
+     * @since 4.4.0
+     */
+    public static void createTemporaryBin(XpdfCommandType xpdfCommandType) throws IOException {
         // get temporary bin path
         final Path tempBinPath;
         switch (xpdfCommandType) {
@@ -146,11 +157,7 @@ public class XpdfUtils {
             throw new XpdfRuntimeException("Unable to locate xpdf binaries");
         }
 
-        try {
-            FileUtils.copyInputStreamToFile(binResourceStream, tempBinPath.toFile());
-        } catch (Exception e) {
-            throw new XpdfRuntimeException("Unable to copy xpdf binaries to directory accessible by OS", e);
-        }
+        FileUtils.copyInputStreamToFile(binResourceStream, tempBinPath.toFile());
     }
 
     //todo: add a unit test for this switch (and ALL switches in codebase) that verify all cases accounted for
