@@ -1,12 +1,15 @@
 package io.xpdftools.pdftext;
 
-import io.xpdftools.common.*;
+import io.xpdftools.common.XpdfCommandType;
+import io.xpdftools.common.XpdfTool;
+import io.xpdftools.common.exception.*;
+import io.xpdftools.common.util.ReadInputStreamTask;
+import io.xpdftools.common.util.XpdfUtils;
 import lombok.Builder;
 import lombok.val;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -15,14 +18,14 @@ import java.util.concurrent.Executors;
 /**
  * A wrapper of the Xpdf command line tool <em>pdftotext</em>.
  *
- * <p> {@code PdfTextTool} automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
- * The {@link #process process} method invokes the native library to extract text from your PDF file.
+ * <p> {@code PdfTextTool} automatically configures itself to target the <em>pdftotext</em> executable native to your OS and JVM architecture.
+ * The {@link #process process} method invokes the command to extract text from your PDF file.
  *
  * @author Cody Frehr
  * @since 4.4.0
  */
 @Builder
-public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
+public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     /**
      * The command type.
@@ -39,35 +42,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     // should you properly shutdown when done?
 //    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    //todo: javadoc
-    public static class PdfTextToolBuilder {
-
-        //todo: javadoc
-        public PdfTextTool build() {
-            // configure defaultOutputDirectory
-            val defaultOutputDirectoryBuilder = defaultOutputDirectory == null
-                    ? XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile()
-                    : defaultOutputDirectory;
-            try {
-                if (!Files.exists(defaultOutputDirectoryBuilder.toPath())) {
-                    defaultOutputDirectoryBuilder.mkdirs();
-                }
-                if (!defaultOutputDirectoryBuilder.isDirectory()) {
-                    throw new XpdfRuntimeException("The default output directory must be a directory");
-                }
-            } catch (Exception e) {
-                throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
-            }
-
-            return new PdfTextTool(defaultOutputDirectoryBuilder);
-        }
-    }
-
-    //todo: add proper javadoc
-//    public PdfTextTool() {
-//        this.defaultOutputDirectory = XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
-//    }
-
     //todo: should throw better exception type for constructor, not runtime exception?
     //todo: whats the best way to distribute resources?
     //      this solution copies binaries resource from inside jar to a directory outside of jar which accessible to client OS...
@@ -82,42 +56,49 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     //todo: add unit tests to ensure all os/bit value combos have resource
     //todo: add proper javadoc (fix description, add params, etc)
     //todo: clean up exception handling in all constructors
-    /**
-     * Creates an instance of {@code PdfTextTool} and configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
-     *
-     * @since 4.4.0
-     */
-//    public PdfTextTool(String defaultOutputDirectory) {
-//        //todo: what if provided default output directory is null??
-//        try {
-//            this.defaultOutputDirectory = Paths.get(defaultOutputDirectory).toFile();
-//
-//            if (!this.defaultOutputDirectory.isDirectory()) {
-//                throw new XpdfRuntimeException("The default output directory must be a directory");
-//            }
-//        } catch (Exception e) {
-//            throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
-//        }
-//    }
+    //todo: javadoc
+    public static class PdfTextToolBuilder {
 
-    //todo: is "process" really the most friendly name for this?
-    // maybe you should just drop the interface and simplify this
+        public PdfTextTool build() {
+            val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
+
+            return new PdfTextTool(defaultOutputDirectoryBuilder);
+        }
+
+        protected File configureDefaultOutputDirectory() {
+            if (defaultOutputDirectory == null) {
+                return XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
+            } else {
+                try {
+                    if (!defaultOutputDirectory.isDirectory()) {
+                        throw new XpdfRuntimeException("The default output directory must be a directory");
+                    }
+                } catch (Exception e) {
+                    throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
+                }
+                return defaultOutputDirectory;
+            }
+        }
+    }
+
+    //todo: maybe you should just drop the interface and simplify this
     //todo: add @NotNull to public method parameters
     //todo: break out logic into smaller methods
     /**
      * Gets text from a PDF file.
      *
-     * <p> This method invokes the <em>pdftotext</em> command with a given set of arguments.
+     * <p> This method executes the <em>pdftotext</em> command with a given set of arguments.
      * Once processing is complete, it returns the text {@code File} that the text was extracted into.
      *
      * @param request the command arguments
      * @return the PDF text {@code File}
      * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
-     * @throws XpdfProcessingException if <em>pdftotext</em> command returns non-zero exit code
+     * @throws XpdfExecutionException if <em>pdftotext</em> command returns non-zero exit code
+     * @throws XpdfProcessingException if any other exception occurs during processing
      * @since 4.4.0
      */
     @Override
-    public PdfTextResponse process(PdfTextRequest request) throws XpdfProcessingException, XpdfValidationException {
+    public PdfTextResponse process(PdfTextRequest request) throws XpdfException {
         val executorService = Executors.newSingleThreadExecutor();
 
         try {
@@ -139,16 +120,14 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             XpdfUtils.createTemporaryBin(XPDF_COMMAND_TYPE);
 
             // get commands
-            //todo: how can you be sure user is not injecting malicious arguments into file path..?
-            // need to verify args better..
-            val commands = new ArrayList<String>();
-            commands.add(XpdfUtils.getBinCommand(XPDF_COMMAND_TYPE));
-            commands.addAll(getCommandOptions(request.getOptions()));
-            commands.add(request.getPdfFile().getCanonicalPath());
-            commands.add(textFile.getCanonicalPath());
+            val commandParts = new ArrayList<String>();
+            commandParts.add(XpdfUtils.getBinCommand(XPDF_COMMAND_TYPE));
+            commandParts.addAll(getCommandOptions(request.getOptions()));
+            commandParts.add(request.getPdfFile().getCanonicalPath());
+            commandParts.add(textFile.getCanonicalPath());
 
             // process commands
-            val processBuilder = new ProcessBuilder(commands.toArray(new String[0]));
+            val processBuilder = new ProcessBuilder(commandParts.toArray(new String[0]));
             val process = processBuilder.start();
 
             //todo: log output
@@ -186,19 +165,24 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                         break;
                 }
 
-                throw new XpdfProcessingException(standardOutput, errorOutput, message);
+                throw new XpdfExecutionException(standardOutput, errorOutput, message);
             }
-        } catch (XpdfProcessingException | XpdfValidationException | XpdfRuntimeException e) {
+        } catch (XpdfException | XpdfRuntimeException e) {
             throw e;
         } catch (Exception e) {
-            //todo: should we be throwing checked or unchecked exceptions?
-            throw new XpdfRuntimeException(e);
+            throw new XpdfProcessingException(e);
         } finally {
             executorService.shutdown();
         }
     }
 
-    //todo: add some kind of javadoc
+    /**
+     * Gets the options which can be invoked alongside the command.
+     *
+     * @param request the command arguments
+     * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
+     * @since 4.4.0
+     */
     protected void validate(PdfTextRequest request) throws XpdfValidationException {
         // verify files
         if (!request.getPdfFile().exists())
@@ -225,9 +209,18 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         }
 
         //todo: what other validation would be helpful?
+
+        //todo: how can you be sure user is not injecting malicious arguments into file path, or other string fields on request?
+        // need to verify if possible to do this, and prevent..
     }
 
-    //todo: add some kind of javadoc
+    /**
+     * Gets the options to be invoked alongside the command.
+     *
+     * @param options the command options as {@code PdfTextOptions}
+     * @return the command options as {@code List<String>}
+     * @since 4.4.0
+     */
     protected List<String> getCommandOptions(PdfTextOptions options) {
         if (options == null)
             return Collections.emptyList();
@@ -325,4 +318,5 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
         return args;
     }
+
 }

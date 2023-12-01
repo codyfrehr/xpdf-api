@@ -67,4 +67,5 @@ public enum PdfTextFormat {
      * @since 4.4.0
      */
     TABLE,
+
 }

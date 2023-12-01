@@ -1,4 +1,4 @@
-import io.xpdftools.common.XpdfException;
+import io.xpdftools.common.exception.XpdfException;
 import io.xpdftools.pdftext.*;
 import lombok.val;
 

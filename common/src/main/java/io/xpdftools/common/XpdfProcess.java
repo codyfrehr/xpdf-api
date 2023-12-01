@@ -1,5 +1,7 @@
 package io.xpdftools.common;
 
+import io.xpdftools.common.exception.XpdfException;
+
 import java.util.List;
 
 //todo: do you really need this abstract class?
@@ -10,4 +12,5 @@ import java.util.List;
 public abstract class XpdfProcess<Request, Response> implements XpdfTool<Request, Response> {
     protected abstract List<String> getCommandOptions(Request request);
     protected abstract void validate(Request request) throws XpdfException;
+
 }
