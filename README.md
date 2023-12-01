@@ -40,4 +40,13 @@ c++ stuff:
     **** see if you get replies on your xpdf forum post... https://forum.xpdfreader.com/viewforum.php?f=3
 - exe maven plugin: https://www.mojohaus.org/exec-maven-plugin/examples/example-exec-using-executabledependency.html
 - exe maven plugin: https://support.huaweicloud.com/intl/en-us/codeci_faq/codeci_faq_1036.html
-- 
+
+- c++ NEXT STEPS:
+  - video explaining how to build c++ project: https://www.youtube.com/watch?v=AJRGU_XgVMQ&list=WL&index=34
+    - do this yourself and build static windows library that you can import into this project and test running via JNA.
+  - next, build xpdf library from source code and test running via JNA
+    - you may need to alter source code to build as static lib instead of executable (add_executable() in xpdf/CMakeLists.txt)
+    - https://cmake.org/cmake/help/latest/command/add_library.html
+    - got all this JNI stuff to work! just need to figure out how to compile xpdf stuff in windows.
+      part of problem is figuring out linking and stuff like that. seems like you would need to create header file for pdftext.cc.
+      before going any further on this, really need to understand better how c++ works and compile process works and linking, etc
