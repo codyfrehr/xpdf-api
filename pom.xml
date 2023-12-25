@@ -31,11 +31,11 @@
             -->
     <properties>
         <junit.version>5.10.1</junit.version>
-        <kotlin.version>1.9.21</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+        <kotlin.version>1.9.22</kotlin.version>
         <lombok.version>1.18.28</lombok.version>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <!--todo: should you specify plugin versions..?-->
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
@@ -103,7 +103,7 @@
             <dependency>
                 <groupId>io.mockk</groupId>
                 <artifactId>mockk-jvm</artifactId>
-                <version>1.13.8</version>
+                <version>1.12.8</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -187,18 +187,6 @@
                     <extensions>true</extensions>
                     <executions>
                         <execution>
-                            <id>compile</id>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                            <configuration>
-                                <sourceDirs>
-                                    <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                                    <sourceDir>${project.basedir}/src/main/java</sourceDir>
-                                </sourceDirs>
-                            </configuration>
-                        </execution>
-                        <execution>
                             <id>test-compile</id>
                             <goals>
                                 <goal>test-compile</goal>
@@ -224,8 +212,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
@@ -236,19 +222,8 @@
                     </configuration>
                     <executions>
                         <execution>
-                            <id>default-compile</id>
-                            <phase>none</phase>
-                        </execution>
-                        <execution>
                             <id>default-testCompile</id>
                             <phase>none</phase>
-                        </execution>
-                        <execution>
-                            <id>java-compile</id>
-                            <phase>compile</phase>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
                         </execution>
                         <execution>
                             <id>java-test-compile</id>
