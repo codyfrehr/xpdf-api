@@ -102,7 +102,7 @@
             <!--test-->
             <dependency>
                 <groupId>io.mockk</groupId>
-                <artifactId>mockk</artifactId>
+                <artifactId>mockk-jvm</artifactId>
                 <version>1.13.8</version>
                 <scope>test</scope>
             </dependency>
@@ -153,7 +153,7 @@
         <!--test-->
         <dependency>
             <groupId>io.mockk</groupId>
-            <artifactId>mockk</artifactId>
+            <artifactId>mockk-jvm</artifactId>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
