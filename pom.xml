@@ -101,6 +101,12 @@
             </dependency>
             <!--test-->
             <dependency>
+                <groupId>io.kotest</groupId>
+                <artifactId>kotest-assertions-core-jvm</artifactId>
+                <version>5.8.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>io.mockk</groupId>
                 <artifactId>mockk-jvm</artifactId>
                 <version>1.12.8</version>
@@ -118,6 +124,7 @@
                 <version>3.24.2</version>
                 <scope>test</scope>
             </dependency>
+            <!--todo: 1.8.10 also comes with io.kotest... what should we do with duplicates..? -->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib</artifactId>
@@ -157,6 +164,10 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <!--test-->
+        <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-assertions-core-jvm</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.mockk</groupId>
             <artifactId>mockk-jvm</artifactId>

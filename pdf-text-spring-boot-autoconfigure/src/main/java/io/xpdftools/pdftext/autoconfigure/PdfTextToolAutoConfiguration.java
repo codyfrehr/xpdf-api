@@ -1,6 +1,5 @@
 package io.xpdftools.pdftext.autoconfigure;
 
-import io.xpdftools.common.XpdfCommandType;
 import io.xpdftools.common.util.XpdfUtils;
 import io.xpdftools.pdftext.PdfTextTool;
 import io.xpdftools.pdftext.config.PdfTextToolConfig;
@@ -42,9 +41,8 @@ public class PdfTextToolAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public PdfTextToolConfig pdfTextToolConfig() throws IOException {
-
         String defaultOutputDirectory = pdfTextToolProperties.getDefaultOutputDirectory() == null
-                ? XpdfUtils.getTemporaryOutputDirectory(XpdfCommandType.PDF_TEXT).toFile().getCanonicalPath()
+                ? XpdfUtils.getPdfTextOutPath().toFile().getCanonicalPath()
                 : pdfTextToolProperties.getDefaultOutputDirectory();
 
         PdfTextToolConfig pdfTextToolConfig = new PdfTextToolConfig();
