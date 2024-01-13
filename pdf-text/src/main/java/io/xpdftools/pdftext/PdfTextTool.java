@@ -7,6 +7,7 @@ import io.xpdftools.common.util.ReadInputStreamTask;
 import io.xpdftools.common.util.XpdfUtils;
 import lombok.Builder;
 import lombok.val;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
         protected File configureDefaultOutputDirectory() {
             if (defaultOutputDirectory == null) {
-                return XpdfUtils.getTemporaryOutputDirectory(XPDF_COMMAND_TYPE).toFile();
+                return XpdfUtils.getPdfTextOutPath().toFile();
             } else {
                 try {
                     if (!defaultOutputDirectory.isDirectory()) {
@@ -116,12 +117,20 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             // create output directory if not exists
             textFile.getParentFile().mkdir();
 
-            // create temp bin if not exists
-            XpdfUtils.createTemporaryBin(XPDF_COMMAND_TYPE);
+            //todo: should this really be checked everytime..?
+            //      maybe it should just be checked/created once at startup
+            // create bin resource on an OS-accessible directory
+            if (!XpdfUtils.getPdfTextLocalPath().toFile().exists()) {
+                val binResourceStream = XpdfUtils.class.getClassLoader().getResourceAsStream(XpdfUtils.getPdfTextResourceName());
+                if (binResourceStream == null) {
+                    throw new XpdfRuntimeException("Unable to locate Xpdf binaries");
+                }
+                FileUtils.copyInputStreamToFile(binResourceStream, XpdfUtils.getPdfTextLocalPath().toFile());
+            }
 
             // get commands
             val commandParts = new ArrayList<String>();
-            commandParts.add(XpdfUtils.getBinCommand(XPDF_COMMAND_TYPE));
+            commandParts.add(XpdfUtils.getPdfTextLocalPath().toFile().getCanonicalPath());
             commandParts.addAll(getCommandOptions(request.getOptions()));
             commandParts.add(request.getPdfFile().getCanonicalPath());
             commandParts.add(textFile.getCanonicalPath());
