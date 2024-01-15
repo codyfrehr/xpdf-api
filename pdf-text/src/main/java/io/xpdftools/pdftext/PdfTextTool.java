@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static io.xpdftools.common.util.XpdfUtils.*;
+import static io.xpdftools.common.util.XpdfUtils.getPdfTextLocalPath;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -33,6 +35,12 @@ import static java.util.Collections.emptyList;
  */
 @Builder
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
+
+    /**
+     * The {@code Path} to the <em>pdftotext</em> library that should be invoked.
+     * By default, the library included with this project will be invoked.
+     */
+    protected final Path libraryPath;
 
     /**
      * The default directory that output text {@code Files} will be written to if not specified in {@code PdfTextRequest}.
@@ -67,31 +75,37 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     public static class PdfTextToolBuilder {
 
         public PdfTextTool build() {
-            configureResources();
-
+            val libraryPathBuilder = configureLibraryPath();
             val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
             val timeoutMillisecondsBuilder = configureTimeoutMilliseconds();
 
-            return new PdfTextTool(defaultOutputDirectoryBuilder, timeoutMillisecondsBuilder);
+            return new PdfTextTool(libraryPathBuilder, defaultOutputDirectoryBuilder, timeoutMillisecondsBuilder);
         }
 
         //todo: is javadoc needed for lombok stuff? can lombok stuff even be included by javadoc plugin??
         /**
-         * Copies <em>pdftotext</em> library from project resources to OS-accessible directory on local system.
+         * Configures path to <em>pdftotext</em> library.
          *
          * @since 4.4.0
          */
-        protected void configureResources() {
-            if (!getPdfTextLocalPath().toFile().exists()) {
-                val binResourceStream = XpdfUtils.class.getClassLoader().getResourceAsStream(getPdfTextResourceName());
-                if (binResourceStream == null) {
-                    throw new XpdfRuntimeException("Unable to locate Xpdf binaries in project resources");
+        protected Path configureLibraryPath() {
+            if (libraryPath == null) {
+                // copy library from project resources to OS-accessible directory on local system
+                val pdfTextLocalPath = getPdfTextLocalPath();
+                if (!pdfTextLocalPath.toFile().exists()) {
+                    val binResourceStream = XpdfUtils.class.getClassLoader().getResourceAsStream(getPdfTextResourceName());
+                    if (binResourceStream == null) {
+                        throw new XpdfRuntimeException("Unable to locate Xpdf binaries in project resources");
+                    }
+                    try {
+                        FileUtils.copyInputStreamToFile(binResourceStream, pdfTextLocalPath.toFile());
+                    } catch (IOException e) {
+                        throw new XpdfRuntimeException("Unable to copy Xpdf binaries to local system");
+                    }
                 }
-                try {
-                    FileUtils.copyInputStreamToFile(binResourceStream, getPdfTextLocalPath().toFile());
-                } catch (IOException e) {
-                    throw new XpdfRuntimeException("Unable to copy Xpdf binaries to local system");
-                }
+                return pdfTextLocalPath;
+            } else {
+                return libraryPath;
             }
         }
 
@@ -105,7 +119,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
                 return getPdfTextOutPath().toFile();
             } else {
                 if (!defaultOutputDirectory.isDirectory()) {
-                    throw new XpdfRuntimeException("The default output directory must be a directory");
+                    throw new XpdfRuntimeException("The default output directory does not exist");
                 }
                 return defaultOutputDirectory;
             }
@@ -126,7 +140,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     }
 
     //todo: maybe you should just drop the interface and simplify this
-    //todo: add @NotNull to public method parameters
+    //todo: add @NotNull to all methods parameters where should not be null?
     /**
      * Gets text from a PDF file.
      *
@@ -294,7 +308,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     protected List<String> getCommandParts(PdfTextRequest request, File textFile) throws IOException {
         val commandParts = new ArrayList<String>();
 
-        commandParts.add(getPdfTextLocalPath().toFile().getCanonicalPath());
+        commandParts.add(libraryPath.toFile().getCanonicalPath());
         commandParts.addAll(getCommandOptions(request.getOptions()));
         commandParts.add(request.getPdfFile().getCanonicalPath());
         commandParts.add(textFile.getCanonicalPath());

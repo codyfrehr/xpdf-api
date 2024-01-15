@@ -7,6 +7,9 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.junit5.MockKExtension
 import io.xpdftools.common.exception.XpdfExecutionException
 import io.xpdftools.common.exception.XpdfProcessingException
 import io.xpdftools.common.exception.XpdfRuntimeException
@@ -15,6 +18,7 @@ import io.xpdftools.common.util.ReadInputStreamTask
 import io.xpdftools.common.util.XpdfUtils
 import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.io.ByteArrayInputStream
@@ -26,6 +30,17 @@ import java.util.*
 import java.util.UUID.randomUUID
 
 class PdfTextToolTest {
+
+    //todo: some kind of setup like this might be nicer...
+//    private val libraryPath = mockk<Path>(relaxed = true)
+//    private val defaultOutputDirectory = mockk<File>(relaxed = true)
+//    private val timeoutMilliseconds = 10L
+//    private val pdfTextTool = PdfTextTool.builder()
+//            .libraryPath(libraryPath)
+//            .defaultOutputDirectory(defaultOutputDirectory)
+//            .timeoutMilliseconds(timeoutMilliseconds)
+//            .build()
+
     private val pdfTextTool = PdfTextTool.builder().build()
 
     @Test
@@ -141,7 +156,7 @@ class PdfTextToolTest {
         }
 
         // when then
-        shouldThrowWithMessage<XpdfRuntimeException>("The default output directory must be a directory") {
+        shouldThrowWithMessage<XpdfRuntimeException>("The default output directory does not exist") {
             PdfTextTool.builder().defaultOutputDirectory(defaultOutputDirectory).build()
         }
     }
@@ -417,11 +432,6 @@ class PdfTextToolTest {
     @Test
     fun `should get command parts`() {
         // given
-        mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextLocalPath() } returns mockk(relaxed = true) {
-            every { toFile().canonicalPath } returns "cmdPath"
-        }
-
         val request = mockk<PdfTextRequest>(relaxed = true) {
             every { pdfFile.canonicalPath } returns "pdfPath"
         }
@@ -430,6 +440,11 @@ class PdfTextToolTest {
             every { canonicalPath } returns "textPath"
         }
 
+        val libraryPath = mockk<Path> {
+            every { toFile().canonicalPath } returns "cmdPath"
+        }
+
+        val pdfTextTool = PdfTextTool.builder().libraryPath(libraryPath).build()
         val pdfTextToolSpy = spyk(pdfTextTool) {
             every { getCommandOptions(any()) } returns listOf("opt1", "opt2")
         }
