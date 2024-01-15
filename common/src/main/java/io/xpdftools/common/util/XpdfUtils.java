@@ -45,6 +45,16 @@ public class XpdfUtils {
     }
 
     /**
+     * Gets the maximum amount of time in milliseconds allotted to pdftotext process before timing out.
+     *
+     * @return the timeout duration in milliseconds as {@code Long}
+     * @since 4.4.0
+     */
+    static public Long getPdfTextTimeoutMilliseconds() {
+        return 0L;
+    }
+
+    /**
      * Gets the name of the pdftotext library.
      *
      * @return the library name as {@code String}

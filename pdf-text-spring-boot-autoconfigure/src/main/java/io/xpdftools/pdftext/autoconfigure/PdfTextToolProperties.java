@@ -9,5 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class PdfTextToolProperties {
 
     private String defaultOutputDirectory;
+    private Long timeoutMilliseconds;
 
 }
