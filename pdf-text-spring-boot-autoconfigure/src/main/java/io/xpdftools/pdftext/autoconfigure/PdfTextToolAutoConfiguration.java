@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
-import static io.xpdftools.pdftext.config.PdfTextToolConfigParams.DEFAULT_OUTPUT_DIRECTORY;
-import static io.xpdftools.pdftext.config.PdfTextToolConfigParams.TIMEOUT_MILLISECONDS;
+import static io.xpdftools.pdftext.config.PdfTextToolConfigParams.*;
 
 //note: followed this guide at first:
 //      https://www.baeldung.com/spring-boot-custom-starter
@@ -42,6 +42,10 @@ public class PdfTextToolAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public PdfTextToolConfig pdfTextToolConfig() throws IOException {
+        Path libraryPath = pdfTextToolProperties.getLibraryPath() == null
+                ? XpdfUtils.getPdfTextLocalPath()
+                : pdfTextToolProperties.getLibraryPath();
+
         String defaultOutputDirectory = pdfTextToolProperties.getDefaultOutputDirectory() == null
                 ? XpdfUtils.getPdfTextOutPath().toFile().getCanonicalPath()
                 : pdfTextToolProperties.getDefaultOutputDirectory();
@@ -51,6 +55,7 @@ public class PdfTextToolAutoConfiguration {
                 : pdfTextToolProperties.getTimeoutMilliseconds();
 
         PdfTextToolConfig pdfTextToolConfig = new PdfTextToolConfig();
+        pdfTextToolConfig.put(LIBRARY_PATH, libraryPath);
         pdfTextToolConfig.put(DEFAULT_OUTPUT_DIRECTORY, defaultOutputDirectory);
         pdfTextToolConfig.put(TIMEOUT_MILLISECONDS, timeoutMilliseconds);
 
@@ -61,6 +66,7 @@ public class PdfTextToolAutoConfiguration {
     @ConditionalOnMissingBean
     public PdfTextTool pdfTextTool(PdfTextToolConfig pdfTextToolConfig) {
         return PdfTextTool.builder()
+                .libraryPath((Path) pdfTextToolConfig.get(LIBRARY_PATH))
                 .defaultOutputDirectory(new File((String) pdfTextToolConfig.get(DEFAULT_OUTPUT_DIRECTORY)))
                 .timeoutMilliseconds((Long) pdfTextToolConfig.get(TIMEOUT_MILLISECONDS))
                 .build();
