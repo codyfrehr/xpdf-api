@@ -13,6 +13,7 @@ import io.xpdftools.common.exception.XpdfRuntimeException
 import io.xpdftools.common.exception.XpdfValidationException
 import io.xpdftools.common.util.ReadInputStreamTask
 import io.xpdftools.common.util.XpdfUtils
+import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -26,6 +27,77 @@ import java.util.UUID.randomUUID
 
 class PdfTextToolTest {
     private val pdfTextTool = PdfTextTool.builder().build()
+
+    @Test
+    fun `should initialize and copy pdf text library to local system`() {
+        // given
+        mockkStatic(XpdfUtils::class)
+        every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns false
+
+        mockkStatic(FileUtils::class)
+        every { FileUtils.copyInputStreamToFile(any(), any()) } just runs
+
+        // when
+        PdfTextTool.builder().build()
+
+        // then
+        verify { FileUtils.copyInputStreamToFile(any(), any()) }
+
+        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(FileUtils::class)
+    }
+
+    @Test
+    fun `should initialize and not copy pdf text library to local system`() {
+        // given
+        mockkStatic(XpdfUtils::class)
+        every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns true
+
+        mockkStatic(FileUtils::class)
+        every { FileUtils.copyInputStreamToFile(any(), any()) } just runs
+
+        // when
+        PdfTextTool.builder().build()
+
+        // then
+        verify(exactly = 0) { FileUtils.copyInputStreamToFile(any(), any()) }
+
+        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(FileUtils::class)
+    }
+
+    @Test
+    fun `should throw exception when initializing if unable to get pdf text library resource stream`() {
+        // given
+        mockkStatic(XpdfUtils::class)
+        every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextResourceName() } returns "notexists"
+
+        // when then
+        shouldThrowWithMessage<XpdfRuntimeException>("Unable to locate Xpdf binaries in project resources") {
+            PdfTextTool.builder().build()
+        }
+
+        unmockkStatic(XpdfUtils::class)
+    }
+
+    @Test
+    fun `should throw exception when initializing if unable to copy pdf text library to local system`() {
+        // given
+        mockkStatic(XpdfUtils::class)
+        every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns false
+
+        mockkStatic(FileUtils::class)
+        every { FileUtils.copyInputStreamToFile(any(), any()) } throws IOException()
+
+        // when then
+        shouldThrowWithMessage<XpdfRuntimeException>("Unable to copy Xpdf binaries to local system") {
+            PdfTextTool.builder().build()
+        }
+
+        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(FileUtils::class)
+    }
 
     @Test
     fun `should initialize and get default output directory from xpdf utils`() {

@@ -54,8 +54,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     //todo: instead of copying resource every time an instance is created, a check should first be performed to make sure it doesnt already exist
     //      this same check should also be done in the process() method
     //      maybe move some of this code into common..
-    //todo: add unit tests to ensure all os/bit value combos have resource
-    //todo: add proper javadoc (fix description, add params, etc)
     //todo: clean up exception handling in all constructors
     //todo: javadoc
     public static class PdfTextToolBuilder {
@@ -68,7 +66,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             return new PdfTextTool(defaultOutputDirectoryBuilder);
         }
 
-        //todo: add tests!
         /**
          * Copies <em>pdftotext</em> library from project resources to OS-accessible directory on local system.
          *
@@ -107,7 +104,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     //todo: maybe you should just drop the interface and simplify this
     //todo: add @NotNull to public method parameters
-    //todo: break out logic into smaller methods
     /**
      * Gets text from a PDF file.
      *
@@ -217,12 +213,15 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         if (request.getOptions() != null) {
             val pageStart = request.getOptions().getPageStart();
             val pageEnd = request.getOptions().getPageEnd();
-            if (pageStart != null && pageStart < 0)
+            if (pageStart != null && pageStart < 0) {
                 throw new XpdfValidationException("PageStart cannot be less than zero");
-            if (pageEnd != null && pageEnd < 0)
+            }
+            if (pageEnd != null && pageEnd < 0) {
                 throw new XpdfValidationException("PageEnd cannot be less than zero");
-            if (pageStart != null && pageEnd != null && pageStart > pageEnd)
+            }
+            if (pageStart != null && pageEnd != null && pageStart > pageEnd) {
                 throw new XpdfValidationException("PageStart must come before PageEnd");
+            }
         }
 
         //todo: what other validation would be helpful?
@@ -283,8 +282,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      * @since 4.4.0
      */
     protected List<String> getCommandOptions(PdfTextOptions options) {
-        if (options == null)
+        if (options == null) {
             return emptyList();
+        }
 
         val args = new ArrayList<String>();
 
@@ -292,12 +292,14 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 //        args.add("-verbose");
 
         val pageStart = options.getPageStart();
-        if (pageStart != null)
+        if (pageStart != null) {
             args.addAll(asList("-f", pageStart.toString()));
+        }
 
         val pageEnd = options.getPageEnd();
-        if (pageEnd != null)
+        if (pageEnd != null) {
             args.addAll(asList("-l", pageEnd.toString()));
+        }
 
         val format = options.getFormat();
         if (format != null) {
@@ -366,16 +368,19 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         }
 
         val pageBreakIncluded = options.isPageBreakIncluded();
-        if (!pageBreakIncluded)
+        if (!pageBreakIncluded) {
             args.add("-nopgbrk");
+        }
 
         val ownerPassword = options.getOwnerPassword();
-        if (ownerPassword != null)
+        if (ownerPassword != null) {
             args.addAll(asList("-opw", String.format("\"%s\"", ownerPassword)));
+        }
 
         val userPassword = options.getUserPassword();
-        if (userPassword != null)
+        if (userPassword != null) {
             args.addAll(asList("-upw", String.format("\"%s\"", userPassword)));
+        }
 
         return args;
     }
