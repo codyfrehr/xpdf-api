@@ -1,6 +1,5 @@
 package io.xpdftools.pdftext;
 
-import io.xpdftools.common.XpdfCommandType;
 import io.xpdftools.common.XpdfTool;
 import io.xpdftools.common.exception.*;
 import io.xpdftools.common.util.ReadInputStreamTask;
@@ -12,8 +11,14 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executors;
+
+import static io.xpdftools.common.util.XpdfUtils.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
 /**
@@ -29,14 +34,9 @@ import java.util.concurrent.Executors;
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     /**
-     * The command type.
-     */
-    private static final XpdfCommandType XPDF_COMMAND_TYPE = XpdfCommandType.PDF_TEXT;
-
-    /**
      * The directory to which output text {@code Files} will be written if {@code textFile} is not provided in {@code PdfTextRequest}.
      */
-    private final File defaultOutputDirectory;
+    protected final File defaultOutputDirectory;
 
     //todo: are threads managed correctly with process here?
     // should new singleton be declared, or retrieved
@@ -61,21 +61,44 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     public static class PdfTextToolBuilder {
 
         public PdfTextTool build() {
+            configureResources();
+
             val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
 
             return new PdfTextTool(defaultOutputDirectoryBuilder);
         }
 
+        //todo: add tests!
+        /**
+         * Copies <em>pdftotext</em> library from project resources to OS-accessible directory on local system.
+         *
+         * @since 4.4.0
+         */
+        protected void configureResources() {
+            if (!getPdfTextLocalPath().toFile().exists()) {
+                val binResourceStream = XpdfUtils.class.getClassLoader().getResourceAsStream(getPdfTextResourceName());
+                if (binResourceStream == null) {
+                    throw new XpdfRuntimeException("Unable to locate Xpdf binaries in project resources");
+                }
+                try {
+                    FileUtils.copyInputStreamToFile(binResourceStream, getPdfTextLocalPath().toFile());
+                } catch (IOException e) {
+                    throw new XpdfRuntimeException("Unable to copy Xpdf binaries to local system");
+                }
+            }
+        }
+
+        /**
+         * Configures default output directory.
+         *
+         * @since 4.4.0
+         */
         protected File configureDefaultOutputDirectory() {
             if (defaultOutputDirectory == null) {
-                return XpdfUtils.getPdfTextOutPath().toFile();
+                return getPdfTextOutPath().toFile();
             } else {
-                try {
-                    if (!defaultOutputDirectory.isDirectory()) {
-                        throw new XpdfRuntimeException("The default output directory must be a directory");
-                    }
-                } catch (Exception e) {
-                    throw new XpdfRuntimeException("Unable to create temporary directory for output text files", e);
+                if (!defaultOutputDirectory.isDirectory()) {
+                    throw new XpdfRuntimeException("The default output directory must be a directory");
                 }
                 return defaultOutputDirectory;
             }
@@ -91,8 +114,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      * <p> This method executes the <em>pdftotext</em> command with a given set of arguments.
      * Once processing is complete, it returns the text {@code File} that the text was extracted into.
      *
-     * @param request the command arguments
-     * @return the PDF text {@code File}
+     * @param request the {@code PdfTextRequest}
+     * @return the {@code PdfTextResponse} containing {@code File} with PDF text
      * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
      * @throws XpdfExecutionException if <em>pdftotext</em> command returns non-zero exit code
      * @throws XpdfProcessingException if any other exception occurs during processing
@@ -107,44 +130,23 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             validate(request);
 
             // configure output text file
-            final File textFile;
-            if (request.getTextFile() != null) {
-                textFile = request.getTextFile();
-            } else {
-                textFile = Paths.get(defaultOutputDirectory.getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
-            }
-
-            // create output directory if not exists
-            textFile.getParentFile().mkdir();
-
-            //todo: should this really be checked everytime..?
-            //      maybe it should just be checked/created once at startup
-            // create bin resource on an OS-accessible directory
-            if (!XpdfUtils.getPdfTextLocalPath().toFile().exists()) {
-                val binResourceStream = XpdfUtils.class.getClassLoader().getResourceAsStream(XpdfUtils.getPdfTextResourceName());
-                if (binResourceStream == null) {
-                    throw new XpdfRuntimeException("Unable to locate Xpdf binaries");
-                }
-                FileUtils.copyInputStreamToFile(binResourceStream, XpdfUtils.getPdfTextLocalPath().toFile());
-            }
+            val textFile = initializeTextFile(request);
 
             // get commands
-            val commandParts = new ArrayList<String>();
-            commandParts.add(XpdfUtils.getPdfTextLocalPath().toFile().getCanonicalPath());
-            commandParts.addAll(getCommandOptions(request.getOptions()));
-            commandParts.add(request.getPdfFile().getCanonicalPath());
-            commandParts.add(textFile.getCanonicalPath());
+            val commandParts = getCommandParts(request, textFile);
 
             // process commands
-            val processBuilder = new ProcessBuilder(commandParts.toArray(new String[0]));
+            val processBuilder = new ProcessBuilder(commandParts);
             val process = processBuilder.start();
 
+            // read process output
             //todo: log output
             //todo: should you do this after waiting for process to finish, so that processing of pdf does not hang on waiting for std out?
             // or makes sense as is?
             val standardOutput = executorService.submit(new ReadInputStreamTask(process.getInputStream())).get();
             val errorOutput = executorService.submit(new ReadInputStreamTask(process.getErrorStream())).get();
 
+            // wait for process finish
             //todo: configurable timeout?
             val exitCode = process.waitFor();
 
@@ -186,22 +188,28 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     }
 
     /**
-     * Gets the options which can be invoked alongside the command.
+     * Validates the {@code PdfTextRequest}.
      *
-     * @param request the command arguments
+     * @param request the {@code PdfTextRequest}
      * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
      * @since 4.4.0
      */
     protected void validate(PdfTextRequest request) throws XpdfValidationException {
-        // verify files
-        if (!request.getPdfFile().exists())
-            throw new XpdfValidationException("PdfFile does not exist");
+        if (request == null) {
+            throw new XpdfValidationException("PdfTextRequest cannot be null");
+        }
 
+        // check pdf file exists
+        if (!request.getPdfFile().exists()) {
+            throw new XpdfValidationException("PdfFile does not exist");
+        }
+
+        // check valid text file path
         if (request.getTextFile() != null) {
             try {
                 request.getTextFile().getCanonicalPath();
             } catch (IOException e) {
-                throw new XpdfValidationException("TxtFile does not have a valid path");
+                throw new XpdfValidationException("Invalid path given for TextFile");
             }
         }
 
@@ -224,7 +232,51 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     }
 
     /**
-     * Gets the options to be invoked alongside the command.
+     * Gets the output text {@code File} to write to and creates parent directory.
+     *
+     * @param request the {@code PdfTextRequest}
+     * @return the output text {@code File}
+     * @throws IOException if the canonical path of default output directory is invalid
+     * @since 4.4.0
+     */
+    protected File initializeTextFile(PdfTextRequest request) throws IOException {
+        final File textFile;
+        if (request.getTextFile() != null) {
+            // use text file provided in request
+            textFile = request.getTextFile();
+        } else {
+            // create text file from default output directory
+            textFile = Paths.get(defaultOutputDirectory.getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
+        }
+
+        // create output directory if not exists
+        textFile.getParentFile().mkdir();
+
+        return textFile;
+    }
+
+    /**
+     * Gets the complete list of command parts to be executed in {@code Process}.
+     *
+     * @param request the {@code PdfTextRequest}
+     * @param textFile the output text {@code File}
+     * @return the command parts as {@code List<String>}
+     * @throws IOException if the canonical path of local <em>pdftotext</em> library is invalid
+     * @since 4.4.0
+     */
+    protected List<String> getCommandParts(PdfTextRequest request, File textFile) throws IOException {
+        val commandParts = new ArrayList<String>();
+
+        commandParts.add(getPdfTextLocalPath().toFile().getCanonicalPath());
+        commandParts.addAll(getCommandOptions(request.getOptions()));
+        commandParts.add(request.getPdfFile().getCanonicalPath());
+        commandParts.add(textFile.getCanonicalPath());
+
+        return commandParts;
+    }
+
+    /**
+     * Gets the options to be invoked alongside the <em>pdftotext</em> command.
      *
      * @param options the command options as {@code PdfTextOptions}
      * @return the command options as {@code List<String>}
@@ -232,7 +284,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      */
     protected List<String> getCommandOptions(PdfTextOptions options) {
         if (options == null)
-            return Collections.emptyList();
+            return emptyList();
 
         val args = new ArrayList<String>();
 
@@ -241,11 +293,11 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
         val pageStart = options.getPageStart();
         if (pageStart != null)
-            args.addAll(Arrays.asList("-f", pageStart.toString()));
+            args.addAll(asList("-f", pageStart.toString()));
 
         val pageEnd = options.getPageEnd();
         if (pageEnd != null)
-            args.addAll(Arrays.asList("-l", pageEnd.toString()));
+            args.addAll(asList("-l", pageEnd.toString()));
 
         val format = options.getFormat();
         if (format != null) {
@@ -274,22 +326,22 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         if (encoding != null) {
             switch (encoding) {
                 case ASCII_7:
-                    args.addAll(Arrays.asList("-enc", "ASCII7"));
+                    args.addAll(asList("-enc", "ASCII7"));
                     break;
                 case LATIN_1:
-                    args.addAll(Arrays.asList("-enc", "Latin1"));
+                    args.addAll(asList("-enc", "Latin1"));
                     break;
                 case SYMBOL:
-                    args.addAll(Arrays.asList("-enc", "Symbol"));
+                    args.addAll(asList("-enc", "Symbol"));
                     break;
                 case UCS_2:
-                    args.addAll(Arrays.asList("-enc", "UCS-2"));
+                    args.addAll(asList("-enc", "UCS-2"));
                     break;
                 case UTF_8:
-                    args.addAll(Arrays.asList("-enc", "UTF-8"));
+                    args.addAll(asList("-enc", "UTF-8"));
                     break;
                 case ZAPF_DINGBATS:
-                    args.addAll(Arrays.asList("-enc", "ZapfDingbats"));
+                    args.addAll(asList("-enc", "ZapfDingbats"));
                     break;
                 default:
                     throw new XpdfRuntimeException(String.format("Encoding case %s is missing from command options switch statement", encoding.name()));
@@ -300,13 +352,13 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         if (endOfLine != null) {
             switch (endOfLine) {
                 case DOS:
-                    args.addAll(Arrays.asList("-eol", "dos"));
+                    args.addAll(asList("-eol", "dos"));
                     break;
                 case MAC:
-                    args.addAll(Arrays.asList("-eol", "mac"));
+                    args.addAll(asList("-eol", "mac"));
                     break;
                 case UNIX:
-                    args.addAll(Arrays.asList("-eol", "unix"));
+                    args.addAll(asList("-eol", "unix"));
                     break;
                 default:
                     throw new XpdfRuntimeException(String.format("EndOfLine case %s is missing from command options switch statement", endOfLine.name()));
@@ -319,11 +371,11 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
         val ownerPassword = options.getOwnerPassword();
         if (ownerPassword != null)
-            args.addAll(Arrays.asList("-opw", String.format("\"%s\"", ownerPassword)));
+            args.addAll(asList("-opw", String.format("\"%s\"", ownerPassword)));
 
         val userPassword = options.getUserPassword();
         if (userPassword != null)
-            args.addAll(Arrays.asList("-upw", String.format("\"%s\"", userPassword)));
+            args.addAll(asList("-upw", String.format("\"%s\"", userPassword)));
 
         return args;
     }
