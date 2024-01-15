@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static io.xpdftools.pdftext.config.PdfTextToolConfigParams.DEFAULT_OUTPUT_DIRECTORY;
+import static io.xpdftools.pdftext.config.PdfTextToolConfigParams.TIMEOUT_MILLISECONDS;
 
 //note: followed this guide at first:
 //      https://www.baeldung.com/spring-boot-custom-starter
@@ -45,8 +46,13 @@ public class PdfTextToolAutoConfiguration {
                 ? XpdfUtils.getPdfTextOutPath().toFile().getCanonicalPath()
                 : pdfTextToolProperties.getDefaultOutputDirectory();
 
+        Long timeoutMilliseconds = pdfTextToolProperties.getTimeoutMilliseconds() == null
+                ? XpdfUtils.getPdfTextTimeoutMilliseconds()
+                : pdfTextToolProperties.getTimeoutMilliseconds();
+
         PdfTextToolConfig pdfTextToolConfig = new PdfTextToolConfig();
         pdfTextToolConfig.put(DEFAULT_OUTPUT_DIRECTORY, defaultOutputDirectory);
+        pdfTextToolConfig.put(TIMEOUT_MILLISECONDS, timeoutMilliseconds);
 
         return pdfTextToolConfig;
     }
@@ -56,6 +62,7 @@ public class PdfTextToolAutoConfiguration {
     public PdfTextTool pdfTextTool(PdfTextToolConfig pdfTextToolConfig) {
         return PdfTextTool.builder()
                 .defaultOutputDirectory(new File((String) pdfTextToolConfig.get(DEFAULT_OUTPUT_DIRECTORY)))
+                .timeoutMilliseconds((Long) pdfTextToolConfig.get(TIMEOUT_MILLISECONDS))
                 .build();
     }
 

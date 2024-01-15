@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static io.xpdftools.common.util.XpdfUtils.*;
 import static java.util.Arrays.asList;
@@ -34,9 +35,16 @@ import static java.util.Collections.emptyList;
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     /**
-     * The directory to which output text {@code Files} will be written if {@code textFile} is not provided in {@code PdfTextRequest}.
+     * The default directory that output text {@code Files} will be written to if not specified in {@code PdfTextRequest}.
+     * By default, this value will be configured to {@link XpdfUtils#getPdfTextOutPath XpdfUtils.getPdfTextOutPath()}.
      */
     protected final File defaultOutputDirectory;
+
+    /**
+     * The maximum amount of time in milliseconds allotted to <em>pdftotext</em> process before timing out.
+     * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutMilliseconds()}  XpdfUtils.getPdfTextTimeoutMilliseconds()}.
+     */
+    protected final Long timeoutMilliseconds;
 
     //todo: are threads managed correctly with process here?
     // should new singleton be declared, or retrieved
@@ -62,10 +70,12 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             configureResources();
 
             val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
+            val timeoutMillisecondsBuilder = configureTimeoutMilliseconds();
 
-            return new PdfTextTool(defaultOutputDirectoryBuilder);
+            return new PdfTextTool(defaultOutputDirectoryBuilder, timeoutMillisecondsBuilder);
         }
 
+        //todo: is javadoc needed for lombok stuff? can lombok stuff even be included by javadoc plugin??
         /**
          * Copies <em>pdftotext</em> library from project resources to OS-accessible directory on local system.
          *
@@ -98,6 +108,19 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
                     throw new XpdfRuntimeException("The default output directory must be a directory");
                 }
                 return defaultOutputDirectory;
+            }
+        }
+
+        /**
+         * Configures process timeout.
+         *
+         * @since 4.4.0
+         */
+        protected long configureTimeoutMilliseconds() {
+            if (timeoutMilliseconds == null) {
+                return XpdfUtils.getPdfTextTimeoutMilliseconds();
+            } else {
+                return timeoutMilliseconds;
             }
         }
     }
@@ -143,36 +166,41 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             val errorOutput = executorService.submit(new ReadInputStreamTask(process.getErrorStream())).get();
 
             // wait for process finish
-            //todo: configurable timeout?
-            val exitCode = process.waitFor();
-
-            // handle process result
-            if (exitCode == 0) {
-                return PdfTextResponse.builder()
-                        .textFile(textFile)
-                        .standardOutput(standardOutput)
-                        .build();
-            } else {
-                final String message;
-                switch (exitCode) {
-                    case 1:
-                        message = "Error opening the PDF file";
-                        break;
-                    case 2:
-                        message = "Error opening the output file";
-                        break;
-                    case 3:
-                        message = "Error related to PDF permissions";
-                        break;
-                    case 99:
-                        message = "Other Xpdf error";
-                        break;
-                    default:
-                        message = "Unknown Xpdf error";
-                        break;
+            if (process.waitFor(timeoutMilliseconds, TimeUnit.MILLISECONDS)) {
+                // handle process finished
+                if (process.exitValue() == 0) {
+                    return PdfTextResponse.builder()
+                            .textFile(textFile)
+                            .standardOutput(standardOutput)
+                            .build();
+                } else {
+                    final String message;
+                    switch (process.exitValue()) {
+                        case 1:
+                            message = "Error opening the PDF file";
+                            break;
+                        case 2:
+                            message = "Error opening the output file";
+                            break;
+                        case 3:
+                            message = "Error related to PDF permissions";
+                            break;
+                        case 99:
+                            message = "Other Xpdf error";
+                            break;
+                        default:
+                            message = "Unknown Xpdf error";
+                            break;
+                    }
+                    throw new XpdfExecutionException(standardOutput, errorOutput, message);
                 }
-
-                throw new XpdfExecutionException(standardOutput, errorOutput, message);
+            } else {
+                // handle process timeout
+                process.destroy();
+                //todo: what happens to standardOutput and errorOutput, above, in this scenario?
+                //      can they be accessed? is there any special "closing" of stuff that needs to be done?
+                //      ...need better understanding of processes in general...
+                throw new XpdfExecutionException("", "", "Timeout reached before process could finish");
             }
         } catch (XpdfException | XpdfRuntimeException e) {
             throw e;

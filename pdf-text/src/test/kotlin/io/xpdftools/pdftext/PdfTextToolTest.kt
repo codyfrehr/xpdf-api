@@ -147,6 +147,30 @@ class PdfTextToolTest {
     }
 
     @Test
+    fun `should initialize and get timeout from xpdf utils`() {
+        // given
+        mockkStatic(XpdfUtils::class)
+        every { XpdfUtils.getPdfTextTimeoutMilliseconds() } returns 100L
+
+        // when
+        val result = PdfTextTool.builder().build()
+
+        // then
+        result.timeoutMilliseconds shouldBe 100L
+
+        unmockkStatic(XpdfUtils::class)
+    }
+
+    @Test
+    fun `should initialize with timeout`() {
+        // when
+        val result = PdfTextTool.builder().timeoutMilliseconds(100L).build()
+
+        // then
+        result.timeoutMilliseconds shouldBe 100L
+    }
+
+    @Test
     fun `should process`() {
         // given
         val standardOutput = "standardOutput"
@@ -158,7 +182,8 @@ class PdfTextToolTest {
         every { anyConstructed<ProcessBuilder>().start() } returns mockk {
             every { inputStream } returns standardOutputStream
             every { errorStream } returns errorOutputStream
-            every { waitFor() } returns 0
+            every { waitFor(any(), any()) } returns true
+            every { exitValue() } returns 0
         }
 
         mockkConstructor(ReadInputStreamTask::class)
@@ -200,7 +225,8 @@ class PdfTextToolTest {
         every { anyConstructed<ProcessBuilder>().start() } returns mockk {
             every { inputStream } returns standardOutputStream
             every { errorStream } returns errorOutputStream
-            every { waitFor() } returns exitCode
+            every { waitFor(any(), any()) } returns true
+            every { exitValue() } returns exitCode
         }
 
         mockkConstructor(ReadInputStreamTask::class)
@@ -216,6 +242,39 @@ class PdfTextToolTest {
 
         // when then
         shouldThrowWithMessage<XpdfExecutionException>(message) {
+            pdfTextToolSpy.process(mockk())
+        }
+    }
+
+    @Test
+    fun `should throw exception when processing if timout`() {
+        // given
+        val standardOutput = "standardOutput"
+        val errorOutput = "errorOutput"
+        val standardOutputStream = mockk<ByteArrayInputStream>()
+        val errorOutputStream = mockk<ByteArrayInputStream>()
+
+        mockkConstructor(ProcessBuilder::class)
+        every { anyConstructed<ProcessBuilder>().start() } returns mockk {
+            every { inputStream } returns standardOutputStream
+            every { errorStream } returns errorOutputStream
+            every { waitFor(any(), any()) } returns false
+            every { destroy() } just runs
+        }
+
+        mockkConstructor(ReadInputStreamTask::class)
+        every { constructedWith<ReadInputStreamTask>(EqMatcher(standardOutputStream)).call() } returns standardOutput
+        every { constructedWith<ReadInputStreamTask>(EqMatcher(errorOutputStream)).call() } returns errorOutput
+
+        val textFile = mockk<File>()
+        val pdfTextToolSpy = spyk(pdfTextTool) {
+            every { validate(any()) } just runs
+            every { initializeTextFile(any()) } returns textFile
+            every { getCommandParts(any(), any()) } returns mockk()
+        }
+
+        // when then
+        shouldThrowWithMessage<XpdfExecutionException>("Timeout reached before process could finish") {
             pdfTextToolSpy.process(mockk())
         }
     }
