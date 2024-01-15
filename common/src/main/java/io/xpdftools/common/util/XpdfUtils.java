@@ -69,7 +69,6 @@ public class XpdfUtils {
      * This helps to locate the correct Xpdf library for this system in the project resources.
      *
      * @return a representation of OS and bits as {@code String}
-     * @throws XpdfRuntimeException if incompatible OS or JVM bit architecture
      * @since 4.4.0
      */
     static protected String getTargetSystem() {

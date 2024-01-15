@@ -43,6 +43,7 @@ public class PdfTextRequest {
      */
     private final File textFile;
 
+    //todo: why is this not "final"?
     /**
      * Command options to customize processing.
      *

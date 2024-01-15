@@ -149,4 +149,5 @@ class XpdfUtilsTest {
             XpdfUtils.getTargetSystem()
         }
     }
+
 }
