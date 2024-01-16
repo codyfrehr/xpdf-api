@@ -4,11 +4,11 @@ import io.xpdftools.common.util.XpdfUtils;
 import io.xpdftools.pdftext.PdfTextTool;
 import io.xpdftools.pdftext.config.PdfTextToolConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,10 +28,8 @@ import static io.xpdftools.pdftext.config.PdfTextToolConfigParams.*;
 //      but maybe what you can do is allow where bin file gets copied to, to be configurable?
 //todo: then once configs decided on, need to cleanup PdfTextTool autoconfig constructor logic to properly handle config inputs, like so:
 //      https://github.com/eugenp/tutorials/blob/master/spring-boot-modules/spring-boot-custom-starter/greeter-library/src/main/java/com/baeldung/greeter/library/Greeter.java
-//todo: need PdfTextTool constructor for non-autoconfiguration
-//todo: make PdfTextTool use builder pattern
 //todo: javadoc
-@Configuration
+@AutoConfiguration
 @ConditionalOnClass(PdfTextTool.class)
 @EnableConfigurationProperties(PdfTextToolProperties.class)
 public class PdfTextToolAutoConfiguration {
@@ -42,9 +40,9 @@ public class PdfTextToolAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public PdfTextToolConfig pdfTextToolConfig() throws IOException {
-        Path libraryPath = pdfTextToolProperties.getLibraryPath() == null
+        Path nativeLibraryPath = pdfTextToolProperties.getNativeLibraryPath() == null
                 ? XpdfUtils.getPdfTextLocalPath()
-                : pdfTextToolProperties.getLibraryPath();
+                : pdfTextToolProperties.getNativeLibraryPath();
 
         String defaultOutputDirectory = pdfTextToolProperties.getDefaultOutputDirectory() == null
                 ? XpdfUtils.getPdfTextOutPath().toFile().getCanonicalPath()
@@ -55,7 +53,7 @@ public class PdfTextToolAutoConfiguration {
                 : pdfTextToolProperties.getTimeoutMilliseconds();
 
         PdfTextToolConfig pdfTextToolConfig = new PdfTextToolConfig();
-        pdfTextToolConfig.put(LIBRARY_PATH, libraryPath);
+        pdfTextToolConfig.put(NATIVE_LIBRARY_PATH, nativeLibraryPath);
         pdfTextToolConfig.put(DEFAULT_OUTPUT_DIRECTORY, defaultOutputDirectory);
         pdfTextToolConfig.put(TIMEOUT_MILLISECONDS, timeoutMilliseconds);
 
@@ -66,7 +64,7 @@ public class PdfTextToolAutoConfiguration {
     @ConditionalOnMissingBean
     public PdfTextTool pdfTextTool(PdfTextToolConfig pdfTextToolConfig) {
         return PdfTextTool.builder()
-                .libraryPath((Path) pdfTextToolConfig.get(LIBRARY_PATH))
+                .nativeLibraryPath((Path) pdfTextToolConfig.get(NATIVE_LIBRARY_PATH))
                 .defaultOutputDirectory(new File((String) pdfTextToolConfig.get(DEFAULT_OUTPUT_DIRECTORY)))
                 .timeoutMilliseconds((Long) pdfTextToolConfig.get(TIMEOUT_MILLISECONDS))
                 .build();

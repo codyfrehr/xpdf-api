@@ -19,11 +19,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static io.xpdftools.common.util.XpdfUtils.*;
-import static io.xpdftools.common.util.XpdfUtils.getPdfTextLocalPath;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
+//todo: everywhere "native <em>pdftotext</em> library" used, just replace with "native library"
+//      except maybe in this class javadoc, and public process method
+//      just want to have consistent naming convention everywhere we talk about "the library"
 /**
  * A wrapper of the Xpdf command line tool <em>pdftotext</em>.
  *
@@ -37,10 +39,10 @@ import static java.util.Collections.emptyList;
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     /**
-     * The {@code Path} to the <em>pdftotext</em> library that should be invoked.
+     * The {@code Path} to the native <em>pdftotext</em> library that should be invoked.
      * By default, the library included with this project will be invoked.
      */
-    protected final Path libraryPath;
+    protected final Path nativeLibraryPath;
 
     /**
      * The default directory that output text {@code Files} will be written to if not specified in {@code PdfTextRequest}.
@@ -48,6 +50,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      */
     protected final File defaultOutputDirectory;
 
+    //todo: test what happens in xpdf-apis if you dont configure this property
+    //      i want to see what happens with reference data types...
+    //      does it accept default value from XpdfUtils, xpdf-apis provide default value of 0, or is it just null?
     /**
      * The maximum amount of time in milliseconds allotted to <em>pdftotext</em> process before timing out.
      * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutMilliseconds()}  XpdfUtils.getPdfTextTimeoutMilliseconds()}.
@@ -75,37 +80,40 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     public static class PdfTextToolBuilder {
 
         public PdfTextTool build() {
-            val libraryPathBuilder = configureLibraryPath();
+            val nativeLibraryPathBuilder = configureNativeLibraryPath();
             val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
             val timeoutMillisecondsBuilder = configureTimeoutMilliseconds();
 
-            return new PdfTextTool(libraryPathBuilder, defaultOutputDirectoryBuilder, timeoutMillisecondsBuilder);
+            return new PdfTextTool(nativeLibraryPathBuilder, defaultOutputDirectoryBuilder, timeoutMillisecondsBuilder);
         }
 
         //todo: is javadoc needed for lombok stuff? can lombok stuff even be included by javadoc plugin??
         /**
-         * Configures path to <em>pdftotext</em> library.
+         * Configures path to native <em>pdftotext</em> library.
          *
          * @since 4.4.0
          */
-        protected Path configureLibraryPath() {
-            if (libraryPath == null) {
+        protected Path configureNativeLibraryPath() {
+            if (nativeLibraryPath == null) {
                 // copy library from project resources to OS-accessible directory on local system
                 val pdfTextLocalPath = getPdfTextLocalPath();
                 if (!pdfTextLocalPath.toFile().exists()) {
                     val binResourceStream = XpdfUtils.class.getClassLoader().getResourceAsStream(getPdfTextResourceName());
                     if (binResourceStream == null) {
-                        throw new XpdfRuntimeException("Unable to locate Xpdf binaries in project resources");
+                        throw new XpdfRuntimeException("Unable to locate native library in project resources");
                     }
                     try {
                         FileUtils.copyInputStreamToFile(binResourceStream, pdfTextLocalPath.toFile());
                     } catch (IOException e) {
-                        throw new XpdfRuntimeException("Unable to copy Xpdf binaries to local system");
+                        throw new XpdfRuntimeException("Unable to copy native library from resources to local system");
                     }
                 }
                 return pdfTextLocalPath;
             } else {
-                return libraryPath;
+                if (!nativeLibraryPath.toFile().exists()) {
+                    throw new XpdfRuntimeException("The configured native library does not exist at the path specified");
+                }
+                return nativeLibraryPath;
             }
         }
 
@@ -118,9 +126,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             if (defaultOutputDirectory == null) {
                 return getPdfTextOutPath().toFile();
             } else {
-                if (!defaultOutputDirectory.isDirectory()) {
-                    throw new XpdfRuntimeException("The default output directory does not exist");
-                }
+                defaultOutputDirectory.mkdir();
                 return defaultOutputDirectory;
             }
         }
@@ -144,19 +150,21 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     /**
      * Gets text from a PDF file.
      *
-     * <p> This method executes the <em>pdftotext</em> command with a given set of arguments.
+     * <p> This method invokes the native <em>pdftotext</em> command with a given set of arguments.
      * Once processing is complete, it returns the text {@code File} that the text was extracted into.
      *
      * @param request the {@code PdfTextRequest}
      * @return the {@code PdfTextResponse} containing {@code File} with PDF text
      * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
-     * @throws XpdfExecutionException if <em>pdftotext</em> command returns non-zero exit code
+     * @throws XpdfNativeExecutionException if native <em>pdftotext</em> process returns non-zero exit code
+     * @throws XpdfNativeTimeoutException if native <em>pdftotext</em> process duration exceeds timeout length
      * @throws XpdfProcessingException if any other exception occurs during processing
      * @since 4.4.0
      */
     @Override
     public PdfTextResponse process(PdfTextRequest request) throws XpdfException {
         val executorService = Executors.newSingleThreadExecutor();
+        Process process = null;
 
         try {
             // validate request
@@ -170,22 +178,22 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
             // process commands
             val processBuilder = new ProcessBuilder(commandParts);
-            val process = processBuilder.start();
+            process = processBuilder.start();
 
-            // read process output
-            //todo: log output
-            //todo: should you do this after waiting for process to finish, so that processing of pdf does not hang on waiting for std out?
-            // or makes sense as is?
-            val standardOutput = executorService.submit(new ReadInputStreamTask(process.getInputStream())).get();
-            val errorOutput = executorService.submit(new ReadInputStreamTask(process.getErrorStream())).get();
+            //todo: should we provide any logging for this?
+            val standardOutput = executorService.submit(new ReadInputStreamTask(process.getInputStream()));
+            val errorOutput = executorService.submit(new ReadInputStreamTask(process.getErrorStream()));
 
             // wait for process finish
+            //todo: look at other implementations of process to see if your pattern looks good.
+            //      for example, FileSystemUtils.performCommand() has very similar structure, so thats nice!
+            //      but look at some other implementations anyways to get an understanding of how things are done
             if (process.waitFor(timeoutMilliseconds, TimeUnit.MILLISECONDS)) {
                 // handle process finished
                 if (process.exitValue() == 0) {
                     return PdfTextResponse.builder()
                             .textFile(textFile)
-                            .standardOutput(standardOutput)
+                            .standardOutput(standardOutput.get())
                             .build();
                 } else {
                     final String message;
@@ -206,22 +214,23 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
                             message = "Unknown Xpdf error";
                             break;
                     }
-                    throw new XpdfExecutionException(standardOutput, errorOutput, message);
+                    throw new XpdfNativeExecutionException(standardOutput.get(), errorOutput.get(), message);
                 }
             } else {
                 // handle process timeout
-                process.destroy();
-                //todo: what happens to standardOutput and errorOutput, above, in this scenario?
-                //      can they be accessed? is there any special "closing" of stuff that needs to be done?
-                //      ...need better understanding of processes in general...
-                throw new XpdfExecutionException("", "", "Timeout reached before process could finish");
+                throw new XpdfNativeTimeoutException("Timeout reached before process could finish");
             }
         } catch (XpdfException | XpdfRuntimeException e) {
             throw e;
         } catch (Exception e) {
             throw new XpdfProcessingException(e);
         } finally {
+            //todo: does order matter here?
+            //todo: also, should really try to capture these in unit tests
             executorService.shutdown();
+            if (process != null) {
+                process.destroy();
+            }
         }
     }
 
@@ -308,7 +317,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     protected List<String> getCommandParts(PdfTextRequest request, File textFile) throws IOException {
         val commandParts = new ArrayList<String>();
 
-        commandParts.add(libraryPath.toFile().getCanonicalPath());
+        commandParts.add(nativeLibraryPath.toFile().getCanonicalPath());
         commandParts.addAll(getCommandOptions(request.getOptions()));
         commandParts.add(request.getPdfFile().getCanonicalPath());
         commandParts.add(textFile.getCanonicalPath());

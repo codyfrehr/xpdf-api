@@ -7,18 +7,11 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.*
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.junit5.MockKExtension
-import io.xpdftools.common.exception.XpdfExecutionException
-import io.xpdftools.common.exception.XpdfProcessingException
-import io.xpdftools.common.exception.XpdfRuntimeException
-import io.xpdftools.common.exception.XpdfValidationException
+import io.xpdftools.common.exception.*
 import io.xpdftools.common.util.ReadInputStreamTask
 import io.xpdftools.common.util.XpdfUtils
 import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.io.ByteArrayInputStream
@@ -32,11 +25,11 @@ import java.util.UUID.randomUUID
 class PdfTextToolTest {
 
     //todo: some kind of setup like this might be nicer...
-//    private val libraryPath = mockk<Path>(relaxed = true)
+//    private val nativeLibraryPath = mockk<Path>(relaxed = true)
 //    private val defaultOutputDirectory = mockk<File>(relaxed = true)
 //    private val timeoutMilliseconds = 10L
 //    private val pdfTextTool = PdfTextTool.builder()
-//            .libraryPath(libraryPath)
+//            .nativeLibraryPath(nativeLibraryPath)
 //            .defaultOutputDirectory(defaultOutputDirectory)
 //            .timeoutMilliseconds(timeoutMilliseconds)
 //            .build()
@@ -44,7 +37,7 @@ class PdfTextToolTest {
     private val pdfTextTool = PdfTextTool.builder().build()
 
     @Test
-    fun `should initialize and copy pdf text library to local system`() {
+    fun `should initialize and copy native library to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
         every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns false
@@ -63,7 +56,7 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should initialize and not copy pdf text library to local system`() {
+    fun `should initialize and not copy native library to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
         every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns true
@@ -82,14 +75,28 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should throw exception when initializing if unable to get pdf text library resource stream`() {
+    fun `should initialize with native library`() {
+        // given
+        val nativeLibraryPath = mockk<Path> {
+            every { toFile().exists() } returns true
+        }
+
+        // when
+        val result = PdfTextTool.builder().nativeLibraryPath(nativeLibraryPath).build()
+
+        // then
+        result.nativeLibraryPath shouldBe nativeLibraryPath
+    }
+
+    @Test
+    fun `should throw exception when initializing if unable to get native library resource stream`() {
         // given
         mockkStatic(XpdfUtils::class)
         every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns false
         every { XpdfUtils.getPdfTextResourceName() } returns "notexists"
 
         // when then
-        shouldThrowWithMessage<XpdfRuntimeException>("Unable to locate Xpdf binaries in project resources") {
+        shouldThrowWithMessage<XpdfRuntimeException>("Unable to locate native library in project resources") {
             PdfTextTool.builder().build()
         }
 
@@ -97,7 +104,7 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should throw exception when initializing if unable to copy pdf text library to local system`() {
+    fun `should throw exception when initializing if unable to copy native library to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
         every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns false
@@ -106,12 +113,25 @@ class PdfTextToolTest {
         every { FileUtils.copyInputStreamToFile(any(), any()) } throws IOException()
 
         // when then
-        shouldThrowWithMessage<XpdfRuntimeException>("Unable to copy Xpdf binaries to local system") {
+        shouldThrowWithMessage<XpdfRuntimeException>("Unable to copy native library from resources to local system") {
             PdfTextTool.builder().build()
         }
 
         unmockkStatic(XpdfUtils::class)
         unmockkStatic(FileUtils::class)
+    }
+
+    @Test
+    fun `should throw exception when initializing with native library that does not exist`() {
+        // given
+        val nativeLibraryPath = mockk<Path> {
+            every { toFile().exists() } returns false
+        }
+
+        // when then
+        shouldThrowWithMessage<XpdfRuntimeException>("The configured native library does not exist at the path specified") {
+            PdfTextTool.builder().nativeLibraryPath(nativeLibraryPath).build()
+        }
     }
 
     @Test
@@ -137,28 +157,13 @@ class PdfTextToolTest {
     @Test
     fun `should initialize with default output directory`() {
         // given
-        val defaultOutputDirectory = mockk<File> {
-            every { isDirectory } returns true
-        }
+        val defaultOutputDirectory = mockk<File>(relaxed = true)
 
         // when
         val result = PdfTextTool.builder().defaultOutputDirectory(defaultOutputDirectory).build()
 
         // then
         result.defaultOutputDirectory shouldBe defaultOutputDirectory
-    }
-
-    @Test
-    fun `should throw exception when initializing with default output directory that is not directory`() {
-        // given
-        val defaultOutputDirectory = mockk<File> {
-            every { isDirectory } returns false
-        }
-
-        // when then
-        shouldThrowWithMessage<XpdfRuntimeException>("The default output directory does not exist") {
-            PdfTextTool.builder().defaultOutputDirectory(defaultOutputDirectory).build()
-        }
     }
 
     @Test
@@ -199,6 +204,7 @@ class PdfTextToolTest {
             every { errorStream } returns errorOutputStream
             every { waitFor(any(), any()) } returns true
             every { exitValue() } returns 0
+            every { destroy() } just runs
         }
 
         mockkConstructor(ReadInputStreamTask::class)
@@ -242,6 +248,7 @@ class PdfTextToolTest {
             every { errorStream } returns errorOutputStream
             every { waitFor(any(), any()) } returns true
             every { exitValue() } returns exitCode
+            every { destroy() } just runs
         }
 
         mockkConstructor(ReadInputStreamTask::class)
@@ -256,7 +263,7 @@ class PdfTextToolTest {
         }
 
         // when then
-        shouldThrowWithMessage<XpdfExecutionException>(message) {
+        shouldThrowWithMessage<XpdfNativeExecutionException>(message) {
             pdfTextToolSpy.process(mockk())
         }
     }
@@ -289,7 +296,7 @@ class PdfTextToolTest {
         }
 
         // when then
-        shouldThrowWithMessage<XpdfExecutionException>("Timeout reached before process could finish") {
+        shouldThrowWithMessage<XpdfNativeTimeoutException>("Timeout reached before process could finish") {
             pdfTextToolSpy.process(mockk())
         }
     }
@@ -440,11 +447,12 @@ class PdfTextToolTest {
             every { canonicalPath } returns "textPath"
         }
 
-        val libraryPath = mockk<Path> {
+        val nativeLibraryPath = mockk<Path> {
+            every { toFile().exists() } returns true
             every { toFile().canonicalPath } returns "cmdPath"
         }
 
-        val pdfTextTool = PdfTextTool.builder().libraryPath(libraryPath).build()
+        val pdfTextTool = PdfTextTool.builder().nativeLibraryPath(nativeLibraryPath).build()
         val pdfTextToolSpy = spyk(pdfTextTool) {
             every { getCommandOptions(any()) } returns listOf("opt1", "opt2")
         }
