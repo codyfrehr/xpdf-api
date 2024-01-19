@@ -3,7 +3,7 @@ package io.xpdftools.common.exception;
 import lombok.experimental.StandardException;
 
 /**
- * A Xpdf {@code Exception}.
+ * A <em>Xpdf</em> {@code Exception}.
  *
  * @author Cody Frehr
  * @since 4.4.0

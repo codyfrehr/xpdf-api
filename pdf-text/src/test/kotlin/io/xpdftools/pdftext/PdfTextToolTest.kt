@@ -40,7 +40,7 @@ class PdfTextToolTest {
     fun `should initialize and copy native library to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns false
 
         mockkStatic(FileUtils::class)
         every { FileUtils.copyInputStreamToFile(any(), any()) } just runs
@@ -59,7 +59,7 @@ class PdfTextToolTest {
     fun `should initialize and not copy native library to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns true
+        every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns true
 
         mockkStatic(FileUtils::class)
         every { FileUtils.copyInputStreamToFile(any(), any()) } just runs
@@ -92,8 +92,8 @@ class PdfTextToolTest {
     fun `should throw exception when initializing if unable to get native library resource stream`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns false
-        every { XpdfUtils.getPdfTextResourceName() } returns "notexists"
+        every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextNativeLibraryResourceName() } returns "notexists"
 
         // when then
         shouldThrowWithMessage<XpdfRuntimeException>("Unable to locate native library in project resources") {
@@ -107,7 +107,7 @@ class PdfTextToolTest {
     fun `should throw exception when initializing if unable to copy native library to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextLocalPath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns false
 
         mockkStatic(FileUtils::class)
         every { FileUtils.copyInputStreamToFile(any(), any()) } throws IOException()
@@ -141,7 +141,7 @@ class PdfTextToolTest {
 
         val defaultOutputDirectory = mockk<File>()
 
-        every { XpdfUtils.getPdfTextOutPath() } returns mockk<Path> {
+        every { XpdfUtils.getPdfTextDefaultOutputPath() } returns mockk<Path> {
             every { toFile() } returns defaultOutputDirectory
         }
 

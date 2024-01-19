@@ -5,7 +5,7 @@ package io.xpdftools.common;
 import io.xpdftools.common.exception.XpdfException;
 
 /**
- * A wrapper of a Xpdf command line tool that is capable of invoking an executable.
+ * A wrapper of a native <em>Xpdf</em> library that is capable of invoking the library.
  *
  * @author Cody Frehr
  * @since 4.4.0
