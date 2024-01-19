@@ -41,11 +41,11 @@ public class PdfTextToolAutoConfiguration {
     @ConditionalOnMissingBean
     public PdfTextToolConfig pdfTextToolConfig() throws IOException {
         Path nativeLibraryPath = pdfTextToolProperties.getNativeLibraryPath() == null
-                ? XpdfUtils.getPdfTextLocalPath()
+                ? XpdfUtils.getPdfTextNativeLibraryPath()
                 : pdfTextToolProperties.getNativeLibraryPath();
 
         String defaultOutputDirectory = pdfTextToolProperties.getDefaultOutputDirectory() == null
-                ? XpdfUtils.getPdfTextOutPath().toFile().getCanonicalPath()
+                ? XpdfUtils.getPdfTextDefaultOutputPath().toFile().getCanonicalPath()
                 : pdfTextToolProperties.getDefaultOutputDirectory();
 
         Long timeoutMilliseconds = pdfTextToolProperties.getTimeoutMilliseconds() == null

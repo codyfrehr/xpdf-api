@@ -25,12 +25,12 @@ import static java.util.Collections.emptyList;
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
 //todo: everywhere "native <em>pdftotext</em> library" used, just replace with "native library"
 //      except maybe in this class javadoc, and public process method
-//      just want to have consistent naming convention everywhere we talk about "the library"
+//      just want to have consistent naming convention everywhere we talk about "the library" or "Xpdf"
 /**
- * A wrapper of the Xpdf command line tool <em>pdftotext</em>.
+ * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
  *
- * <p> {@code PdfTextTool} automatically configures itself to target the <em>pdftotext</em> executable native to your OS and JVM architecture.
- * The {@link #process process} method invokes the command to extract text from your PDF file.
+ * <p> {@code PdfTextTool} automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
+ * The {@link #process process} method invokes the library to extract text from a PDF file.
  *
  * @author Cody Frehr
  * @since 4.4.0
@@ -39,14 +39,15 @@ import static java.util.Collections.emptyList;
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     /**
-     * The {@code Path} to the native <em>pdftotext</em> library that should be invoked.
-     * By default, the library included with this project will be invoked.
+     * The {@code Path} to the native library that should be invoked.
+     * By default, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath() XpdfUtils.getPdfTextNativeLibraryPath()},
+     * which points to the native library included with this project.
      */
     protected final Path nativeLibraryPath;
 
     /**
-     * The default directory that output text {@code Files} will be written to if not specified in {@code PdfTextRequest}.
-     * By default, this value will be configured to {@link XpdfUtils#getPdfTextOutPath XpdfUtils.getPdfTextOutPath()}.
+     * The default directory that output text {@code Files} will be written to if not specified in a {@code PdfTextRequest}.
+     * By default, this value will be configured to {@link XpdfUtils#getPdfTextDefaultOutputPath XpdfUtils.getPdfTextDefaultOutputPath()}.
      */
     protected final File defaultOutputDirectory;
 
@@ -54,8 +55,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     //      i want to see what happens with reference data types...
     //      does it accept default value from XpdfUtils, xpdf-apis provide default value of 0, or is it just null?
     /**
-     * The maximum amount of time in milliseconds allotted to <em>pdftotext</em> process before timing out.
-     * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutMilliseconds()}  XpdfUtils.getPdfTextTimeoutMilliseconds()}.
+     * The maximum amount of time in milliseconds allotted to the native process before timing out.
+     * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutMilliseconds() XpdfUtils.getPdfTextTimeoutMilliseconds()}.
      */
     protected final Long timeoutMilliseconds;
 
@@ -79,6 +80,11 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     //todo: javadoc
     public static class PdfTextToolBuilder {
 
+        /**
+         * Constructs {@link PdfTextTool}.
+         *
+         * @since 4.4.0
+         */
         public PdfTextTool build() {
             val nativeLibraryPathBuilder = configureNativeLibraryPath();
             val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
@@ -89,26 +95,26 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
         //todo: is javadoc needed for lombok stuff? can lombok stuff even be included by javadoc plugin??
         /**
-         * Configures path to native <em>pdftotext</em> library.
+         * Configures {@link #nativeLibraryPath}.
          *
          * @since 4.4.0
          */
         protected Path configureNativeLibraryPath() {
             if (nativeLibraryPath == null) {
                 // copy library from project resources to OS-accessible directory on local system
-                val pdfTextLocalPath = getPdfTextLocalPath();
-                if (!pdfTextLocalPath.toFile().exists()) {
-                    val binResourceStream = XpdfUtils.class.getClassLoader().getResourceAsStream(getPdfTextResourceName());
-                    if (binResourceStream == null) {
+                val pdfTextNativeLibraryPath = getPdfTextNativeLibraryPath();
+                if (!pdfTextNativeLibraryPath.toFile().exists()) {
+                    val nativeLibraryResourceStream = XpdfUtils.class.getClassLoader().getResourceAsStream(getPdfTextNativeLibraryResourceName());
+                    if (nativeLibraryResourceStream == null) {
                         throw new XpdfRuntimeException("Unable to locate native library in project resources");
                     }
                     try {
-                        FileUtils.copyInputStreamToFile(binResourceStream, pdfTextLocalPath.toFile());
+                        FileUtils.copyInputStreamToFile(nativeLibraryResourceStream, pdfTextNativeLibraryPath.toFile());
                     } catch (IOException e) {
                         throw new XpdfRuntimeException("Unable to copy native library from resources to local system");
                     }
                 }
-                return pdfTextLocalPath;
+                return pdfTextNativeLibraryPath;
             } else {
                 if (!nativeLibraryPath.toFile().exists()) {
                     throw new XpdfRuntimeException("The configured native library does not exist at the path specified");
@@ -118,13 +124,13 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         }
 
         /**
-         * Configures default output directory.
+         * Configures {@link #defaultOutputDirectory}.
          *
          * @since 4.4.0
          */
         protected File configureDefaultOutputDirectory() {
             if (defaultOutputDirectory == null) {
-                return getPdfTextOutPath().toFile();
+                return getPdfTextDefaultOutputPath().toFile();
             } else {
                 defaultOutputDirectory.mkdir();
                 return defaultOutputDirectory;
@@ -132,7 +138,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         }
 
         /**
-         * Configures process timeout.
+         * Configures {@link #timeoutMilliseconds}.
          *
          * @since 4.4.0
          */
@@ -148,16 +154,16 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     //todo: maybe you should just drop the interface and simplify this
     //todo: add @NotNull to all methods parameters where should not be null?
     /**
-     * Gets text from a PDF file.
+     * Gets text from a PDF {@code File}.
      *
-     * <p> This method invokes the native <em>pdftotext</em> command with a given set of arguments.
-     * Once processing is complete, it returns the text {@code File} that the text was extracted into.
+     * <p> This method invokes the native <em>pdftotext</em> library against a PDF {@code File} with a set of options.
+     * The native process extracts text from a PDF {@code File} into a text {@code File}.
      *
-     * @param request the {@code PdfTextRequest}
-     * @return the {@code PdfTextResponse} containing {@code File} with PDF text
+     * @param request {@code PdfTextRequest}
+     * @return {@code PdfTextResponse} with text {@code File} containing text extracted from PDF
      * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
-     * @throws XpdfNativeExecutionException if native <em>pdftotext</em> process returns non-zero exit code
-     * @throws XpdfNativeTimeoutException if native <em>pdftotext</em> process duration exceeds timeout length
+     * @throws XpdfNativeExecutionException if native process returns non-zero exit code
+     * @throws XpdfNativeTimeoutException if native process duration exceeds timeout length
      * @throws XpdfProcessingException if any other exception occurs during processing
      * @since 4.4.0
      */
@@ -235,9 +241,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     }
 
     /**
-     * Validates the {@code PdfTextRequest}.
+     * Validates a {@code PdfTextRequest}.
      *
-     * @param request the {@code PdfTextRequest}
+     * @param request {@code PdfTextRequest}
      * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
      * @since 4.4.0
      */
@@ -282,11 +288,11 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     }
 
     /**
-     * Gets the output text {@code File} to write to and creates parent directory.
+     * Gets the text {@code File} that the native process should write to.
      *
-     * @param request the {@code PdfTextRequest}
-     * @return the output text {@code File}
-     * @throws IOException if the canonical path of default output directory is invalid
+     * @param request {@code PdfTextRequest}
+     * @return text {@code File}
+     * @throws IOException if canonical path of {@link #defaultOutputDirectory} is invalid
      * @since 4.4.0
      */
     protected File initializeTextFile(PdfTextRequest request) throws IOException {
@@ -306,12 +312,12 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     }
 
     /**
-     * Gets the complete list of command parts to be executed in {@code Process}.
+     * Gets the complete list of command parts for {@code Process}.
      *
-     * @param request the {@code PdfTextRequest}
-     * @param textFile the output text {@code File}
-     * @return the command parts as {@code List<String>}
-     * @throws IOException if the canonical path of local <em>pdftotext</em> library is invalid
+     * @param request {@code PdfTextRequest}
+     * @param textFile text {@code File}
+     * @return command parts as {@code List<String>}
+     * @throws IOException if canonical path of {@link #nativeLibraryPath} is invalid
      * @since 4.4.0
      */
     protected List<String> getCommandParts(PdfTextRequest request, File textFile) throws IOException {
@@ -326,10 +332,10 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     }
 
     /**
-     * Gets the options to be invoked alongside the <em>pdftotext</em> command.
+     * Gets the command options to invoke with the native library.
      *
-     * @param options the command options as {@code PdfTextOptions}
-     * @return the command options as {@code List<String>}
+     * @param options command options as {@code PdfTextOptions}
+     * @return command options as {@code List<String>}
      * @since 4.4.0
      */
     protected List<String> getCommandOptions(PdfTextOptions options) {

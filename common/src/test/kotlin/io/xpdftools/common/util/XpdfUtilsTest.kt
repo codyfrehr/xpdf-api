@@ -34,32 +34,32 @@ class XpdfUtilsTest {
     }
 
     @Test
-    fun `should get pdf text resource name`() {
+    fun `should get pdf text native library resource name`() {
         // given
         every { XpdfUtils.getTargetSystem() } returns "targetSystem"
-        every { XpdfUtils.getPdfTextLibraryName() } returns "libraryName"
+        every { XpdfUtils.getPdfTextNativeLibraryName() } returns "nativeLibraryName"
 
         // when then
-        XpdfUtils.getPdfTextResourceName() shouldBe "xpdf/targetSystem/libraryName"
+        XpdfUtils.getPdfTextNativeLibraryResourceName() shouldBe "xpdf/targetSystem/nativeLibraryName"
     }
 
     @Test
-    fun `should get pdf text local path`() {
+    fun `should get pdf text native library path`() {
         // given
         every { XpdfUtils.getXpdfTempPath() } returns Paths.get("tempPath")
-        every { XpdfUtils.getPdfTextLibraryName() } returns "libraryName"
+        every { XpdfUtils.getPdfTextNativeLibraryName() } returns "nativeLibraryName"
 
         // when then
-        XpdfUtils.getPdfTextLocalPath() shouldBe Paths.get("tempPath", "pdf-text", "bin", "libraryName")
+        XpdfUtils.getPdfTextNativeLibraryPath() shouldBe Paths.get("tempPath", "pdf-text", "bin", "nativeLibraryName")
     }
 
     @Test
-    fun `should get pdf text out path`() {
+    fun `should get pdf text default output path`() {
         // given
         every { XpdfUtils.getXpdfTempPath() } returns Paths.get("tempPath")
 
         // when then
-        XpdfUtils.getPdfTextOutPath() shouldBe Paths.get("tempPath", "pdf-text", "out")
+        XpdfUtils.getPdfTextDefaultOutputPath() shouldBe Paths.get("tempPath", "pdf-text", "out")
     }
 
     @ParameterizedTest
@@ -70,13 +70,13 @@ class XpdfUtilsTest {
             "windows-32, pdftotext.exe",
             "windows-64, pdftotext.exe",
     )
-    fun `should get pdf text library name`(targetSystem: String,
-                                           libraryName: String) {
+    fun `should get pdf text native library name`(targetSystem: String,
+                                           nativeLibraryName: String) {
         // given
         every { XpdfUtils.getTargetSystem() } returns targetSystem
 
         // when then
-        XpdfUtils.getPdfTextLibraryName() shouldBe libraryName
+        XpdfUtils.getPdfTextNativeLibraryName() shouldBe nativeLibraryName
     }
 
     @Test
