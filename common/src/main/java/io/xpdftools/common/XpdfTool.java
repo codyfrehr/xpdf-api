@@ -11,6 +11,7 @@ import io.xpdftools.common.exception.XpdfException;
  * @since 4.4.0
  */
 public interface XpdfTool<Request, Response> {
+
     Response process(Request request) throws XpdfException;
 
 }

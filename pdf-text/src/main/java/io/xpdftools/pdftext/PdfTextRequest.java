@@ -44,10 +44,12 @@ public class PdfTextRequest {
     private final File textFile;
 
     //todo: why is this not "final"?
+    //      does that make it optional in the builder?
     /**
      * Command options to customize processing.
      *
      * @since 4.4.0
      */
     private PdfTextOptions options;
+
 }
