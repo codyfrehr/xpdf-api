@@ -18,7 +18,16 @@
     - core (non-spring stuff)
     - autoconfigure (all auto-config stuff with conditional bean to override. create bean, but give user option to override)
     - starter (springboot and all spring dependencies)
-c++ stuff:
+
+## autoconfiguration:
+- followed this guide at first:
+  - https://www.baeldung.com/spring-boot-custom-starter
+  - https://github.com/eugenp/tutorials/blob/master/spring-boot-modules/spring-boot-custom-starter/greeter-spring-boot-autoconfigure/src/main/resources/META-INF/spring.factories
+- at first, autoconfiguration not detected. but some stack overflow comment mentioned that spring-boot 3 does NOT use spring.factories. instead, had to follow this guide:
+  - https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration
+  - https://github.com/eugenp/tutorials/blob/master/spring-boot-modules/spring-boot-custom-starter/greeter-library/src/main/java/com/baeldung/greeter/library/Greeter.java
+
+## c++ stuff:
 - install Windows c++ compiler MinGW via MYSYS2: https://code.visualstudio.com/docs/cpp/config-mingw
 - JNI: https://www.baeldung.com/jni
   cd C:\Users\Cody\repos\xpdf-tools\pdf-to-text-c\src\main\java\io\xpdftools\pdftotextc
@@ -41,7 +50,7 @@ c++ stuff:
 - exe maven plugin: https://www.mojohaus.org/exec-maven-plugin/examples/example-exec-using-executabledependency.html
 - exe maven plugin: https://support.huaweicloud.com/intl/en-us/codeci_faq/codeci_faq_1036.html
 
-- c++ NEXT STEPS:
+## c++ NEXT STEPS:
   - video explaining how to build c++ project: https://www.youtube.com/watch?v=AJRGU_XgVMQ&list=WL&index=34
     - do this yourself and build static windows library that you can import into this project and test running via JNA.
   - next, build xpdf library from source code and test running via JNA

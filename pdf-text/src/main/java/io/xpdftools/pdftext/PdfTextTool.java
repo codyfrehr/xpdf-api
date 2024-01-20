@@ -23,9 +23,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
-//todo: everywhere "native <em>pdftotext</em> library" used, just replace with "native library"
-//      except maybe in this class javadoc, and public process method
-//      just want to have consistent naming convention everywhere we talk about "the library" or "Xpdf"
 /**
  * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
  *
@@ -39,17 +36,17 @@ import static java.util.Collections.emptyList;
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     /**
-     * The {@code Path} to the native library that should be invoked.
+     * The {@code Path} to the native library {@code File} that should be invoked.
      * By default, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath() XpdfUtils.getPdfTextNativeLibraryPath()},
      * which points to the native library included with this project.
      */
     protected final Path nativeLibraryPath;
 
     /**
-     * The default directory that output text {@code Files} will be written to if not specified in a {@code PdfTextRequest}.
+     * The default directory as {@code Path} that output text {@code Files} will be written to if not specified in a {@code PdfTextRequest}.
      * By default, this value will be configured to {@link XpdfUtils#getPdfTextDefaultOutputPath XpdfUtils.getPdfTextDefaultOutputPath()}.
      */
-    protected final File defaultOutputDirectory;
+    protected final Path defaultOutputPath;
 
     //todo: test what happens in xpdf-apis if you dont configure this property
     //      i want to see what happens with reference data types...
@@ -65,18 +62,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     // should you properly shutdown when done?
 //    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    //todo: should throw better exception type for constructor, not runtime exception?
-    //todo: whats the best way to distribute resources?
-    //      this solution copies binaries resource from inside jar to a directory outside of jar which accessible to client OS...
-    //      but is there a better way? this solution feels dirty
-    //      should we request client download the binaries themself, and configure path?
     //todo: also, there is no way for the client to verify that we are including the authentic xpdf binaries in this solution...
     //      how can you package the binaries with this solution in a credible way?
     //      maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
-    //todo: instead of copying resource every time an instance is created, a check should first be performed to make sure it doesnt already exist
-    //      this same check should also be done in the process() method
-    //      maybe move some of this code into common..
-    //todo: clean up exception handling in all constructors
     //todo: javadoc
     public static class PdfTextToolBuilder {
 
@@ -124,16 +112,15 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         }
 
         /**
-         * Configures {@link #defaultOutputDirectory}.
+         * Configures {@link #defaultOutputPath}.
          *
          * @since 4.4.0
          */
-        protected File configureDefaultOutputDirectory() {
-            if (defaultOutputDirectory == null) {
-                return getPdfTextDefaultOutputPath().toFile();
+        protected Path configureDefaultOutputDirectory() {
+            if (defaultOutputPath == null) {
+                return getPdfTextDefaultOutputPath();
             } else {
-                defaultOutputDirectory.mkdir();
-                return defaultOutputDirectory;
+                return defaultOutputPath;
             }
         }
 
@@ -292,7 +279,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      *
      * @param request {@code PdfTextRequest}
      * @return text {@code File}
-     * @throws IOException if canonical path of {@link #defaultOutputDirectory} is invalid
+     * @throws IOException if canonical path of {@link #defaultOutputPath} is invalid
      * @since 4.4.0
      */
     protected File initializeTextFile(PdfTextRequest request) throws IOException {
@@ -301,8 +288,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             // use text file provided in request
             textFile = request.getTextFile();
         } else {
-            // create text file from default output directory
-            textFile = Paths.get(defaultOutputDirectory.getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
+            // create text file from default output path
+            textFile = Paths.get(defaultOutputPath.toFile().getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
         }
 
         // create output directory if not exists

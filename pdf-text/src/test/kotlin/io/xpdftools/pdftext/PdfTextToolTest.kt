@@ -26,11 +26,11 @@ class PdfTextToolTest {
 
     //todo: some kind of setup like this might be nicer...
 //    private val nativeLibraryPath = mockk<Path>(relaxed = true)
-//    private val defaultOutputDirectory = mockk<File>(relaxed = true)
+//    private val defaultOutputPath = mockk<File>(relaxed = true)
 //    private val timeoutMilliseconds = 10L
 //    private val pdfTextTool = PdfTextTool.builder()
 //            .nativeLibraryPath(nativeLibraryPath)
-//            .defaultOutputDirectory(defaultOutputDirectory)
+//            .defaultOutputPath(defaultOutputPath)
 //            .timeoutMilliseconds(timeoutMilliseconds)
 //            .build()
 
@@ -135,35 +135,33 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should initialize and get default output directory from xpdf utils`() {
+    fun `should initialize and get default output path from xpdf utils`() {
         // given
         mockkStatic(XpdfUtils::class)
 
-        val defaultOutputDirectory = mockk<File>()
+        val defaultOutputPath = mockk<Path>()
 
-        every { XpdfUtils.getPdfTextDefaultOutputPath() } returns mockk<Path> {
-            every { toFile() } returns defaultOutputDirectory
-        }
+        every { XpdfUtils.getPdfTextDefaultOutputPath() } returns defaultOutputPath
 
         // when
         val result = PdfTextTool.builder().build()
 
         // then
-        result.defaultOutputDirectory shouldBe defaultOutputDirectory
+        result.defaultOutputPath shouldBe defaultOutputPath
 
         unmockkStatic(XpdfUtils::class)
     }
 
     @Test
-    fun `should initialize with default output directory`() {
+    fun `should initialize with default output path`() {
         // given
-        val defaultOutputDirectory = mockk<File>(relaxed = true)
+        val defaultOutputPath = mockk<Path>()
 
         // when
-        val result = PdfTextTool.builder().defaultOutputDirectory(defaultOutputDirectory).build()
+        val result = PdfTextTool.builder().defaultOutputPath(defaultOutputPath).build()
 
         // then
-        result.defaultOutputDirectory shouldBe defaultOutputDirectory
+        result.defaultOutputPath shouldBe defaultOutputPath
     }
 
     @Test
@@ -431,7 +429,7 @@ class PdfTextToolTest {
         }
 
         // when then
-        pdfTextTool.initializeTextFile(request) shouldBe Paths.get(pdfTextTool.defaultOutputDirectory.canonicalPath, "$randomUuid.txt").toFile()
+        pdfTextTool.initializeTextFile(request) shouldBe Paths.get(pdfTextTool.defaultOutputPath.toFile().canonicalPath, "$randomUuid.txt").toFile()
 
         unmockkStatic(UUID::class)
     }
