@@ -11,9 +11,9 @@
     <modules>
         <module>common</module>
         <module>pdf-text</module>
-        <module>pdf-text-c</module>
         <module>pdf-text-spring-boot-starter</module>
-        <module>pdf-text-spring-boot-autoconfigure</module>
+        <!--todo: remove this-->
+        <module>pdf-text-c</module>
     </modules>
 
     <!--todo: you currently have ibm semeru runtime installed.
@@ -63,11 +63,6 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.xpdftools</groupId>
-                <artifactId>pdf-text-spring-boot-autoconfigure</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.12.0</version>
@@ -77,22 +72,6 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-autoconfigure</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-configuration-processor</artifactId>
-                <version>${spring-boot.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
