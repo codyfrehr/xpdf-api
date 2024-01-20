@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.CsvSource
 import java.nio.file.Paths
 
 class XpdfUtilsTest {
+
     private val javaTmpDir = System.getProperty("java.io.tmpdir")
     private val originalSunArchDataModel = System.getProperty("sun.arch.data.model")
     private val originalOsName = System.getProperty("os.name")

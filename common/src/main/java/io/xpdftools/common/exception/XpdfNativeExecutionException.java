@@ -10,37 +10,21 @@ import lombok.Getter;
  */
 @Getter
 public class XpdfNativeExecutionException extends XpdfException {
-    private final String standardOutput;
-    private final String errorOutput;
 
-    public XpdfNativeExecutionException(String standardOutput,
-                                        String errorOutput) {
-        super();
-        this.standardOutput = standardOutput;
-        this.errorOutput = errorOutput;
-    }
+    /**
+     * The standard output of a native <em>Xpdf</em> process.
+     */
+    private final String standardOutput;
+
+    /**
+     * The error output of a native <em>Xpdf</em> process.
+     */
+    private final String errorOutput;
 
     public XpdfNativeExecutionException(String standardOutput,
                                         String errorOutput,
                                         String message) {
         super(message);
-        this.standardOutput = standardOutput;
-        this.errorOutput = errorOutput;
-    }
-
-    public XpdfNativeExecutionException(String standardOutput,
-                                        String errorOutput,
-                                        String message,
-                                        Throwable cause) {
-        super(message, cause);
-        this.standardOutput = standardOutput;
-        this.errorOutput = errorOutput;
-    }
-
-    public XpdfNativeExecutionException(String standardOutput,
-                                        String errorOutput,
-                                        Throwable cause) {
-        super(cause);
         this.standardOutput = standardOutput;
         this.errorOutput = errorOutput;
     }

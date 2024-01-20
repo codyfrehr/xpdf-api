@@ -48,9 +48,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      */
     protected final Path defaultOutputPath;
 
-    //todo: test what happens in xpdf-apis if you dont configure this property
-    //      i want to see what happens with reference data types...
-    //      does it accept default value from XpdfUtils, xpdf-apis provide default value of 0, or is it just null?
     /**
      * The maximum amount of time in milliseconds allotted to the native process before timing out.
      * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutMilliseconds() XpdfUtils.getPdfTextTimeoutMilliseconds()}.

@@ -21,6 +21,7 @@ import java.nio.file.Path;
 @EnableConfigurationProperties(PdfTextToolProperties.class)
 public class PdfTextToolAutoConfiguration {
 
+    //todo: add unit test
     @Bean
     @ConditionalOnMissingBean
     public PdfTextTool pdfTextTool(PdfTextToolProperties pdfTextToolProperties) {
