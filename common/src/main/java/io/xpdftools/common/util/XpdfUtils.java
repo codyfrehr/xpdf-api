@@ -85,7 +85,6 @@ public class XpdfUtils {
         // get JVM bit architecture
         val bit = System.getProperty("sun.arch.data.model");
 
-        //todo: throw different exception type?
         if ("UNKNOWN".equals(bit)) {
             throw new XpdfRuntimeException("Unexpected error getting JVM bit architecture");
         }

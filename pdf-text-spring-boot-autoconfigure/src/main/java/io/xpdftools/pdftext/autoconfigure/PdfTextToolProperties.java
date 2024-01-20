@@ -5,15 +5,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.nio.file.Path;
 
-//todo: javadoc
+/**
+ * The configurable properties of a {@code PdfTextTool} that are enabled in {@code PdfTextToolAutoConfiguration}.
+ *
+ * @author Cody Frehr
+ * @since 4.4.0
+ */
 @Data
 @ConfigurationProperties(prefix = "xpdf-tools.pdf-text")
 public class PdfTextToolProperties {
 
-    //todo: what is correct way to deal with "Path" type?
     private Path nativeLibraryPath;
-    private String defaultOutputDirectory;
-    //todo: can we use "Long" or should it be primitive?
+    private Path defaultOutputPath;
     private Long timeoutMilliseconds;
 
 }
