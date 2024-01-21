@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.io.File;
 
 /**
- * Contains the {@code PdfTextTool} process output.
+ * Contains the output from native <em>pdftotext</em> process.
  *
  * @author Cody Frehr
  * @since 4.4.0
@@ -16,14 +16,14 @@ import java.io.File;
 public class PdfTextResponse {
 
     /**
-     * Text {@code File} containing the text extracted from input PDF {@code File}.
+     * Text file containing the text extracted from input PDF file.
      *
      * @since 4.4.0
      */
     private File textFile;
 
     /**
-     * Standard output streamed from execution of <em>pdftotext</em> command.
+     * Standard output streamed from native <em>pdftotext</em> process.
      *
      * @since 4.4.0
      */

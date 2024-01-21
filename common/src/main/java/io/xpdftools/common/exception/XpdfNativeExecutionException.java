@@ -3,7 +3,7 @@ package io.xpdftools.common.exception;
 import lombok.Getter;
 
 /**
- * A {@code XpdfException} thrown when a native <em>Xpdf</em> process returns a non-zero exit code.
+ * A {@link XpdfException} thrown when a native <em>Xpdf</em> process returns a non-zero exit code.
  *
  * @author Cody Frehr
  * @since 4.4.0

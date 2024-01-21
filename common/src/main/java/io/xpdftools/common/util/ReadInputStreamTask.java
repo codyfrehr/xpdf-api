@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /**
- * A task that converts an {@code InputStream} connected to a process {@code Process} to a {@code String}.
+ * A task that converts an {@code InputStream} connected to a {@code Process} to a {@code String}.
  *
  * @author Cody Frehr
  * @since 4.4.0

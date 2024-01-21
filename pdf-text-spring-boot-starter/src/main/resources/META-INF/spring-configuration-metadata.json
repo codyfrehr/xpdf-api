@@ -7,7 +7,7 @@
       "name": "xpdf-tools.pdf-text.default-output-path"
     },
     {
-      "name": "xpdf-tools.pdf-text.timeout-milliseconds"
+      "name": "xpdf-tools.pdf-text.timeout-seconds"
     }
   ]
 }

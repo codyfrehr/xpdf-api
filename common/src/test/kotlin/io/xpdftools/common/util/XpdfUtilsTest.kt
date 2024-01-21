@@ -63,6 +63,15 @@ class XpdfUtilsTest {
         XpdfUtils.getPdfTextDefaultOutputPath() shouldBe Paths.get("tempPath", "pdf-text", "out")
     }
 
+    @Test
+    fun `should get pdf text timeout seconds`() {
+        // given
+        every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 100L
+
+        // when then
+        XpdfUtils.getPdfTextTimeoutSeconds() shouldBe 100L
+    }
+
     @ParameterizedTest
     @CsvSource(
             "linux-32, pdftotext",
