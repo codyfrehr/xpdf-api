@@ -1,3 +1,5 @@
+package io.xpdftools.pdftext.autoconfigure
+
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -5,7 +7,6 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import io.xpdftools.common.util.XpdfUtils
 import io.xpdftools.pdftext.PdfTextTool
-import io.xpdftools.pdftext.autoconfigure.PdfTextToolAutoConfiguration
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,7 +17,6 @@ import org.springframework.context.annotation.Configuration
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
-
 
 class PdfTextToolAutoConfigurationTest {
 
