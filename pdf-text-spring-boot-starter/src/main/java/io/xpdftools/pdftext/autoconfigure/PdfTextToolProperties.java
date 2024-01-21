@@ -1,12 +1,13 @@
 package io.xpdftools.pdftext.autoconfigure;
 
+import io.xpdftools.pdftext.PdfTextTool;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.nio.file.Path;
 
 /**
- * The configurable properties of a {@code PdfTextTool} that are enabled in {@code PdfTextToolAutoConfiguration}.
+ * The configurable properties of a {@link PdfTextTool} that is autoconfigured in {@link PdfTextToolAutoConfiguration}.
  *
  * @author Cody Frehr
  * @since 4.4.0
@@ -17,6 +18,6 @@ public class PdfTextToolProperties {
 
     private Path nativeLibraryPath;
     private Path defaultOutputPath;
-    private Long timeoutMilliseconds;
+    private Long timeoutSeconds;
 
 }

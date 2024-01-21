@@ -7,13 +7,13 @@ import lombok.NonNull;
 import java.io.File;
 
 /**
- * Contains the {@code PdfTextTool} process input.
+ * Contains the input for invoking the native <em>pdftotext</em> library.
  *
  * <br><br> Example usage:
  * <blockquote><pre>
  *  PdfTextRequest.builder()
- *      .pdfFile(new File("/home/cody/docs/some.pdf"))
- *      .textFile(new File("/home/cody/docs/some.txt"))
+ *      .pdfFile(Paths.get("C:/docs/some.pdf"))
+ *      .textFile(Paths.get("C:/docs/some.txt"))
  *      .options(PdfTextOptions.builder().format(PdfTextFormat.RAW).build())
  *      .build();
  * </pre></blockquote>
@@ -27,7 +27,7 @@ import java.io.File;
 public class PdfTextRequest {
 
     /**
-     * Input PDF {@code File}.
+     * Input PDF file.
      *
      * @implNote Required.
      * @since 4.4.0
@@ -36,7 +36,7 @@ public class PdfTextRequest {
     private final File pdfFile;
 
     /**
-     * Output text {@code File}.
+     * Output text file.
      *
      * @implNote If {@code null}, a temporary {@code File} will get created.
      * @since 4.4.0
@@ -45,6 +45,7 @@ public class PdfTextRequest {
 
     //todo: why is this not "final"?
     //      does that make it optional in the builder?
+    //todo: test this
     /**
      * Command options to customize processing.
      *

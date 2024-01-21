@@ -1,5 +1,6 @@
 package io.xpdftools.common.util;
 
+import io.xpdftools.common.XpdfTool;
 import io.xpdftools.common.exception.XpdfRuntimeException;
 import lombok.val;
 
@@ -7,7 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Helpers for a {@code XpdfTool}.
+ * Helpers for a {@link XpdfTool}.
  *
  * @author Cody Frehr
  * @since 4.4.0
@@ -17,7 +18,7 @@ public class XpdfUtils {
     /**
      * Gets the resource name of the <em>pdftotext</em> library native to this system.
      *
-     * @return native library resource name as {@code String}
+     * @return native library resource name
      * @since 4.4.0
      */
     static public String getPdfTextNativeLibraryResourceName() {
@@ -25,9 +26,9 @@ public class XpdfUtils {
     }
 
     /**
-     * Gets the {@code Path} where the native <em>pdftotext</em> library should be copied so that it can be accessed by OS.
+     * Gets the path where the native <em>pdftotext</em> library should be copied so that it can be accessed by OS.
      *
-     * @return native library {@code Path}
+     * @return native library path
      * @since 4.4.0
      */
     static public Path getPdfTextNativeLibraryPath() {
@@ -35,9 +36,9 @@ public class XpdfUtils {
     }
 
     /**
-     * Gets the {@code Path} where the native <em>pdftotext</em> library should write output.
+     * Gets the path where the native <em>pdftotext</em> library should write output.
      *
-     * @return writeable output {@code Path} for native process
+     * @return writeable output path for native process
      * @since 4.4.0
      */
     static public Path getPdfTextDefaultOutputPath() {
@@ -45,19 +46,19 @@ public class XpdfUtils {
     }
 
     /**
-     * Gets the maximum amount of time in milliseconds allotted to the native <em>pdftotext</em> process before timing out.
+     * Gets the maximum amount of time in seconds allotted to the native <em>pdftotext</em> process before timing out.
      *
-     * @return timeout length in milliseconds as {@code Long} for native process
+     * @return timeout length in seconds for native process
      * @since 4.4.0
      */
-    static public Long getPdfTextTimeoutMilliseconds() {
+    static public Long getPdfTextTimeoutSeconds() {
         return 0L;
     }
 
     /**
      * Gets the name of the native <em>pdftotext</em> library.
      *
-     * @return native library name as {@code String}
+     * @return native library name
      * @since 4.4.0
      */
     static protected String getPdfTextNativeLibraryName() {
@@ -67,7 +68,7 @@ public class XpdfUtils {
     /**
      * Gets the temporary directory utilized by native <em>Xpdf</em> libraries.
      *
-     * @return directory {@code Path}
+     * @return directory
      * @since 4.4.0
      */
     static protected Path getXpdfTempPath() {
@@ -78,7 +79,7 @@ public class XpdfUtils {
      * Gets the OS and JVM bit architecture specific to this system.
      * This helps to locate the correct <em>Xpdf</em> library for this system in the project resources.
      *
-     * @return representation of OS and bits as {@code String}
+     * @return representation of OS and bits
      * @since 4.4.0
      */
     static protected String getTargetSystem() {

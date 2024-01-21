@@ -27,11 +27,11 @@ class PdfTextToolTest {
     //todo: some kind of setup like this might be nicer...
 //    private val nativeLibraryPath = mockk<Path>(relaxed = true)
 //    private val defaultOutputPath = mockk<File>(relaxed = true)
-//    private val timeoutMilliseconds = 10L
+//    private val timeoutSeconds = 10L
 //    private val pdfTextTool = PdfTextTool.builder()
 //            .nativeLibraryPath(nativeLibraryPath)
 //            .defaultOutputPath(defaultOutputPath)
-//            .timeoutMilliseconds(timeoutMilliseconds)
+//            .timeoutSeconds(timeoutSeconds)
 //            .build()
 
     private val pdfTextTool = PdfTextTool.builder().build()
@@ -168,13 +168,13 @@ class PdfTextToolTest {
     fun `should initialize and get timeout from xpdf utils`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextTimeoutMilliseconds() } returns 100L
+        every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 100L
 
         // when
         val result = PdfTextTool.builder().build()
 
         // then
-        result.timeoutMilliseconds shouldBe 100L
+        result.timeoutSeconds shouldBe 100L
 
         unmockkStatic(XpdfUtils::class)
     }
@@ -182,10 +182,10 @@ class PdfTextToolTest {
     @Test
     fun `should initialize with timeout`() {
         // when
-        val result = PdfTextTool.builder().timeoutMilliseconds(100L).build()
+        val result = PdfTextTool.builder().timeoutSeconds(100L).build()
 
         // then
-        result.timeoutMilliseconds shouldBe 100L
+        result.timeoutSeconds shouldBe 100L
     }
 
     @Test

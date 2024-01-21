@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 /**
- * Contains command options to customize processing by {@code PdfTextTool}.
+ * Contains the command options to include when invoking the native <em>pdftotext</em> library.
  *
  * <br><br> Example usage:
  * <blockquote><pre>
@@ -22,9 +22,8 @@ import lombok.Getter;
 @Getter
 public class PdfTextOptions {
     //todo: should we implement sensible default values?
-    //  probably better than leaving the decision to xpdf binaries, right..?
-    //  also, will make it more clear to end user whats happening...
-
+    //      probably better than leaving the decision to xpdf binaries, right..?
+    //      also, will make it more clear to end user whats happening...
     //todo: understand if 0 based and include info in implNote
     //todo: default value? (+ implNote on default value)
     /**

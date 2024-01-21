@@ -26,8 +26,17 @@ import static java.util.Collections.emptyList;
 /**
  * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
  *
- * <p> {@code PdfTextTool} automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
- * The {@link #process process} method invokes the library to extract text from a PDF file.
+ * <p> Automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
+ * The {@link #process} method invokes the native library to extract text from a PDF file.
+ *
+ * <br><br> Example usage:
+ * <blockquote><pre>
+ *  PdfTextTool.builder()
+ *      .nativeLibraryPath(Paths.get("C:/libs/pdftotext.exe"))
+ *      .defaultOutputPath(Paths.get("C:/docs/output"))
+ *      .timeoutSeconds(60L)
+ *      .build();
+ * </pre></blockquote>
  *
  * @author Cody Frehr
  * @since 4.4.0
@@ -36,23 +45,23 @@ import static java.util.Collections.emptyList;
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     /**
-     * The {@code Path} to the native library {@code File} that should be invoked.
-     * By default, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath() XpdfUtils.getPdfTextNativeLibraryPath()},
+     * The path to the native library that should be invoked.
+     * By default, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath},
      * which points to the native library included with this project.
      */
     protected final Path nativeLibraryPath;
 
     /**
-     * The default directory as {@code Path} that output text {@code Files} will be written to if not specified in a {@code PdfTextRequest}.
-     * By default, this value will be configured to {@link XpdfUtils#getPdfTextDefaultOutputPath XpdfUtils.getPdfTextDefaultOutputPath()}.
+     * The default directory that output text files will be written to, if not specified in a {@link PdfTextRequest}.
+     * By default, this value will be configured to {@link XpdfUtils#getPdfTextDefaultOutputPath}.
      */
     protected final Path defaultOutputPath;
 
     /**
-     * The maximum amount of time in milliseconds allotted to the native process before timing out.
-     * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutMilliseconds() XpdfUtils.getPdfTextTimeoutMilliseconds()}.
+     * The maximum amount of time in seconds allotted to the native process before timing out.
+     * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutSeconds}.
      */
-    protected final Long timeoutMilliseconds;
+    protected final Long timeoutSeconds;
 
     //todo: are threads managed correctly with process here?
     // should new singleton be declared, or retrieved
@@ -73,9 +82,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         public PdfTextTool build() {
             val nativeLibraryPathBuilder = configureNativeLibraryPath();
             val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
-            val timeoutMillisecondsBuilder = configureTimeoutMilliseconds();
+            val timeoutSecondsBuilder = configureTimeoutSeconds();
 
-            return new PdfTextTool(nativeLibraryPathBuilder, defaultOutputDirectoryBuilder, timeoutMillisecondsBuilder);
+            return new PdfTextTool(nativeLibraryPathBuilder, defaultOutputDirectoryBuilder, timeoutSecondsBuilder);
         }
 
         //todo: is javadoc needed for lombok stuff? can lombok stuff even be included by javadoc plugin??
@@ -122,15 +131,15 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         }
 
         /**
-         * Configures {@link #timeoutMilliseconds}.
+         * Configures {@link #timeoutSeconds}.
          *
          * @since 4.4.0
          */
-        protected long configureTimeoutMilliseconds() {
-            if (timeoutMilliseconds == null) {
-                return XpdfUtils.getPdfTextTimeoutMilliseconds();
+        protected long configureTimeoutSeconds() {
+            if (timeoutSeconds == null) {
+                return XpdfUtils.getPdfTextTimeoutSeconds();
             } else {
-                return timeoutMilliseconds;
+                return timeoutSeconds;
             }
         }
     }
@@ -138,14 +147,14 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     //todo: maybe you should just drop the interface and simplify this
     //todo: add @NotNull to all methods parameters where should not be null?
     /**
-     * Gets text from a PDF {@code File}.
+     * Gets text from a PDF file.
      *
-     * <p> This method invokes the native <em>pdftotext</em> library against a PDF {@code File} with a set of options.
-     * The native process extracts text from a PDF {@code File} into a text {@code File}.
+     * <p> This method invokes the native <em>pdftotext</em> library against a PDF file with a set of options.
+     * The native process extracts text from a PDF file into a text file.
      *
-     * @param request {@code PdfTextRequest}
-     * @return {@code PdfTextResponse} with text {@code File} containing text extracted from PDF
-     * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
+     * @param request {@link PdfTextRequest}
+     * @return {@link PdfTextResponse} with text file containing text extracted from PDF
+     * @throws XpdfValidationException if request is invalid
      * @throws XpdfNativeExecutionException if native process returns non-zero exit code
      * @throws XpdfNativeTimeoutException if native process duration exceeds timeout length
      * @throws XpdfProcessingException if any other exception occurs during processing
@@ -178,7 +187,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             //todo: look at other implementations of process to see if your pattern looks good.
             //      for example, FileSystemUtils.performCommand() has very similar structure, so thats nice!
             //      but look at some other implementations anyways to get an understanding of how things are done
-            if (process.waitFor(timeoutMilliseconds, TimeUnit.MILLISECONDS)) {
+            if (process.waitFor(timeoutSeconds, TimeUnit.SECONDS)) {
                 // handle process finished
                 if (process.exitValue() == 0) {
                     return PdfTextResponse.builder()
@@ -225,10 +234,10 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     }
 
     /**
-     * Validates a {@code PdfTextRequest}.
+     * Validates a {@link PdfTextRequest}.
      *
-     * @param request {@code PdfTextRequest}
-     * @throws XpdfValidationException if {@code PdfTextRequest} is invalid
+     * @param request {@link PdfTextRequest}
+     * @throws XpdfValidationException if request is invalid
      * @since 4.4.0
      */
     protected void validate(PdfTextRequest request) throws XpdfValidationException {
@@ -272,10 +281,10 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     }
 
     /**
-     * Gets the text {@code File} that the native process should write to.
+     * Gets the text file that the native process should write to.
      *
-     * @param request {@code PdfTextRequest}
-     * @return text {@code File}
+     * @param request {@link PdfTextRequest}
+     * @return text file
      * @throws IOException if canonical path of {@link #defaultOutputPath} is invalid
      * @since 4.4.0
      */
@@ -298,8 +307,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     /**
      * Gets the complete list of command parts for {@code Process}.
      *
-     * @param request {@code PdfTextRequest}
-     * @param textFile text {@code File}
+     * @param request {@link PdfTextRequest}
+     * @param textFile text file
      * @return command parts as {@code List<String>}
      * @throws IOException if canonical path of {@link #nativeLibraryPath} is invalid
      * @since 4.4.0
@@ -318,7 +327,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     /**
      * Gets the command options to invoke with the native library.
      *
-     * @param options command options as {@code PdfTextOptions}
+     * @param options {@link PdfTextOptions}
      * @return command options as {@code List<String>}
      * @since 4.4.0
      */

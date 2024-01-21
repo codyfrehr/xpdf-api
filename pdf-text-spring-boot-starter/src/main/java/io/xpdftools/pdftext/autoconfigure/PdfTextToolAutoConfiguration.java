@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import java.nio.file.Path;
 
 /**
- * An autoconfiguration for a {@code PdfTextTool} bean, enabling configuration properties in {@code PdfTextToolProperties}.
+ * An autoconfiguration for {@link PdfTextTool} with configuration properties defined in {@link PdfTextToolProperties}.
  *
  * @author Cody Frehr
  * @since 4.4.0
@@ -22,6 +22,7 @@ import java.nio.file.Path;
 public class PdfTextToolAutoConfiguration {
 
     //todo: add unit test
+    //todo: should this return interface..?
     @Bean
     @ConditionalOnMissingBean
     public PdfTextTool pdfTextTool(PdfTextToolProperties pdfTextToolProperties) {
@@ -33,14 +34,14 @@ public class PdfTextToolAutoConfiguration {
                 ? XpdfUtils.getPdfTextDefaultOutputPath()
                 : pdfTextToolProperties.getDefaultOutputPath();
 
-        Long timeoutMilliseconds = pdfTextToolProperties.getTimeoutMilliseconds() == null
-                ? XpdfUtils.getPdfTextTimeoutMilliseconds()
-                : pdfTextToolProperties.getTimeoutMilliseconds();
+        Long timeoutSeconds = pdfTextToolProperties.getTimeoutSeconds() == null
+                ? XpdfUtils.getPdfTextTimeoutSeconds()
+                : pdfTextToolProperties.getTimeoutSeconds();
 
         return PdfTextTool.builder()
                 .nativeLibraryPath(nativeLibraryPath)
                 .defaultOutputPath(defaultOutputPath)
-                .timeoutMilliseconds(timeoutMilliseconds)
+                .timeoutSeconds(timeoutSeconds)
                 .build();
     }
 
