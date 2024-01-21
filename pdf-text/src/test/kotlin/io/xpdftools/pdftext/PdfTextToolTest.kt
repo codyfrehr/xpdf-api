@@ -24,16 +24,15 @@ import java.util.UUID.randomUUID
 
 class PdfTextToolTest {
 
-    //todo: some kind of setup like this might be nicer...
+//    //todo: some kind of setup like this might be nicer...
 //    private val nativeLibraryPath = mockk<Path>(relaxed = true)
-//    private val defaultOutputPath = mockk<File>(relaxed = true)
-//    private val timeoutSeconds = 10L
+//    private val defaultOutputPath = mockk<Path>(relaxed = true)
+//    private val timeoutSeconds = 99
 //    private val pdfTextTool = PdfTextTool.builder()
 //            .nativeLibraryPath(nativeLibraryPath)
 //            .defaultOutputPath(defaultOutputPath)
 //            .timeoutSeconds(timeoutSeconds)
 //            .build()
-
     private val pdfTextTool = PdfTextTool.builder().build()
 
     @Test
@@ -62,7 +61,6 @@ class PdfTextToolTest {
         every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns true
 
         mockkStatic(FileUtils::class)
-        every { FileUtils.copyInputStreamToFile(any(), any()) } just runs
 
         // when
         PdfTextTool.builder().build()
@@ -168,13 +166,13 @@ class PdfTextToolTest {
     fun `should initialize and get timeout from xpdf utils`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 100L
+        every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 99
 
         // when
         val result = PdfTextTool.builder().build()
 
         // then
-        result.timeoutSeconds shouldBe 100L
+        result.timeoutSeconds shouldBe 99
 
         unmockkStatic(XpdfUtils::class)
     }
@@ -182,10 +180,10 @@ class PdfTextToolTest {
     @Test
     fun `should initialize with timeout`() {
         // when
-        val result = PdfTextTool.builder().timeoutSeconds(100L).build()
+        val result = PdfTextTool.builder().timeoutSeconds(99).build()
 
         // then
-        result.timeoutSeconds shouldBe 100L
+        result.timeoutSeconds shouldBe 99
     }
 
     @Test
@@ -363,29 +361,30 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should throw exception when validating if negative start page given`() {
+    fun `should throw exception when validating if non-positive start page given`() {
         // given
         val request = mockk<PdfTextRequest>(relaxed = true) {
             every { pdfFile.exists() } returns true
-            every { options.pageStart } returns -1
+            every { options.pageStart } returns 0
         }
 
         // when then
-        shouldThrowWithMessage<XpdfValidationException>("PageStart cannot be less than zero") {
+        shouldThrowWithMessage<XpdfValidationException>("PageStart must be greater than zero") {
             pdfTextTool.validate(request)
         }
     }
 
     @Test
-    fun `should throw exception when validating if negative end page given`() {
+    fun `should throw exception when validating if non-positive end page given`() {
         // given
         val request = mockk<PdfTextRequest>(relaxed = true) {
             every { pdfFile.exists() } returns true
+            every { options.pageStart } returns null
             every { options.pageEnd } returns -1
         }
 
         // when then
-        shouldThrowWithMessage<XpdfValidationException>("PageEnd cannot be less than zero") {
+        shouldThrowWithMessage<XpdfValidationException>("PageEnd must be greater than zero") {
             pdfTextTool.validate(request)
         }
     }
@@ -400,7 +399,7 @@ class PdfTextToolTest {
         }
 
         // when then
-        shouldThrowWithMessage<XpdfValidationException>("PageStart must come before PageEnd") {
+        shouldThrowWithMessage<XpdfValidationException>("PageEnd must be greater than or equal to PageStart") {
             pdfTextTool.validate(request)
         }
     }
