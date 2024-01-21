@@ -20,13 +20,13 @@ public class PdfTextResponse {
      *
      * @since 4.4.0
      */
-    private File textFile;
+    private final File textFile;
 
     /**
      * Standard output streamed from native <em>pdftotext</em> process.
      *
      * @since 4.4.0
      */
-    private String standardOutput;
+    private final String standardOutput;
 
 }

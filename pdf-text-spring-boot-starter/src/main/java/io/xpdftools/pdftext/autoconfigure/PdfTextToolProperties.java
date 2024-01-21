@@ -18,6 +18,6 @@ public class PdfTextToolProperties {
 
     private Path nativeLibraryPath;
     private Path defaultOutputPath;
-    private Long timeoutSeconds;
+    private Integer timeoutSeconds;
 
 }

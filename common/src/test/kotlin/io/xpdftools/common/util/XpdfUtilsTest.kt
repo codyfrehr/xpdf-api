@@ -66,10 +66,10 @@ class XpdfUtilsTest {
     @Test
     fun `should get pdf text timeout seconds`() {
         // given
-        every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 100L
+        every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 99
 
         // when then
-        XpdfUtils.getPdfTextTimeoutSeconds() shouldBe 100L
+        XpdfUtils.getPdfTextTimeoutSeconds() shouldBe 99
     }
 
     @ParameterizedTest

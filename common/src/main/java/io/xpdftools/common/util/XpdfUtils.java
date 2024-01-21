@@ -51,8 +51,8 @@ public class XpdfUtils {
      * @return timeout length in seconds for native process
      * @since 4.4.0
      */
-    static public Long getPdfTextTimeoutSeconds() {
-        return 0L;
+    static public Integer getPdfTextTimeoutSeconds() {
+        return 30;
     }
 
     /**

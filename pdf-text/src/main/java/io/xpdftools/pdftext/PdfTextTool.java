@@ -5,6 +5,7 @@ import io.xpdftools.common.exception.*;
 import io.xpdftools.common.util.ReadInputStreamTask;
 import io.xpdftools.common.util.XpdfUtils;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
 
@@ -34,7 +35,7 @@ import static java.util.Collections.emptyList;
  *  PdfTextTool.builder()
  *      .nativeLibraryPath(Paths.get("C:/libs/pdftotext.exe"))
  *      .defaultOutputPath(Paths.get("C:/docs/output"))
- *      .timeoutSeconds(60L)
+ *      .timeoutSeconds(60)
  *      .build();
  * </pre></blockquote>
  *
@@ -42,6 +43,7 @@ import static java.util.Collections.emptyList;
  * @since 4.4.0
  */
 @Builder
+@Getter
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     /**
@@ -49,19 +51,19 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      * By default, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath},
      * which points to the native library included with this project.
      */
-    protected final Path nativeLibraryPath;
+    private final Path nativeLibraryPath;
 
     /**
      * The default directory that output text files will be written to, if not specified in a {@link PdfTextRequest}.
      * By default, this value will be configured to {@link XpdfUtils#getPdfTextDefaultOutputPath}.
      */
-    protected final Path defaultOutputPath;
+    private final Path defaultOutputPath;
 
     /**
      * The maximum amount of time in seconds allotted to the native process before timing out.
      * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutSeconds}.
      */
-    protected final Long timeoutSeconds;
+    private final Integer timeoutSeconds;
 
     //todo: are threads managed correctly with process here?
     // should new singleton be declared, or retrieved
@@ -135,7 +137,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
          *
          * @since 4.4.0
          */
-        protected long configureTimeoutSeconds() {
+        protected int configureTimeoutSeconds() {
             if (timeoutSeconds == null) {
                 return XpdfUtils.getPdfTextTimeoutSeconds();
             } else {
@@ -263,14 +265,14 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         if (request.getOptions() != null) {
             val pageStart = request.getOptions().getPageStart();
             val pageEnd = request.getOptions().getPageEnd();
-            if (pageStart != null && pageStart < 0) {
-                throw new XpdfValidationException("PageStart cannot be less than zero");
+            if (pageStart != null && pageStart <= 0) {
+                throw new XpdfValidationException("PageStart must be greater than zero");
             }
-            if (pageEnd != null && pageEnd < 0) {
-                throw new XpdfValidationException("PageEnd cannot be less than zero");
+            if (pageEnd != null && pageEnd <= 0) {
+                throw new XpdfValidationException("PageEnd must be greater than zero");
             }
             if (pageStart != null && pageEnd != null && pageStart > pageEnd) {
-                throw new XpdfValidationException("PageStart must come before PageEnd");
+                throw new XpdfValidationException("PageEnd must be greater than or equal to PageStart");
             }
         }
 

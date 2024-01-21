@@ -29,39 +29,39 @@ public class PdfTextOptions {
     /**
      * First page to include in text output.
      *
-     * @implNote Must be non-negative.
+     * @implNote Must be positive.
      * @since 4.4.0
      */
-    private Integer pageStart;
+    private final Integer pageStart;
 
     /**
      * Last page to include in text output.
      *
-     * @implNote Must be non-negative and greater than {@code pageStart}.
+     * @implNote Must be positive and greater than or equal to {@link #pageStart}.
      * @since 4.4.0
      */
-    private Integer pageEnd;
+    private final Integer pageEnd;
 
     /**
      * Format, or structure, to give text output.
      *
      * @since 4.4.0
      */
-    private PdfTextFormat format;
+    private final PdfTextFormat format;
 
     /**
      * Encoding to use for text output.
      *
      * @since 4.4.0
      */
-    private PdfTextEncoding encoding;
+    private final PdfTextEncoding encoding;
 
     /**
      * End-of-line convention to use for text output.
      *
      * @since 4.4.0
      */
-    private PdfTextEndOfLine endOfLine;
+    private final PdfTextEndOfLine endOfLine;
 
     /**
      * Flag to include new page characters in output text.
@@ -70,20 +70,20 @@ public class PdfTextOptions {
      * @since 4.4.0
      */
     @Builder.Default
-    private boolean pageBreakIncluded = true;
+    private final boolean pageBreakIncluded = true;
 
     /**
      * Owner password for encrypted PDF files.
      *
      * @since 4.4.0
      */
-    private String ownerPassword;
+    private final String ownerPassword;
 
     /**
      * User password for encrypted PDF files.
      *
      * @since 4.4.0
      */
-    private String userPassword;
+    private final String userPassword;
 
 }

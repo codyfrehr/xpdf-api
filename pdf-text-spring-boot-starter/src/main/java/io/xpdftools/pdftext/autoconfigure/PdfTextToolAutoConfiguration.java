@@ -21,8 +21,6 @@ import java.nio.file.Path;
 @EnableConfigurationProperties(PdfTextToolProperties.class)
 public class PdfTextToolAutoConfiguration {
 
-    //todo: add unit test
-    //todo: should this return interface..?
     @Bean
     @ConditionalOnMissingBean
     public PdfTextTool pdfTextTool(PdfTextToolProperties pdfTextToolProperties) {
@@ -34,7 +32,7 @@ public class PdfTextToolAutoConfiguration {
                 ? XpdfUtils.getPdfTextDefaultOutputPath()
                 : pdfTextToolProperties.getDefaultOutputPath();
 
-        Long timeoutSeconds = pdfTextToolProperties.getTimeoutSeconds() == null
+        Integer timeoutSeconds = pdfTextToolProperties.getTimeoutSeconds() == null
                 ? XpdfUtils.getPdfTextTimeoutSeconds()
                 : pdfTextToolProperties.getTimeoutSeconds();
 
