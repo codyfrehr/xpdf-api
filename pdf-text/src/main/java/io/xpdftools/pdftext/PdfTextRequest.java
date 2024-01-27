@@ -7,7 +7,7 @@ import lombok.NonNull;
 import java.io.File;
 
 /**
- * Contains the input for invoking the native <em>pdftotext</em> library.
+ * Represents the command to invoke the native <em>pdftotext</em> process.
  *
  * <br><br> Example usage:
  * <blockquote><pre>
@@ -35,10 +35,11 @@ public class PdfTextRequest {
     @NonNull
     private final File pdfFile;
 
+    //todo: add implNote about default-output-directory?
     /**
      * Output text file.
      *
-     * @implNote If {@code null}, a temporary {@code File} will get created.
+     * @implNote If unassigned, a temporary file will get created.
      * @since 4.4.0
      */
     private final File textFile;

@@ -24,6 +24,8 @@ public class ReadInputStreamTask implements Callable<String> {
      */
     private final InputStream inputStream;
 
+    //todo: do line-endings need to be considered..?
+    //      maybe there is a way to write this so that lines join using default system line-ending property (look up java property for that)
     @Override
     public String call() {
         val reader = new BufferedReader(new InputStreamReader(inputStream));
