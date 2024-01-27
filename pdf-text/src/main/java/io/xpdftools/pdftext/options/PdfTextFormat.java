@@ -1,7 +1,8 @@
-package io.xpdftools.pdftext;
+package io.xpdftools.pdftext.options;
 
+//todo: add @implNote about how these options may be configured with xpdfrc config or -fixed arg?
 /**
- * Defines the format, or structure, to use for text output.
+ * Defines how text extracted from a PDF file should be formatted, or structured.
  *
  * @author Cody Frehr
  * @since 4.4.0

@@ -10,6 +10,9 @@ import io.mockk.*
 import io.xpdftools.common.exception.*
 import io.xpdftools.common.util.ReadInputStreamTask
 import io.xpdftools.common.util.XpdfUtils
+import io.xpdftools.pdftext.options.PdfTextEncoding
+import io.xpdftools.pdftext.options.PdfTextEndOfLine
+import io.xpdftools.pdftext.options.PdfTextFormat
 import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -316,7 +319,7 @@ class PdfTextToolTest {
         val request = mockk<PdfTextRequest>(relaxed = true) {
             every { pdfFile.exists() } returns true
             every { options.pageStart } returns 1
-            every { options.pageEnd } returns 2
+            every { options.pageStop } returns 2
         }
 
         // when then
@@ -380,11 +383,11 @@ class PdfTextToolTest {
         val request = mockk<PdfTextRequest>(relaxed = true) {
             every { pdfFile.exists() } returns true
             every { options.pageStart } returns null
-            every { options.pageEnd } returns -1
+            every { options.pageStop } returns -1
         }
 
         // when then
-        shouldThrowWithMessage<XpdfValidationException>("PageEnd must be greater than zero") {
+        shouldThrowWithMessage<XpdfValidationException>("PageStop must be greater than zero") {
             pdfTextTool.validate(request)
         }
     }
@@ -395,11 +398,11 @@ class PdfTextToolTest {
         val request = mockk<PdfTextRequest>(relaxed = true) {
             every { pdfFile.exists() } returns true
             every { options.pageStart } returns 2
-            every { options.pageEnd } returns 1
+            every { options.pageStop } returns 1
         }
 
         // when then
-        shouldThrowWithMessage<XpdfValidationException>("PageEnd must be greater than or equal to PageStart") {
+        shouldThrowWithMessage<XpdfValidationException>("PageStop must be greater than or equal to PageStart") {
             pdfTextTool.validate(request)
         }
     }
@@ -471,7 +474,7 @@ class PdfTextToolTest {
         // given
         val options = PdfTextOptions.builder()
                 .pageStart(1)
-                .pageEnd(2)
+                .pageStop(2)
                 .build()
 
         // when then
@@ -487,7 +490,7 @@ class PdfTextToolTest {
             "LINE_PRINTER, -lineprinter",
     )
     fun `should get command options for format`(format: PdfTextFormat,
-                                                   arg: String) {
+                                                arg: String) {
         // given
         val options = PdfTextOptions.builder().format(format).build()
 
@@ -497,15 +500,15 @@ class PdfTextToolTest {
 
     @ParameterizedTest
     @CsvSource(
-            "ASCII_7, ASCII7",
             "LATIN_1, Latin1",
-            "SYMBOL, Symbol",
-            "UCS_2, UCS-2",
+            "ASCII_7, ASCII7",
             "UTF_8, UTF-8",
+            "UCS_2, UCS-2",
+            "SYMBOL, Symbol",
             "ZAPF_DINGBATS, ZapfDingbats",
     )
     fun `should get command options for encoding`(encoding: PdfTextEncoding,
-                                                     arg: String) {
+                                                  arg: String) {
         // given
         val options = PdfTextOptions.builder().encoding(encoding).build()
 
@@ -520,7 +523,7 @@ class PdfTextToolTest {
             "UNIX, unix",
     )
     fun `should get command options for end of line`(endOfLine: PdfTextEndOfLine,
-                                                        arg: String) {
+                                                     arg: String) {
         // given
         val options = PdfTextOptions.builder().endOfLine(endOfLine).build()
 
@@ -529,9 +532,9 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should get command options for including page break`() {
+    fun `should get command options for excluding page break`() {
         // given
-        val options = PdfTextOptions.builder().pageBreakIncluded(false).build()
+        val options = PdfTextOptions.builder().pageBreakExcluded(true).build()
 
         // when then
         pdfTextTool.getCommandOptions(options) shouldContainExactly listOf("-nopgbrk")

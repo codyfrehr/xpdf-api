@@ -59,3 +59,24 @@
     - got all this JNI stuff to work! just need to figure out how to compile xpdf stuff in windows.
       part of problem is figuring out linking and stuff like that. seems like you would need to create header file for pdftext.cc.
       before going any further on this, really need to understand better how c++ works and compile process works and linking, etc
+
+## why design decisions were made:
+## todo: start recording new notes here. this is important for future development, so we can understand why we took certain design approaches.
+## some of this will be important to include as end notes to user
+- mission of this library
+  - this library should:
+    - facilitate programmatic access to xpdf
+    - act as an interface to xpdf
+    - represent xpdf as purely as possible
+  - this library should NOT:
+      - replace xpdf
+      - obscure xpdf commands
+      - try to explain why xpdf works the way it works (this lib is just an interface for xpdf, not a user guide)
+  - therefore:
+      - individual request options should be nullable because they are *options*.
+        we want our request object to represent the command options relayed to xpdf as clearly as possible.
+        for example, making "pageBreakExcluded" primitive would result in the option having value "false" by default.
+        although this is probably a better coding practice, it makes request object look like user has chosen false (when in reality, they may have chosen nothing, and nothing will be added to actual xpdf commands)
+      - individual request options should also be nullable, and not defaulted, because sometimes xpdf does things differently when no option is given!
+        for example, the choice to not include a "format" option results in a different format than any of the options, themselves.
+        choosing nothing/null is an option, in and of itself, and may result in different functionality under the hood of xpdf (and we dont want to obscure that)

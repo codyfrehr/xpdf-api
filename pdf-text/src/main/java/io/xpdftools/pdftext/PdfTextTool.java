@@ -23,6 +23,7 @@ import static io.xpdftools.common.util.XpdfUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
+//todo: override toString() in classes
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
 /**
  * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
@@ -46,21 +47,28 @@ import static java.util.Collections.emptyList;
 @Getter
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
+    //todo: add @implNote to all properties of all builder classes, if necessary.
+    //      for example, the statement about default value for this property is probably better in an @implNote
+    //todo: add @since to all properties of all builder classes
+    //      (or if not necessary, remove everywhere https://www.baeldung.com/javadoc-version-since)
+    //      @since definitely NOT needed on private/protected methods.
+    //      but it is useful on private builder properties, such as this property below, since it gets applied to builder methods
+    //todo: should you use "If unassigned" instead of "By default", to match terminology used in other builders with nullable properties?
     /**
-     * The path to the native library that should be invoked.
+     * Path to the native library that should be invoked.
      * By default, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath},
      * which points to the native library included with this project.
      */
     private final Path nativeLibraryPath;
 
     /**
-     * The default directory that output text files will be written to, if not specified in a {@link PdfTextRequest}.
+     * Default directory that output text files will be written to, if not specified in the {@link PdfTextRequest}.
      * By default, this value will be configured to {@link XpdfUtils#getPdfTextDefaultOutputPath}.
      */
     private final Path defaultOutputPath;
 
     /**
-     * The maximum amount of time in seconds allotted to the native process before timing out.
+     * Maximum amount of time in seconds allotted to the native process before timing out.
      * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutSeconds}.
      */
     private final Integer timeoutSeconds;
@@ -73,14 +81,14 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     //todo: also, there is no way for the client to verify that we are including the authentic xpdf binaries in this solution...
     //      how can you package the binaries with this solution in a credible way?
     //      maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
-    //todo: javadoc
+    //todo: is javadoc needed on builder/lombok stuff?
+    //      probably not, since builder methods inherit javadoc from private properties
+    //      besides, can lombok stuff even be included by javadoc plugin??
+    //todo: can the static class PdfTextToolBuilder be made unaccessible to end user?
+    //      not sure this is possible.
+    //      but you can manually copy lombok-generated code for this class into this actual class, and play with modifiers, to see if possible
     public static class PdfTextToolBuilder {
 
-        /**
-         * Constructs {@link PdfTextTool}.
-         *
-         * @since 4.4.0
-         */
         public PdfTextTool build() {
             val nativeLibraryPathBuilder = configureNativeLibraryPath();
             val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
@@ -89,12 +97,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             return new PdfTextTool(nativeLibraryPathBuilder, defaultOutputDirectoryBuilder, timeoutSecondsBuilder);
         }
 
-        //todo: is javadoc needed for lombok stuff? can lombok stuff even be included by javadoc plugin??
-        /**
-         * Configures {@link #nativeLibraryPath}.
-         *
-         * @since 4.4.0
-         */
         protected Path configureNativeLibraryPath() {
             if (nativeLibraryPath == null) {
                 // copy library from project resources to OS-accessible directory on local system
@@ -119,11 +121,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             }
         }
 
-        /**
-         * Configures {@link #defaultOutputPath}.
-         *
-         * @since 4.4.0
-         */
         protected Path configureDefaultOutputDirectory() {
             if (defaultOutputPath == null) {
                 return getPdfTextDefaultOutputPath();
@@ -132,11 +129,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             }
         }
 
-        /**
-         * Configures {@link #timeoutSeconds}.
-         *
-         * @since 4.4.0
-         */
         protected int configureTimeoutSeconds() {
             if (timeoutSeconds == null) {
                 return XpdfUtils.getPdfTextTimeoutSeconds();
@@ -235,6 +227,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         }
     }
 
+    //todo: should we have an option to inject unimplemented options?
+    //      maybe it could be a Map on the PdfTextOptions
+
     /**
      * Validates a {@link PdfTextRequest}.
      *
@@ -264,15 +259,15 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         // verify options
         if (request.getOptions() != null) {
             val pageStart = request.getOptions().getPageStart();
-            val pageEnd = request.getOptions().getPageEnd();
+            val pageStop = request.getOptions().getPageStop();
             if (pageStart != null && pageStart <= 0) {
                 throw new XpdfValidationException("PageStart must be greater than zero");
             }
-            if (pageEnd != null && pageEnd <= 0) {
-                throw new XpdfValidationException("PageEnd must be greater than zero");
+            if (pageStop != null && pageStop <= 0) {
+                throw new XpdfValidationException("PageStop must be greater than zero");
             }
-            if (pageStart != null && pageEnd != null && pageStart > pageEnd) {
-                throw new XpdfValidationException("PageEnd must be greater than or equal to PageStart");
+            if (pageStart != null && pageStop != null && pageStart > pageStop) {
+                throw new XpdfValidationException("PageStop must be greater than or equal to PageStart");
             }
         }
 
@@ -348,9 +343,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             args.addAll(asList("-f", pageStart.toString()));
         }
 
-        val pageEnd = options.getPageEnd();
-        if (pageEnd != null) {
-            args.addAll(asList("-l", pageEnd.toString()));
+        val pageStop = options.getPageStop();
+        if (pageStop != null) {
+            args.addAll(asList("-l", pageStop.toString()));
         }
 
         val format = options.getFormat();
@@ -419,8 +414,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             }
         }
 
-        val pageBreakIncluded = options.isPageBreakIncluded();
-        if (!pageBreakIncluded) {
+        val pageBreakExcluded = options.getPageBreakExcluded();
+        if (Boolean.TRUE.equals(pageBreakExcluded)) {
             args.add("-nopgbrk");
         }
 
