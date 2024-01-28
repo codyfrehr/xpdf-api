@@ -483,11 +483,12 @@ class PdfTextToolTest {
 
     @ParameterizedTest
     @CsvSource(
-            "RAW, -raw",
-            "SIMPLE, -simple",
-            "TABLE, -table",
             "LAYOUT, -layout",
+            "SIMPLE, -simple",
+            "SIMPLE_2, -simple2",
+            "TABLE, -table",
             "LINE_PRINTER, -lineprinter",
+            "RAW, -raw",
     )
     fun `should get command options for format`(format: PdfTextFormat,
                                                 arg: String) {
@@ -550,6 +551,21 @@ class PdfTextToolTest {
 
         // when then
         pdfTextTool.getCommandOptions(options) shouldContainExactly listOf("-opw", "\"ownerPass\"", "-upw", "\"userPass\"")
+    }
+
+    @Test
+    fun `should get command options for native options`() {
+        // given
+        val options = PdfTextOptions.builder()
+                .nativeOptions(mapOf(
+                        "-option1" to "value1",
+                        "-option2" to null,
+                        "-option3" to "",
+                        "-option4" to " "))
+                .build()
+
+        // when then
+        pdfTextTool.getCommandOptions(options) shouldContainExactly listOf("-option1", "\"value1\"", "-option2", "-option3", "-option4")
     }
 
 }

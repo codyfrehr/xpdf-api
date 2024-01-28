@@ -38,7 +38,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <!--todo: should you specify plugin versions..?-->
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <mockito.version>4.11.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -229,17 +229,24 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!--todo: editors like IDEA/eclipse already give you nice hover-features with just the inclusion of sources - so is this plugin really needed?
-                        not sure if this plugin helps to build an api documentation website, but at a later stage, you should figure out how to generate html webpages for javadocs.
-                        it could be hosted on official xpdftools website, looking something like this: https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
+                <!--todo: editors like IDEA/eclipse already give you nice hover-features with just the inclusion of sources, but if you want web documentation, then use this plugin to generate web docs.
+                        one issue you will need to figure out is how to generate documentation for lombok stuff, which doesnt seem to be happening currently...
                         -->
 <!--                <plugin>-->
 <!--                    <groupId>org.apache.maven.plugins</groupId>-->
 <!--                    <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--                    <version>${maven.javadoc-plugin.version}</version>-->
+<!--                    <version>${maven-javadoc-plugin.version}</version>-->
 <!--                    <configuration>-->
 <!--                        &lt;!&ndash;todo: any other configs we should include here?&ndash;&gt;-->
 <!--                        <source>${maven.compiler.source}</source>-->
+<!--                        &lt;!&ndash;todo: why is implNote not handled by plugin? issue on my end..?&ndash;&gt;-->
+<!--                        <tags>-->
+<!--                            <tag>-->
+<!--                                <name>implNote</name>-->
+<!--                                <placement>a</placement>-->
+<!--                                <head>Implementation Note:</head>-->
+<!--                            </tag>-->
+<!--                        </tags>-->
 <!--                    </configuration>-->
 <!--                    <executions>-->
 <!--                        <execution>-->
@@ -278,10 +285,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-javadoc-plugin</artifactId>-->
-            <!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>

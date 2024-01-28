@@ -1,6 +1,5 @@
 package io.xpdftools.pdftext.options;
 
-//todo: add @implNote about how other custom eols can be configured with xpdfrc config?
 /**
  * Defines the line-ending characters that should be applied to text extracted from a PDF file.
  *
