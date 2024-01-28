@@ -28,17 +28,12 @@ public class PdfTextToolAutoConfiguration {
                 ? XpdfUtils.getPdfTextNativeLibraryPath()
                 : pdfTextToolProperties.getNativeLibraryPath();
 
-        Path defaultOutputPath = pdfTextToolProperties.getDefaultOutputPath() == null
-                ? XpdfUtils.getPdfTextDefaultOutputPath()
-                : pdfTextToolProperties.getDefaultOutputPath();
-
         Integer timeoutSeconds = pdfTextToolProperties.getTimeoutSeconds() == null
                 ? XpdfUtils.getPdfTextTimeoutSeconds()
                 : pdfTextToolProperties.getTimeoutSeconds();
 
         return PdfTextTool.builder()
                 .nativeLibraryPath(nativeLibraryPath)
-                .defaultOutputPath(defaultOutputPath)
                 .timeoutSeconds(timeoutSeconds)
                 .build();
     }

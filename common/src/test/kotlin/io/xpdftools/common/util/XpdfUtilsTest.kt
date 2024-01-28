@@ -55,12 +55,12 @@ class XpdfUtilsTest {
     }
 
     @Test
-    fun `should get pdf text default output path`() {
+    fun `should get pdf text temp output path`() {
         // given
         every { XpdfUtils.getXpdfTempPath() } returns Paths.get("tempPath")
 
         // when then
-        XpdfUtils.getPdfTextDefaultOutputPath() shouldBe Paths.get("tempPath", "pdf-text", "out")
+        XpdfUtils.getPdfTextTempOutputPath() shouldBe Paths.get("tempPath", "pdf-text", "out")
     }
 
     @Test
