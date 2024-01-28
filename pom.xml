@@ -12,8 +12,6 @@
         <module>common</module>
         <module>pdf-text</module>
         <module>pdf-text-spring-boot-starter</module>
-        <!--todo: remove this-->
-        <module>pdf-text-c</module>
     </modules>
 
     <!--todo: you currently have ibm semeru runtime installed.
