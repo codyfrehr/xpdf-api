@@ -36,12 +36,12 @@ public class XpdfUtils {
     }
 
     /**
-     * Gets the path where the native <em>pdftotext</em> library should write output.
+     * Gets the temporary directory where the native <em>pdftotext</em> library should write output.
      *
-     * @return writeable output path for native process
+     * @return temporary directory
      * @since 4.4.0
      */
-    static public Path getPdfTextDefaultOutputPath() {
+    static public Path getPdfTextTempOutputPath() {
         return getXpdfTempPath().resolve("pdf-text").resolve("out");
     }
 
@@ -68,7 +68,7 @@ public class XpdfUtils {
     /**
      * Gets the temporary directory utilized by native <em>Xpdf</em> libraries.
      *
-     * @return directory
+     * @return temporary directory
      * @since 4.4.0
      */
     static protected Path getXpdfTempPath() {

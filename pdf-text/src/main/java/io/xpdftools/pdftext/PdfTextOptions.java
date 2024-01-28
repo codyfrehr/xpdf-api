@@ -5,6 +5,7 @@ import io.xpdftools.pdftext.options.PdfTextEndOfLine;
 import io.xpdftools.pdftext.options.PdfTextFormat;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import java.util.Map;
  */
 @Builder
 @Getter
+@ToString
 public class PdfTextOptions {
 
     /**
@@ -152,7 +154,7 @@ public class PdfTextOptions {
      *      .nativeOptions(Map.ofEntries(
      *          Map.entry("-raw", null),
      *          Map.entry("-enc", "UTF-8"),
-     *          Map.entry("-opw", "\"Secret 123\"")))
+     *          Map.entry("-opw", "Secret123")))
      *      .build();
      * </pre></blockquote>
      *

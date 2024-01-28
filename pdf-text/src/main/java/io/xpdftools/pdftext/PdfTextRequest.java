@@ -3,6 +3,7 @@ package io.xpdftools.pdftext;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
 
 import java.io.File;
 
@@ -24,6 +25,7 @@ import java.io.File;
  */
 @Builder
 @Getter
+@ToString
 public class PdfTextRequest {
 
     /**
@@ -35,11 +37,10 @@ public class PdfTextRequest {
     @NonNull
     private final File pdfFile;
 
-    //todo: add implNote about default-output-directory?
     /**
      * Output text file.
      *
-     * @implNote If unassigned, a temporary file will get created.
+     * @implNote If unassigned, a temporary file will get created and automatically deleted on JVM termination.
      * @since 4.4.0
      */
     private final File textFile;

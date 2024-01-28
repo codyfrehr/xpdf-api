@@ -17,7 +17,6 @@ import java.nio.file.Path;
 public class PdfTextToolProperties {
 
     private Path nativeLibraryPath;
-    private Path defaultOutputPath;
     private Integer timeoutSeconds;
 
 }

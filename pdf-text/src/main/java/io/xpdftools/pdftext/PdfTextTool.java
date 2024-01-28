@@ -6,6 +6,7 @@ import io.xpdftools.common.util.ReadInputStreamTask;
 import io.xpdftools.common.util.XpdfUtils;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,6 @@ import static io.xpdftools.common.util.XpdfUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-//todo: override toString() in classes
 //todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
 /**
  * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
@@ -35,7 +35,6 @@ import static java.util.Collections.emptyList;
  * <blockquote><pre>
  *  PdfTextTool.builder()
  *      .nativeLibraryPath(Paths.get("C:/libs/pdftotext.exe"))
- *      .defaultOutputPath(Paths.get("C:/docs/output"))
  *      .timeoutSeconds(60)
  *      .build();
  * </pre></blockquote>
@@ -45,6 +44,7 @@ import static java.util.Collections.emptyList;
  */
 @Builder
 @Getter
+@ToString
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
     //todo: add @implNote to all properties of all builder classes, if necessary.
@@ -56,16 +56,11 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
     //todo: should you use "If unassigned" instead of "By default", to match terminology used in other builders with nullable properties?
     /**
      * Path to the native library that should be invoked.
-     * By default, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath},
+     *
+     * @implNote If unassigned, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath},
      * which points to the native library included with this project.
      */
     private final Path nativeLibraryPath;
-
-    /**
-     * Default directory that output text files will be written to, if not specified in the {@link PdfTextRequest}.
-     * By default, this value will be configured to {@link XpdfUtils#getPdfTextDefaultOutputPath}.
-     */
-    private final Path defaultOutputPath;
 
     /**
      * Maximum amount of time in seconds allotted to the native process before timing out.
@@ -91,10 +86,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
         public PdfTextTool build() {
             val nativeLibraryPathBuilder = configureNativeLibraryPath();
-            val defaultOutputDirectoryBuilder = configureDefaultOutputDirectory();
             val timeoutSecondsBuilder = configureTimeoutSeconds();
 
-            return new PdfTextTool(nativeLibraryPathBuilder, defaultOutputDirectoryBuilder, timeoutSecondsBuilder);
+            return new PdfTextTool(nativeLibraryPathBuilder, timeoutSecondsBuilder);
         }
 
         protected Path configureNativeLibraryPath() {
@@ -118,14 +112,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
                     throw new XpdfRuntimeException("The configured native library does not exist at the path specified");
                 }
                 return nativeLibraryPath;
-            }
-        }
-
-        protected Path configureDefaultOutputDirectory() {
-            if (defaultOutputPath == null) {
-                return getPdfTextDefaultOutputPath();
-            } else {
-                return defaultOutputPath;
             }
         }
 
@@ -228,9 +214,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         }
     }
 
-    //todo: should we have an option to inject unimplemented options?
-    //      maybe it could be a Map on the PdfTextOptions
-
     /**
      * Validates a {@link PdfTextRequest}.
      *
@@ -278,7 +261,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      *
      * @param request {@link PdfTextRequest}
      * @return text file
-     * @throws IOException if canonical path of {@link #defaultOutputPath} is invalid
+     * @throws IOException if canonical path of {@link XpdfUtils#getPdfTextTempOutputPath()} is invalid
      * @since 4.4.0
      */
     protected File initializeTextFile(PdfTextRequest request) throws IOException {
@@ -287,8 +270,9 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             // use text file provided in request
             textFile = request.getTextFile();
         } else {
-            // create text file from default output path
-            textFile = Paths.get(defaultOutputPath.toFile().getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
+            // create temporary text file
+            textFile = Paths.get(getPdfTextTempOutputPath().toFile().getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
+            textFile.deleteOnExit();
         }
 
         // create output directory if not exists

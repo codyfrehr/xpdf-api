@@ -42,7 +42,6 @@ class PdfTextToolAutoConfigurationTest {
 
         TestPropertyValues.of(
                 "xpdf-tools.pdf-text.native-library-path=${nativeLibrary.canonicalPath}",
-                "xpdf-tools.pdf-text.default-output-path=defaultOutputPath",
                 "xpdf-tools.pdf-text.timeout-seconds=99"
         ).applyTo(context)
 
@@ -54,7 +53,6 @@ class PdfTextToolAutoConfigurationTest {
 
         // then
         pdfTextTool.nativeLibraryPath shouldBe nativeLibrary.toPath()
-        pdfTextTool.defaultOutputPath shouldBe Paths.get("defaultOutputPath")
         pdfTextTool.timeoutSeconds shouldBe 99
     }
 
@@ -64,11 +62,9 @@ class PdfTextToolAutoConfigurationTest {
         val nativeLibraryPath = mockk<Path> {
             every { toFile().exists() } returns true
         }
-        val defaultOutputPath = mockk<Path>()
 
         mockkStatic(XpdfUtils::class)
         every { XpdfUtils.getPdfTextNativeLibraryPath() } returns nativeLibraryPath
-        every { XpdfUtils.getPdfTextDefaultOutputPath() } returns defaultOutputPath
         every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 99
 
         context.register(PdfTextToolAutoConfiguration::class.java)
@@ -79,7 +75,6 @@ class PdfTextToolAutoConfigurationTest {
 
         // then
         pdfTextTool.nativeLibraryPath shouldBe nativeLibraryPath
-        pdfTextTool.defaultOutputPath shouldBe defaultOutputPath
         pdfTextTool.timeoutSeconds shouldBe 99
 
         unmockkStatic(XpdfUtils::class)

@@ -29,11 +29,9 @@ class PdfTextToolTest {
 
 //    //todo: some kind of setup like this might be nicer...
 //    private val nativeLibraryPath = mockk<Path>(relaxed = true)
-//    private val defaultOutputPath = mockk<Path>(relaxed = true)
 //    private val timeoutSeconds = 99
 //    private val pdfTextTool = PdfTextTool.builder()
 //            .nativeLibraryPath(nativeLibraryPath)
-//            .defaultOutputPath(defaultOutputPath)
 //            .timeoutSeconds(timeoutSeconds)
 //            .build()
     private val pdfTextTool = PdfTextTool.builder().build()
@@ -133,36 +131,6 @@ class PdfTextToolTest {
         shouldThrowWithMessage<XpdfRuntimeException>("The configured native library does not exist at the path specified") {
             PdfTextTool.builder().nativeLibraryPath(nativeLibraryPath).build()
         }
-    }
-
-    @Test
-    fun `should initialize and get default output path from xpdf utils`() {
-        // given
-        mockkStatic(XpdfUtils::class)
-
-        val defaultOutputPath = mockk<Path>()
-
-        every { XpdfUtils.getPdfTextDefaultOutputPath() } returns defaultOutputPath
-
-        // when
-        val result = PdfTextTool.builder().build()
-
-        // then
-        result.defaultOutputPath shouldBe defaultOutputPath
-
-        unmockkStatic(XpdfUtils::class)
-    }
-
-    @Test
-    fun `should initialize with default output path`() {
-        // given
-        val defaultOutputPath = mockk<Path>()
-
-        // when
-        val result = PdfTextTool.builder().defaultOutputPath(defaultOutputPath).build()
-
-        // then
-        result.defaultOutputPath shouldBe defaultOutputPath
     }
 
     @Test
@@ -422,6 +390,9 @@ class PdfTextToolTest {
     @Test
     fun `should initialize text file when file not provided in request`() {
         // given
+        mockkStatic(XpdfUtils::class)
+        every { XpdfUtils.getPdfTextTempOutputPath().toFile().canonicalPath } returns "outPath"
+
         val randomUuid = randomUUID()
         mockkStatic(UUID::class)
         every { randomUUID() } returns randomUuid
@@ -431,8 +402,9 @@ class PdfTextToolTest {
         }
 
         // when then
-        pdfTextTool.initializeTextFile(request) shouldBe Paths.get(pdfTextTool.defaultOutputPath.toFile().canonicalPath, "$randomUuid.txt").toFile()
+        pdfTextTool.initializeTextFile(request) shouldBe Paths.get("outPath", "$randomUuid.txt").toFile()
 
+        unmockkStatic(XpdfUtils::class)
         unmockkStatic(UUID::class)
     }
 

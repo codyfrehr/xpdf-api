@@ -4,9 +4,6 @@
       "name": "xpdf-tools.pdf-text.native-library-path"
     },
     {
-      "name": "xpdf-tools.pdf-text.default-output-path"
-    },
-    {
       "name": "xpdf-tools.pdf-text.timeout-seconds"
     }
   ]

@@ -2,6 +2,7 @@ package io.xpdftools.pdftext;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.File;
 
@@ -13,6 +14,7 @@ import java.io.File;
  */
 @Builder
 @Getter
+@ToString
 public class PdfTextResponse {
 
     //todo: in user guide, you should give examples of how they should read text from this file depending on encoding...
@@ -22,6 +24,7 @@ public class PdfTextResponse {
     /**
      * Text file containing text extracted from input PDF file.
      *
+     * @implNote If this is a temporary file, it will be automatically deleted on JVM termination.
      * @since 4.4.0
      */
     private final File textFile;
