@@ -398,14 +398,23 @@ class PdfTextToolTest {
         every { randomUUID() } returns randomUuid
 
         val request = mockk<PdfTextRequest> {
-            every { textFile } returns null
+            every { getTextFile() } returns null
         }
 
+        val textFile = mockk<File>(relaxed = true)
+        val textFileName = "$randomUuid.txt"
+
+        mockkStatic(Paths::class)
+        every { Paths.get(any(), any()).toFile() } returns textFile
+
         // when then
-        pdfTextTool.initializeTextFile(request) shouldBe Paths.get("outPath", "$randomUuid.txt").toFile()
+        pdfTextTool.initializeTextFile(request) shouldBe textFile
+
+        verify { Paths.get("outPath", textFileName) }
 
         unmockkStatic(XpdfUtils::class)
         unmockkStatic(UUID::class)
+        unmockkStatic(Paths::class)
     }
 
     @Test
@@ -431,8 +440,6 @@ class PdfTextToolTest {
 
         // when then
         pdfTextToolSpy.getCommandParts(request, textFile) shouldContainExactly listOf("cmdPath", "opt1", "opt2", "pdfPath", "textPath")
-
-        mockkStatic(XpdfUtils::class)
     }
 
     @Test

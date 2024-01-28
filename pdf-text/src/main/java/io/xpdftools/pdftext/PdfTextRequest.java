@@ -1,5 +1,6 @@
 package io.xpdftools.pdftext;
 
+import io.xpdftools.common.XpdfRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -8,7 +9,7 @@ import lombok.ToString;
 import java.io.File;
 
 /**
- * Represents the command to invoke the native <em>pdftotext</em> process.
+ * Represents a command to invoke a native <em>pdftotext</em> library.
  *
  * <br><br> Example usage:
  * <blockquote><pre>
@@ -26,7 +27,7 @@ import java.io.File;
 @Builder
 @Getter
 @ToString
-public class PdfTextRequest {
+public class PdfTextRequest extends XpdfRequest {
 
     /**
      * Input PDF file.
@@ -40,7 +41,7 @@ public class PdfTextRequest {
     /**
      * Output text file.
      *
-     * @implNote If unassigned, a temporary file will get created and automatically deleted on JVM termination.
+     * @implNote If unassigned, a temporary file will get created, and then automatically deleted at JVM termination.
      * @since 4.4.0
      */
     private final File textFile;
