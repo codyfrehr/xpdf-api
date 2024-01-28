@@ -1,6 +1,5 @@
 package io.xpdftools.pdftext.options;
 
-//todo: add @implNote about how other custom encodings can be configured with xpdfrc config?
 //todo: what does this mean exactly? the encoding of the text in the PDF? or the encoding to apply to text output? or do both of those mean the same thing..?
 //      think about it in terms of the fonts...
 //      a special encoding is needed to interpret ZapfDingbats...

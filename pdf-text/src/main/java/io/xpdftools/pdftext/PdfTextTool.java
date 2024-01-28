@@ -8,16 +8,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static io.xpdftools.common.util.XpdfUtils.*;
 import static java.util.Arrays.asList;
@@ -166,6 +166,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             // configure output text file
             val textFile = initializeTextFile(request);
 
+            //todo: would be cool to provide a log that prints out the command exactly as it would be entered in the terminal
             // get commands
             val commandParts = getCommandParts(request, textFile);
 
@@ -270,11 +271,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
                 throw new XpdfValidationException("PageStop must be greater than or equal to PageStart");
             }
         }
-
-        //todo: what other validation would be helpful?
-
-        //todo: how can you be sure user is not injecting malicious arguments into file path, or other string fields on request?
-        // need to verify if possible to do this, and prevent..
     }
 
     /**
@@ -351,20 +347,23 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         val format = options.getFormat();
         if (format != null) {
             switch (format) {
-                case RAW:
-                    args.add("-raw");
+                case LAYOUT:
+                    args.add("-layout");
                     break;
                 case SIMPLE:
                     args.add("-simple");
                     break;
+                case SIMPLE_2:
+                    args.add("-simple2");
+                    break;
                 case TABLE:
                     args.add("-table");
                     break;
-                case LAYOUT:
-                    args.add("-layout");
-                    break;
                 case LINE_PRINTER:
                     args.add("-lineprinter");
+                    break;
+                case RAW:
+                    args.add("-raw");
                     break;
                 default:
                     throw new XpdfRuntimeException(String.format("Format case %s is missing from command options switch statement", format.name()));
@@ -374,20 +373,20 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         val encoding = options.getEncoding();
         if (encoding != null) {
             switch (encoding) {
-                case ASCII_7:
-                    args.addAll(asList("-enc", "ASCII7"));
-                    break;
                 case LATIN_1:
                     args.addAll(asList("-enc", "Latin1"));
                     break;
-                case SYMBOL:
-                    args.addAll(asList("-enc", "Symbol"));
+                case ASCII_7:
+                    args.addAll(asList("-enc", "ASCII7"));
+                    break;
+                case UTF_8:
+                    args.addAll(asList("-enc", "UTF-8"));
                     break;
                 case UCS_2:
                     args.addAll(asList("-enc", "UCS-2"));
                     break;
-                case UTF_8:
-                    args.addAll(asList("-enc", "UTF-8"));
+                case SYMBOL:
+                    args.addAll(asList("-enc", "Symbol"));
                     break;
                 case ZAPF_DINGBATS:
                     args.addAll(asList("-enc", "ZapfDingbats"));
@@ -427,6 +426,16 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         val userPassword = options.getUserPassword();
         if (userPassword != null) {
             args.addAll(asList("-upw", String.format("\"%s\"", userPassword)));
+        }
+
+        val nativeOptions = options.getNativeOptions();
+        if (nativeOptions != null) {
+            args.addAll(nativeOptions.entrySet().stream()
+                    .map(it -> asList(it.getKey(), StringUtils.isBlank(it.getValue()) ? null : String.format("\"%s\"", it.getValue())))
+                    .flatMap(Collection::stream)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList())
+            );
         }
 
         return args;
