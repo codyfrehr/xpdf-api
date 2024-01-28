@@ -1,17 +1,18 @@
 package io.xpdftools.common;
 
-//todo: create Abstract or parent class XpdfRequest and XpdfResponse, and enforce those types in this interface?
-
 import io.xpdftools.common.exception.XpdfException;
 
 /**
- * A wrapper of a native <em>Xpdf</em> library that is capable of invoking the library.
+ * A wrapper of a <em>Xpdf</em> command line tool.
  *
  * @author Cody Frehr
  * @since 4.4.0
  */
-public interface XpdfTool<Request, Response> {
+public interface XpdfTool<Request extends XpdfRequest, Response extends XpdfResponse> {
 
+    /**
+     * Invokes a native <em>Xpdf</em> library against a PDF file with a set of options.
+     */
     Response process(Request request) throws XpdfException;
 
 }

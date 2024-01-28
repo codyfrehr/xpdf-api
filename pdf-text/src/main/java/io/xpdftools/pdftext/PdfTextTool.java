@@ -24,7 +24,6 @@ import static io.xpdftools.common.util.XpdfUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-//todo: in the future, extend Callable so that users of sdk can run asynchronously if they would prefer
 /**
  * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
  *
@@ -45,43 +44,25 @@ import static java.util.Collections.emptyList;
 @Builder
 @Getter
 @ToString
-public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
+public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
-    //todo: add @implNote to all properties of all builder classes, if necessary.
-    //      for example, the statement about default value for this property is probably better in an @implNote
-    //todo: add @since to all properties of all builder classes
-    //      (or if not necessary, remove everywhere https://www.baeldung.com/javadoc-version-since)
-    //      @since definitely NOT needed on private/protected methods.
-    //      but it is useful on private builder properties, such as this property below, since it gets applied to builder methods
-    //todo: should you use "If unassigned" instead of "By default", to match terminology used in other builders with nullable properties?
     /**
      * Path to the native library that should be invoked.
      *
-     * @implNote If unassigned, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath},
+     * @implNote If unassigned, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath()},
      * which points to the native library included with this project.
+     * @since 4.4.0
      */
     private final Path nativeLibraryPath;
 
     /**
      * Maximum amount of time in seconds allotted to the native process before timing out.
-     * By default, this value will be configured to {@link XpdfUtils#getPdfTextTimeoutSeconds}.
+     *
+     * @implNote If unassigned, this value is configured to {@link XpdfUtils#getPdfTextTimeoutSeconds()}.
+     * @since 4.4.0
      */
     private final Integer timeoutSeconds;
 
-    //todo: are threads managed correctly with process here?
-    // should new singleton be declared, or retrieved
-    // should you properly shutdown when done?
-//    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-
-    //todo: also, there is no way for the client to verify that we are including the authentic xpdf binaries in this solution...
-    //      how can you package the binaries with this solution in a credible way?
-    //      maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
-    //todo: is javadoc needed on builder/lombok stuff?
-    //      probably not, since builder methods inherit javadoc from private properties
-    //      besides, can lombok stuff even be included by javadoc plugin??
-    //todo: can the static class PdfTextToolBuilder be made unaccessible to end user?
-    //      not sure this is possible.
-    //      but you can manually copy lombok-generated code for this class into this actual class, and play with modifiers, to see if possible
     public static class PdfTextToolBuilder {
 
         public PdfTextTool build() {
@@ -124,8 +105,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         }
     }
 
-    //todo: maybe you should just drop the interface and simplify this
-    //todo: add @NotNull to all methods parameters where should not be null?
     /**
      * Gets text from a PDF file.
      *
@@ -142,8 +121,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      */
     @Override
     public PdfTextResponse process(PdfTextRequest request) throws XpdfException {
-        val executorService = Executors.newSingleThreadExecutor();
         Process process = null;
+        val executorService = Executors.newSingleThreadExecutor();
 
         try {
             // validate request
@@ -152,22 +131,22 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
             // configure output text file
             val textFile = initializeTextFile(request);
 
-            //todo: would be cool to provide a log that prints out the command exactly as it would be entered in the terminal
             // get commands
+            //todo: log complete command executed if debug enabled
+            //      would be cool to provide a log that prints out the command exactly as it would be entered in the terminal
+            //      need to better understand how logging works and how it should be implemented in this project, so that it will be usable for everyone
+            //      or maybe the answer is just that we dont offer logging?
             val commandParts = getCommandParts(request, textFile);
 
             // process commands
             val processBuilder = new ProcessBuilder(commandParts);
             process = processBuilder.start();
 
-            //todo: should we provide any logging for this?
+            //todo: log process std/err streams if debug enabled
             val standardOutput = executorService.submit(new ReadInputStreamTask(process.getInputStream()));
             val errorOutput = executorService.submit(new ReadInputStreamTask(process.getErrorStream()));
 
             // wait for process finish
-            //todo: look at other implementations of process to see if your pattern looks good.
-            //      for example, FileSystemUtils.performCommand() has very similar structure, so thats nice!
-            //      but look at some other implementations anyways to get an understanding of how things are done
             if (process.waitFor(timeoutSeconds, TimeUnit.SECONDS)) {
                 // handle process finished
                 if (process.exitValue() == 0) {
@@ -205,8 +184,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
         } catch (Exception e) {
             throw new XpdfProcessingException(e);
         } finally {
-            //todo: does order matter here?
-            //todo: also, should really try to capture these in unit tests
+            //todo: should really try to capture these in unit tests
             executorService.shutdown();
             if (process != null) {
                 process.destroy();
@@ -219,7 +197,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      *
      * @param request {@link PdfTextRequest}
      * @throws XpdfValidationException if request is invalid
-     * @since 4.4.0
      */
     protected void validate(PdfTextRequest request) throws XpdfValidationException {
         if (request == null) {
@@ -262,7 +239,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      * @param request {@link PdfTextRequest}
      * @return text file
      * @throws IOException if canonical path of {@link XpdfUtils#getPdfTextTempOutputPath()} is invalid
-     * @since 4.4.0
      */
     protected File initializeTextFile(PdfTextRequest request) throws IOException {
         final File textFile;
@@ -288,7 +264,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      * @param textFile text file
      * @return command parts as {@code List<String>}
      * @throws IOException if canonical path of {@link #nativeLibraryPath} is invalid
-     * @since 4.4.0
      */
     protected List<String> getCommandParts(PdfTextRequest request, File textFile) throws IOException {
         val commandParts = new ArrayList<String>();
@@ -306,7 +281,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
      *
      * @param options {@link PdfTextOptions}
      * @return command options as {@code List<String>}
-     * @since 4.4.0
      */
     protected List<String> getCommandOptions(PdfTextOptions options) {
         if (options == null) {
@@ -315,7 +289,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse>  {
 
         val args = new ArrayList<String>();
 
-        //todo: add by default? or add when in debug? or add as option? or make configurable?
+        //todo: add configuration to enable this? or when debug enabled?
 //        args.add("-verbose");
 
         val pageStart = options.getPageStart();

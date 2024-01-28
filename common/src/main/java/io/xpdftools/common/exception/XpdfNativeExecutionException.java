@@ -13,11 +13,15 @@ public class XpdfNativeExecutionException extends XpdfException {
 
     /**
      * The standard output of a native <em>Xpdf</em> process.
+     *
+     * @since 4.4.0
      */
     private final String standardOutput;
 
     /**
      * The error output of a native <em>Xpdf</em> process.
+     *
+     * @since 4.4.0
      */
     private final String errorOutput;
 

@@ -59,7 +59,6 @@ public class XpdfUtils {
      * Gets the name of the native <em>pdftotext</em> library.
      *
      * @return native library name
-     * @since 4.4.0
      */
     static protected String getPdfTextNativeLibraryName() {
         return String.format("pdftotext%s", getTargetSystem().contains("windows") ? ".exe" : "");
@@ -69,7 +68,6 @@ public class XpdfUtils {
      * Gets the temporary directory utilized by native <em>Xpdf</em> libraries.
      *
      * @return temporary directory
-     * @since 4.4.0
      */
     static protected Path getXpdfTempPath() {
         return Paths.get(System.getProperty("java.io.tmpdir")).resolve( "xpdf-tools");
@@ -80,7 +78,6 @@ public class XpdfUtils {
      * This helps to locate the correct <em>Xpdf</em> library for this system in the project resources.
      *
      * @return representation of OS and bits
-     * @since 4.4.0
      */
     static protected String getTargetSystem() {
         // get JVM bit architecture

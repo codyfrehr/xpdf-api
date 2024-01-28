@@ -5,6 +5,21 @@
 - 
 
 ## todo:
+- in the future, make PdfTextTool extend Callable so that users of sdk can run asynchronously if they would prefer?
+  need to explore more on this topic... https://www.baeldung.com/java-single-thread-executor-service
+  in general, need a way better understanding of threading concepts, and how that would play into manual process we run, and how native xpdf lib would be affected
+- in PdfTextTool.process(), do we even need ExecutorService to accomplish what it is we are trying to accomplish?
+  maybe we can instead post this question to stackoverflow, to learn a little more and get some decent feedback.
+- decide on package "version" and cleanup corresponding @since javadoc tags
+- javadoc...
+  need to get plugin working that generates javadoc artifact (html pages)
+  issues seem to arise in javadocs when you reference this library from other projects.
+  for example, in xpdf-apis project, you get a bunch of broken links for types in the "common" package.
+  those same links are NOT broken when we just exclude javadoc artifact from process altogether.
+- another javadoc issue...
+  should javadocs link to external website that will host javadocs?
+  in other official javadocs, you can click a link to open up full docs for some type in your browser.
+  is that an actual website hosting those docs?? or does it just open the html from the javadoc artifact?
 - you should password protect your ssh keys. especially when you go live with servers. otherwise, hacker with access to your keys will have passwordless access to your repos
 - figure out best place to put xpdf binaries
 - configure Service to use correct binaries (windows/mac/linux) based on OS
@@ -18,7 +33,9 @@
     - core (non-spring stuff)
     - autoconfigure (all auto-config stuff with conditional bean to override. create bean, but give user option to override)
     - starter (springboot and all spring dependencies)
-
+- there is no way for the client to verify that we are including the authentic xpdf binaries in this solution... 
+  - how can you package the binaries with this solution in a credible way?
+  - maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
 ## autoconfiguration:
 - followed this guide at first:
   - https://www.baeldung.com/spring-boot-custom-starter
