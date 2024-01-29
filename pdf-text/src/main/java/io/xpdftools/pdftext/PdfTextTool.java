@@ -7,6 +7,7 @@ import io.xpdftools.common.util.XpdfUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +16,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -27,7 +32,7 @@ import static java.util.Collections.emptyList;
 /**
  * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
  *
- * <p> Automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
+ * <br><br> Automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
  * The {@link #process} method invokes the native library to extract text from a PDF file.
  *
  * <br><br> Example usage:
@@ -44,6 +49,7 @@ import static java.util.Collections.emptyList;
 @Builder
 @Getter
 @ToString
+@Slf4j
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
     /**
@@ -108,7 +114,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     /**
      * Gets text from a PDF file.
      *
-     * <p> This method invokes the native <em>pdftotext</em> library against a PDF file with a set of options.
+     * <br><br> This method invokes the native <em>pdftotext</em> library against a PDF file with a set of options.
      * The native process extracts text from a PDF file into a text file.
      *
      * @param request {@link PdfTextRequest}
@@ -121,40 +127,47 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      */
     @Override
     public PdfTextResponse process(PdfTextRequest request) throws XpdfException {
+        log.debug("Process starting");
         Process process = null;
-        val executorService = Executors.newSingleThreadExecutor();
+        ExecutorService executorService = null;
 
         try {
             // validate request
+            log.debug("Validating request");
             validate(request);
 
             // configure output text file
+            log.debug("Configuring output text file");
             val textFile = initializeTextFile(request);
 
             // get commands
-            //todo: log complete command executed if debug enabled
-            //      would be cool to provide a log that prints out the command exactly as it would be entered in the terminal
-            //      need to better understand how logging works and how it should be implemented in this project, so that it will be usable for everyone
-            //      or maybe the answer is just that we dont offer logging?
+            log.debug("Building command");
             val commandParts = getCommandParts(request, textFile);
 
             // process commands
+            log.debug("Invoking native library. Command: {}", commandParts);
             val processBuilder = new ProcessBuilder(commandParts);
             process = processBuilder.start();
 
-            //todo: log process std/err streams if debug enabled
+            executorService = Executors.newSingleThreadExecutor();
             val standardOutput = executorService.submit(new ReadInputStreamTask(process.getInputStream()));
             val errorOutput = executorService.submit(new ReadInputStreamTask(process.getErrorStream()));
 
             // wait for process finish
             if (process.waitFor(timeoutSeconds, TimeUnit.SECONDS)) {
+                //todo: add tests for debug logging... :(
+                //      also, are you happy with this format for your messages?
+                log.debug("Invocation completed. Exit code: {}. Standard output: {}", process.exitValue(), standardOutput.get());
+
                 // handle process finished
                 if (process.exitValue() == 0) {
+                    log.debug("Invocation succeeded");
                     return PdfTextResponse.builder()
                             .textFile(textFile)
                             .standardOutput(standardOutput.get())
                             .build();
                 } else {
+                    log.debug("Invocation failed. Error output: {}", errorOutput.get());
                     final String message;
                     switch (process.exitValue()) {
                         case 1:
@@ -177,18 +190,23 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                 }
             } else {
                 // handle process timeout
+                log.debug("Invocation timed out");
                 throw new XpdfNativeTimeoutException("Timeout reached before process could finish");
             }
         } catch (XpdfException | XpdfRuntimeException e) {
+            log.debug("Process failed. Exception message: {}", e.getMessage());
             throw e;
         } catch (Exception e) {
+            log.debug("Process failed. Exception message: {}", e.getMessage());
             throw new XpdfProcessingException(e);
         } finally {
-            //todo: should really try to capture these in unit tests
-            executorService.shutdown();
+            if (executorService != null) {
+                executorService.shutdown();
+            }
             if (process != null) {
                 process.destroy();
             }
+            log.debug("Process finished");
         }
     }
 
@@ -289,9 +307,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
         val args = new ArrayList<String>();
 
-        //todo: add configuration to enable this? or when debug enabled?
-//        args.add("-verbose");
-
         val pageStart = options.getPageStart();
         if (pageStart != null) {
             args.addAll(asList("-f", pageStart.toString()));
@@ -378,20 +393,20 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
         val ownerPassword = options.getOwnerPassword();
         if (ownerPassword != null) {
-            args.addAll(asList("-opw", String.format("\"%s\"", ownerPassword)));
+            args.addAll(asList("-opw", ownerPassword));
         }
 
         val userPassword = options.getUserPassword();
         if (userPassword != null) {
-            args.addAll(asList("-upw", String.format("\"%s\"", userPassword)));
+            args.addAll(asList("-upw", userPassword));
         }
 
         val nativeOptions = options.getNativeOptions();
         if (nativeOptions != null) {
             args.addAll(nativeOptions.entrySet().stream()
-                    .map(it -> asList(it.getKey(), StringUtils.isBlank(it.getValue()) ? null : String.format("\"%s\"", it.getValue())))
+                    .map(it -> asList(it.getKey(), it.getValue()))
                     .flatMap(Collection::stream)
-                    .filter(Objects::nonNull)
+                    .filter(StringUtils::isNotBlank)
                     .collect(Collectors.toList())
             );
         }

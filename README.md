@@ -77,6 +77,11 @@
       part of problem is figuring out linking and stuff like that. seems like you would need to create header file for pdftext.cc.
       before going any further on this, really need to understand better how c++ works and compile process works and linking, etc
 
+## user documentation website:
+- add section for debugging that explains how to:
+  - configure xpdf-tools for debug-level logging
+  - configure request options for "-verbose" output from native library (which will then be logged in debug mode)
+
 ## why design decisions were made:
 ## todo: start recording new notes here. this is important for future development, so we can understand why we took certain design approaches.
 ## some of this will be important to include as end notes to user
@@ -97,3 +102,5 @@
       - individual request options should also be nullable, and not defaulted, because sometimes xpdf does things differently when no option is given!
         for example, the choice to not include a "format" option results in a different format than any of the options, themselves.
         choosing nothing/null is an option, in and of itself, and may result in different functionality under the hood of xpdf (and we dont want to obscure that)
+- slf4j chosen because we should let end-user of library choose implementation https://www.slf4j.org/faq.html#configure_logging
+- 
