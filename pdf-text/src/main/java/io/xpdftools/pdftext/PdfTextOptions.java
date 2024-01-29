@@ -142,11 +142,15 @@ public class PdfTextOptions {
     private final String userPassword;
 
     /**
-     * Map of options to include directly in the invocation of the native library.
+     * Options to pass directly into the invocation of the native library.
      *
-     * <p> Useful for including options that have not been implemented by this class.
+     * <br><br> Useful for including options specified by the native library, which have not been implemented by this class.
      * Each entry in the map should represent a native option, where the key is the option and the value is the parameter associated with that option.
      * If the native option has no associated parameter, then just map it to a null or empty string.
+     *
+     * <br><br> No validation is performed against this input.
+     * The options you provide here will be passed directly into the invocation, as is.
+     * Be aware that you can inadvertently duplicate an option if you both (a) manually include it here, and (b) assign a value to this class's implementation of that option.
      *
      * <br><br> Example usage:
      * <blockquote><pre>
@@ -194,7 +198,6 @@ public class PdfTextOptions {
      * </pre></blockquote>
      *
      * @implNote No validation is performed against this input.
-     * Any parameter values fed into an option entry will be automatically wrapped in quotes to ensure that the native library correctly interprets the command.
      * @since 4.4.0
      */
     private final Map<String, String> nativeOptions;

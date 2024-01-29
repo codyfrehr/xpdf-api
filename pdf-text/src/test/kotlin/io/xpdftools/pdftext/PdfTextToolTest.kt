@@ -529,7 +529,7 @@ class PdfTextToolTest {
                 .build()
 
         // when then
-        pdfTextTool.getCommandOptions(options) shouldContainExactly listOf("-opw", "\"ownerPass\"", "-upw", "\"userPass\"")
+        pdfTextTool.getCommandOptions(options) shouldContainExactly listOf("-opw", "ownerPass", "-upw", "userPass")
     }
 
     @Test
@@ -544,7 +544,7 @@ class PdfTextToolTest {
                 .build()
 
         // when then
-        pdfTextTool.getCommandOptions(options) shouldContainExactly listOf("-option1", "\"value1\"", "-option2", "-option3", "-option4")
+        pdfTextTool.getCommandOptions(options) shouldContainExactly listOf("-option1", "value1", "-option2", "-option3", "-option4")
     }
 
 }

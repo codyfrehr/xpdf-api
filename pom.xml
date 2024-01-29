@@ -16,21 +16,20 @@
 
     <!--todo: you currently have ibm semeru runtime installed.
             whichjdk.com say you should only use this if you need OpenJ9 VM.
-            what is OpenJ9 VM, and why would it be needed?
-            -->
+            what is OpenJ9 VM, and why would it be needed? -->
     <!--todo: can consumers of this library override any properties, and will that cause problems..?
-              maybe versions need to be hardcoded in dependencies, if so?
-        -->
-    <!--todo: fix any CVEs
-        -->
+              maybe versions need to be hardcoded in dependencies, if so? -->
+    <!--todo: fix any CVEs -->
     <!--todo: is there a way to structure the project or a way to package it so that stuff in common does not get exposed to client?
             there are a lot of things that they dont need access to, such as XpdfTarget...
-            these things shouldnt be available to end user, should they..?
-            -->
+            these things shouldnt be available to end user, should they..? -->
+    <!--todo: analyze deps and make sure no duplicate transitive deps -->
+
     <properties>
         <junit-jupiter.version>5.10.1</junit-jupiter.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <kotlin.version>1.9.22</kotlin.version>
+        <slf4j.version>2.0.11</slf4j.version>
         <lombok.version>1.18.28</lombok.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -69,6 +68,21 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <!--todo: this slf4j-nop library is actually totally disabling logging, because we dont provide an implementation for our tests
+                      so this wont allow us to eventually test the loggers...
+                      should we instead provide a test implementation??
+                      https://www.slf4j.org/faq.html#maven2 -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-nop</artifactId>
+                <version>${slf4j.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -139,6 +153,14 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
         </dependency>
         <!--test-->
         <dependency>
