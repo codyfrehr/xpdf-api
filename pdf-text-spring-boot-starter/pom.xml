@@ -21,7 +21,10 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <!--test-->
-        <!--todo: is this needed?-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

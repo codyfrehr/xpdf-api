@@ -6,6 +6,7 @@ import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.mockk.*
 import io.xpdftools.common.exception.*
 import io.xpdftools.common.util.ReadInputStreamTask
@@ -15,8 +16,11 @@ import io.xpdftools.pdftext.options.PdfTextEndOfLine
 import io.xpdftools.pdftext.options.PdfTextFormat
 import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
@@ -25,6 +29,7 @@ import java.nio.file.Paths
 import java.util.*
 import java.util.UUID.randomUUID
 
+@ExtendWith(OutputCaptureExtension::class)
 class PdfTextToolTest {
 
 //    //todo: some kind of setup like this might be nicer...
@@ -158,7 +163,7 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should process`() {
+    fun `should process`(capturedOutput: CapturedOutput) {
         // given
         val standardOutput = "standardOutput"
         val errorOutput = "errorOutput"
@@ -182,7 +187,7 @@ class PdfTextToolTest {
         val pdfTextToolSpy = spyk(pdfTextTool) {
             every { validate(any()) } just runs
             every { initializeTextFile(any()) } returns textFile
-            every { getCommandParts(any(), any()) } returns mockk()
+            every { getCommandParts(any(), any()) } returns listOf("part1", "part2", "part3")
         }
 
         // when
@@ -191,6 +196,15 @@ class PdfTextToolTest {
         // then
         result.textFile shouldBe textFile
         result.standardOutput shouldBe standardOutput
+
+        capturedOutput.all shouldContain "Process starting"
+        capturedOutput.all shouldContain "Validating request"
+        capturedOutput.all shouldContain "Configuring output text file"
+        capturedOutput.all shouldContain "Building command"
+        capturedOutput.all shouldContain "Invoking native library; command: [part1, part2, part3]"
+        capturedOutput.all shouldContain "Invocation completed; exit code: 0, standard output: standardOutput"
+        capturedOutput.all shouldContain "Invocation succeeded"
+        capturedOutput.all shouldContain "Process finished"
     }
 
     @ParameterizedTest
@@ -202,7 +216,8 @@ class PdfTextToolTest {
             "69, Unknown Xpdf error",
     )
     fun `should throw exception when processing if non-zero exit code`(exitCode: Int,
-                                                                       message: String) {
+                                                                       message: String,
+                                                                       capturedOutput: CapturedOutput) {
         // given
         val standardOutput = "standardOutput"
         val errorOutput = "errorOutput"
@@ -226,17 +241,27 @@ class PdfTextToolTest {
         val pdfTextToolSpy = spyk(pdfTextTool) {
             every { validate(any()) } just runs
             every { initializeTextFile(any()) } returns textFile
-            every { getCommandParts(any(), any()) } returns mockk()
+            every { getCommandParts(any(), any()) } returns listOf("part1", "part2", "part3")
         }
 
         // when then
         shouldThrowWithMessage<XpdfNativeExecutionException>(message) {
             pdfTextToolSpy.process(mockk())
         }
+
+        capturedOutput.all shouldContain "Process starting"
+        capturedOutput.all shouldContain "Validating request"
+        capturedOutput.all shouldContain "Configuring output text file"
+        capturedOutput.all shouldContain "Building command"
+        capturedOutput.all shouldContain "Invoking native library; command: [part1, part2, part3]"
+        capturedOutput.all shouldContain "Invocation completed; exit code: ${exitCode}, standard output: standardOutput"
+        capturedOutput.all shouldContain "Invocation failed; error output: errorOutput"
+        capturedOutput.all shouldContain "Process failed; exception message: $message"
+        capturedOutput.all shouldContain "Process finished"
     }
 
     @Test
-    fun `should throw exception when processing if timout`() {
+    fun `should throw exception when processing if timout`(capturedOutput: CapturedOutput) {
         // given
         val standardOutput = "standardOutput"
         val errorOutput = "errorOutput"
@@ -259,26 +284,40 @@ class PdfTextToolTest {
         val pdfTextToolSpy = spyk(pdfTextTool) {
             every { validate(any()) } just runs
             every { initializeTextFile(any()) } returns textFile
-            every { getCommandParts(any(), any()) } returns mockk()
+            every { getCommandParts(any(), any()) } returns listOf("part1", "part2", "part3")
         }
 
         // when then
         shouldThrowWithMessage<XpdfNativeTimeoutException>("Timeout reached before process could finish") {
             pdfTextToolSpy.process(mockk())
         }
+
+        capturedOutput.all shouldContain "Process starting"
+        capturedOutput.all shouldContain "Validating request"
+        capturedOutput.all shouldContain "Configuring output text file"
+        capturedOutput.all shouldContain "Building command"
+        capturedOutput.all shouldContain "Invoking native library; command: [part1, part2, part3]"
+        capturedOutput.all shouldContain "Invocation timed out"
+        capturedOutput.all shouldContain "Process failed; exception message: Timeout reached before process could finish"
+        capturedOutput.all shouldContain "Process finished"
     }
 
     @Test
-    fun `should throw exception when processing if caught non-xpdf exception`() {
+    fun `should throw exception when processing if caught non-xpdf exception`(capturedOutput: CapturedOutput) {
         // given
         val pdfTextToolSpy = spyk(pdfTextTool) {
-            every { validate(any()) } throws Exception()
+            every { validate(any()) } throws Exception("some message")
         }
 
         // when then
         shouldThrow<XpdfProcessingException> {
             pdfTextToolSpy.process(mockk())
         }
+
+        capturedOutput.all shouldContain "Process starting"
+        capturedOutput.all shouldContain "Validating request"
+        capturedOutput.all shouldContain "Process failed; exception message: some message"
+        capturedOutput.all shouldContain "Process finished"
     }
 
     @Test
