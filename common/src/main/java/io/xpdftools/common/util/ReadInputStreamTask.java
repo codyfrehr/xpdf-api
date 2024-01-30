@@ -29,7 +29,7 @@ public class ReadInputStreamTask implements Callable<String> {
     @Override
     public String call() {
         val reader = new BufferedReader(new InputStreamReader(inputStream));
-        val lines = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+        val lines = reader.lines().collect(Collectors.joining(System.getProperty("line.separator")));
 
         return StringUtils.isBlank(lines) ? null : lines;
     }

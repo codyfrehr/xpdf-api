@@ -32,13 +32,6 @@ import java.util.UUID.randomUUID
 @ExtendWith(OutputCaptureExtension::class)
 class PdfTextToolTest {
 
-//    //todo: some kind of setup like this might be nicer...
-//    private val nativeLibraryPath = mockk<Path>(relaxed = true)
-//    private val timeoutSeconds = 99
-//    private val pdfTextTool = PdfTextTool.builder()
-//            .nativeLibraryPath(nativeLibraryPath)
-//            .timeoutSeconds(timeoutSeconds)
-//            .build()
     private val pdfTextTool = PdfTextTool.builder().build()
 
     @Test
