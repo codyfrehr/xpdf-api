@@ -145,7 +145,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             val commandParts = getCommandParts(request, textFile);
 
             // process commands
-            log.debug("Invoking native library. Command: {}", commandParts);
+            log.debug("Invoking native library; command: {}", commandParts.toString());
             val processBuilder = new ProcessBuilder(commandParts);
             process = processBuilder.start();
 
@@ -155,9 +155,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
             // wait for process finish
             if (process.waitFor(timeoutSeconds, TimeUnit.SECONDS)) {
-                //todo: add tests for debug logging... :(
-                //      also, are you happy with this format for your messages?
-                log.debug("Invocation completed. Exit code: {}. Standard output: {}", process.exitValue(), standardOutput.get());
+                log.debug("Invocation completed; exit code: {}, standard output: {}", process.exitValue(), standardOutput.get());
 
                 // handle process finished
                 if (process.exitValue() == 0) {
@@ -167,7 +165,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                             .standardOutput(standardOutput.get())
                             .build();
                 } else {
-                    log.debug("Invocation failed. Error output: {}", errorOutput.get());
+                    log.debug("Invocation failed; error output: {}", errorOutput.get());
                     final String message;
                     switch (process.exitValue()) {
                         case 1:
@@ -194,10 +192,10 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                 throw new XpdfNativeTimeoutException("Timeout reached before process could finish");
             }
         } catch (XpdfException | XpdfRuntimeException e) {
-            log.debug("Process failed. Exception message: {}", e.getMessage());
+            log.debug("Process failed; exception message: {}", e.getMessage());
             throw e;
         } catch (Exception e) {
-            log.debug("Process failed. Exception message: {}", e.getMessage());
+            log.debug("Process failed; exception message: {}", e.getMessage());
             throw new XpdfProcessingException(e);
         } finally {
             if (executorService != null) {
