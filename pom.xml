@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.xpdftools</groupId>
     <artifactId>xpdf-tools</artifactId>
-    <version>4.4.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -14,6 +14,9 @@
         <module>pdf-text-spring-boot-starter</module>
     </modules>
 
+    <!--todo: maybe this project should be renamed to "xpdf-apis", because it is the API for xpdf, after all!!
+              also rename interface XpdfTool to XpdfApi
+              -->
     <!--todo: you currently have ibm semeru runtime installed.
             whichjdk.com say you should only use this if you need OpenJ9 VM.
             what is OpenJ9 VM, and why would it be needed? -->

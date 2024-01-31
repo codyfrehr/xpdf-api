@@ -8,10 +8,10 @@ package io.xpdftools.pdftext.options;
  * Defines the encoding of text extracted from a PDF file.
  *
  * @implNote Encodings defined here are those included with native <em>pdftotext</em> library.
- //todo: fix how you phrase implNote below, after you implement global xpdfrc configs:
+//todo: fix how you phrase implNote below, after you implement global xpdfrc configs
+//todo: add similar note for EOL option and other options classes
  * Other encodings can be configured via <em>xpdfrc</em> config file.
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 public enum PdfTextEncoding {
 
@@ -19,7 +19,7 @@ public enum PdfTextEncoding {
      * Latin alphabet (No. 1) Unicode character set.
      *
      * @implNote Use {@link #UTF_8}, unless you specifically intend to limit the scope of encoding.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     LATIN_1,
 
@@ -27,7 +27,7 @@ public enum PdfTextEncoding {
      * 7-bit ASCII character set.
      *
      * @implNote Use {@link #UTF_8}, unless you specifically intend to limit the scope of encoding.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     ASCII_7,
 
@@ -35,7 +35,7 @@ public enum PdfTextEncoding {
      * 8-bit Unicode character set.
      *
      * @implNote Backward compatible with {@link #LATIN_1}, {@link #ASCII_7}, and {@link #ZAPF_DINGBATS}.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     UTF_8,
 
@@ -43,7 +43,7 @@ public enum PdfTextEncoding {
      * 2-bit Unicode character set.
      *
      * @implNote Predecessor to UTF-16 encoding.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     UCS_2,
 
@@ -51,8 +51,8 @@ public enum PdfTextEncoding {
      * "Extended" ASCII character set for encoding the Symbol font.
      *
      * @implNote Warning: This extension of the ASCII character set is a legacy encoding that is rarely used.
-     * The Symbol font and its encoding were adopted by PostScript, but never became part of an official encoding standard.
-     * @since 4.4.0
+     * The Symbol font and its encoding were adopted by PostScript, but never became part of any official encoding standard.
+     * @since 1.0.0
      */
     SYMBOL,
 
@@ -60,7 +60,7 @@ public enum PdfTextEncoding {
      * ZapfDingbats Unicode character set.
      *
      * @implNote Use {@link #UTF_8}, unless you specifically intend to limit the scope of encoding.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     ZAPF_DINGBATS,
 

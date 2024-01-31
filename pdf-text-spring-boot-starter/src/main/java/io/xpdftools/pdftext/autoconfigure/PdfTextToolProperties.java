@@ -9,8 +9,7 @@ import java.nio.file.Path;
 /**
  * The configurable properties of a {@link PdfTextTool} that is autoconfigured in {@link PdfTextToolAutoConfiguration}.
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 @Data
 @ConfigurationProperties(prefix = "xpdf-tools.pdf-text")

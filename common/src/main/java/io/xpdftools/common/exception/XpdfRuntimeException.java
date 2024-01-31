@@ -5,8 +5,7 @@ import lombok.experimental.StandardException;
 /**
  * A <em>Xpdf</em> {@code RuntimeException}.
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 @StandardException
 public class XpdfRuntimeException extends RuntimeException {

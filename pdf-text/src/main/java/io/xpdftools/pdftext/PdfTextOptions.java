@@ -24,8 +24,7 @@ import java.util.Map;
  *
  * @implNote Not all options specified by the native <em>pdftotext</em> library have been implemented by this class.
  * See {@link #nativeOptions} for a complete list of options.
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 @Builder
 @Getter
@@ -42,7 +41,7 @@ public class PdfTextOptions {
      *
      * @implNote Must be positive.
      * If unassigned, native library starts from first page.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final Integer pageStart;
 
@@ -56,7 +55,7 @@ public class PdfTextOptions {
      *
      * @implNote Must be positive and greater than or equal to {@link #pageStart}.
      * If unassigned, native library stops on last page.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final Integer pageStop;
 
@@ -74,7 +73,7 @@ public class PdfTextOptions {
      * </pre></blockquote>
      *
      * @implNote If unassigned, native library outputs text in reading order.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final PdfTextFormat format;
 
@@ -87,7 +86,7 @@ public class PdfTextOptions {
      * </pre></blockquote>
      *
      * @implNote If unassigned, native library defaults to {@link PdfTextEncoding#LATIN_1}.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final PdfTextEncoding encoding;
 
@@ -100,7 +99,7 @@ public class PdfTextOptions {
      * </pre></blockquote>
      *
      * @implNote If unassigned, native library uses line-ending convention matching OS it targets.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final PdfTextEndOfLine endOfLine;
 
@@ -113,7 +112,7 @@ public class PdfTextOptions {
      * </pre></blockquote>
      *
      * @implNote If unassigned, native library includes page breaks.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final Boolean pageBreakExcluded;
 
@@ -125,7 +124,7 @@ public class PdfTextOptions {
      *  {@literal -opw <string>}
      * </pre></blockquote>
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final String ownerPassword;
 
@@ -137,7 +136,7 @@ public class PdfTextOptions {
      *  {@literal -upw <string>}
      * </pre></blockquote>
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final String userPassword;
 
@@ -198,7 +197,7 @@ public class PdfTextOptions {
      * </pre></blockquote>
      *
      * @implNote No validation is performed against this input.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final Map<String, String> nativeOptions;
 

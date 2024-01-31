@@ -5,8 +5,7 @@ import io.xpdftools.common.exception.XpdfException;
 /**
  * A wrapper of a <em>Xpdf</em> command line tool.
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 public interface XpdfTool<Request extends XpdfRequest, Response extends XpdfResponse> {
 

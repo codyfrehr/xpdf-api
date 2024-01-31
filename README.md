@@ -21,21 +21,14 @@
   in other official javadocs, you can click a link to open up full docs for some type in your browser.
   is that an actual website hosting those docs?? or does it just open the html from the javadoc artifact?
 - you should password protect your ssh keys. especially when you go live with servers. otherwise, hacker with access to your keys will have passwordless access to your repos
-- figure out best place to put xpdf binaries
-- configure Service to use correct binaries (windows/mac/linux) based on OS
 - read the xpdf sourcecode readme for licensing/distribution info (ie, must include all docs?)
 - running list of things to do correctly when installing to maven repository:
   - push sources
   - write and push javadocs..? (is this mandatory for public sdks? or is this archaic stuff?)
-- make project spring configurable
-  - https://docs.spring.io/spring-boot/docs/1.5.11.RELEASE/reference/html/boot-features-developing-auto-configuration.html
-  - 3 packages
-    - core (non-spring stuff)
-    - autoconfigure (all auto-config stuff with conditional bean to override. create bean, but give user option to override)
-    - starter (springboot and all spring dependencies)
 - there is no way for the client to verify that we are including the authentic xpdf binaries in this solution... 
   - how can you package the binaries with this solution in a credible way?
   - maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
+
 ## autoconfiguration:
 - followed this guide at first:
   - https://www.baeldung.com/spring-boot-custom-starter
