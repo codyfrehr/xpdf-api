@@ -3,20 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.xpdftools</groupId>
-    <artifactId>xpdf-tools</artifactId>
+    <groupId>io.xpdf</groupId>
+    <artifactId>xpdf-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <!--todo: think about versioning scheme...
+        should you be trying to match xpdf lib versions..?
+        in doing so, you are relinquishing the meaning and purpose of your version numbers..
+        for example, what if you have a major change? you would be unable to convey that because you are trying to match xpdfs major version-->
+    <!--todo: also think about versioning from the perspective of additional libraries we may add in the future (ie, PdfImages)
+              what if we have a minor upgrade to PdfText, but nothing needed for PdfImages?
+              Will versions of those libraries get out of sync? or will we just release duplicate/unchanged PdfImages lib with new version but no changes? -->
+    <!--todo: pick a repository to host your artifacts for maven central.
+        take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/ -->
+
     <modules>
-        <module>common</module>
-        <module>pdf-text</module>
-        <module>pdf-text-spring-boot-starter</module>
+        <module>common-api</module>
+        <module>pdf-text-api</module>
+        <module>pdf-text-api-spring-boot-starter</module>
     </modules>
 
-    <!--todo: maybe this project should be renamed to "xpdf-apis", because it is the API for xpdf, after all!!
-              also rename interface XpdfTool to XpdfApi
-              -->
     <!--todo: you currently have ibm semeru runtime installed.
             whichjdk.com say you should only use this if you need OpenJ9 VM.
             what is OpenJ9 VM, and why would it be needed? -->
@@ -53,13 +60,13 @@
                 <version>2.13.0</version>
             </dependency>
             <dependency>
-                <groupId>io.xpdftools</groupId>
-                <artifactId>common</artifactId>
+                <groupId>io.xpdf</groupId>
+                <artifactId>common-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.xpdftools</groupId>
-                <artifactId>pdf-text</artifactId>
+                <groupId>io.xpdf</groupId>
+                <artifactId>pdf-text-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
