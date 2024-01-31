@@ -1,10 +1,10 @@
 {
   "properties": [
     {
-      "name": "xpdf-tools.pdf-text.native-library-path"
+      "name": "xpdf-api.pdf-text.native-library-path"
     },
     {
-      "name": "xpdf-tools.pdf-text.timeout-seconds"
+      "name": "xpdf-api.pdf-text.timeout-seconds"
     }
   ]
 }

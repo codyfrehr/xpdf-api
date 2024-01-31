@@ -92,7 +92,7 @@ class XpdfUtilsTest {
     @Test
     fun `should get xpdf temp path`() {
         // when then
-        XpdfUtils.getXpdfTempPath() shouldBe Paths.get(javaTmpDir, "xpdf-tools")
+        XpdfUtils.getXpdfTempPath() shouldBe Paths.get(javaTmpDir, "xpdf-api")
     }
 
     @ParameterizedTest
