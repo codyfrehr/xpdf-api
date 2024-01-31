@@ -5,6 +5,7 @@
 - 
 
 ## todo:
+- MUST PURCHASE XPDF.IO DOMAIN ASAP!!!!
 - in the future, make PdfTextTool extend Callable so that users of sdk can run asynchronously if they would prefer?
   need to explore more on this topic... https://www.baeldung.com/java-single-thread-executor-service
   in general, need a way better understanding of threading concepts, and how that would play into manual process we run, and how native xpdf lib would be affected
