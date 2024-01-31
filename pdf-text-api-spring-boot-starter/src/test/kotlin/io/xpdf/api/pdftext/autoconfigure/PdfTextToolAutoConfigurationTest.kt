@@ -41,8 +41,8 @@ class PdfTextToolAutoConfigurationTest {
         }
 
         TestPropertyValues.of(
-                "xpdf-tools.pdf-text.native-library-path=${nativeLibrary.canonicalPath}",
-                "xpdf-tools.pdf-text.timeout-seconds=99"
+                "xpdf-api.pdf-text.native-library-path=${nativeLibrary.canonicalPath}",
+                "xpdf-api.pdf-text.timeout-seconds=99"
         ).applyTo(context)
 
         context.register(PdfTextToolAutoConfiguration::class.java)

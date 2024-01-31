@@ -12,7 +12,7 @@ import java.nio.file.Path;
  * @since 1.0.0
  */
 @Data
-@ConfigurationProperties(prefix = "xpdf-tools.pdf-text")
+@ConfigurationProperties(prefix = "xpdf-api.pdf-text")
 public class PdfTextToolProperties {
 
     private Path nativeLibraryPath;

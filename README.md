@@ -1,11 +1,10 @@
-# xpdf-tools
+# xpdf-api
 
 ## local setup:
 - install java 8 (ibm semeru) + set project to correct jdk https://developer.ibm.com/languages/java/semeru-runtimes/downloads/
 - 
 
 ## todo:
-- MUST PURCHASE XPDF.IO DOMAIN ASAP!!!!
 - in the future, make PdfTextTool extend Callable so that users of sdk can run asynchronously if they would prefer?
   need to explore more on this topic... https://www.baeldung.com/java-single-thread-executor-service
   in general, need a way better understanding of threading concepts, and how that would play into manual process we run, and how native xpdf lib would be affected
@@ -41,11 +40,11 @@
 ## c++ stuff:
 - install Windows c++ compiler MinGW via MYSYS2: https://code.visualstudio.com/docs/cpp/config-mingw
 - JNI: https://www.baeldung.com/jni
-  cd C:\Users\Cody\repos\xpdf-tools\pdf-to-text-c\src\main\java\io\xpdftools\pdftotextc
+  cd C:\Users\Cody\repos\xpdf-api\pdf-to-text-c\src\main\java\io\xpdftools\pdftotextc
   javac -h . HelloWorldJNI.java
   g++ -c -I"C:\Program Files\Semeru\jdk-17.0.7.7-openj9\include" -I"C:\Program Files\Semeru\jdk-17.0.7.7-openj9\include\win32" io_xpdftools_pdftotextc_HelloWorldJNI.cpp -o io_xpdftools_pdftotextc_HelloWorldJNI.o
   g++ -shared -o native.dll io_xpdftools_pdftotextc_HelloWorldJNI.o -Wl,--add-stdcall-alias
-  java -cp . -Djava.library.path="C:\Users\Cody\repos\xpdf-tools\pdf-to-text-c\src\main\java\io\xpdftools\pdftotextc" HelloWorldJNI.java
+  java -cp . -Djava.library.path="C:\Users\Cody\repos\xpdf-api\pdf-to-text-c\src\main\java\io\xpdftools\pdftotextc" HelloWorldJNI.java
 - JNI: https://blog.gitnux.com/code/java-c/
 - JNA: https://github.com/java-native-access/jna/tree/7ac44fee3d6b0e47de6d5d10c32be258b9ed1bef#readme
 - JNA sample projects: https://github.com/java-native-access/jna/tree/master/contrib
@@ -73,7 +72,7 @@
 
 ## user documentation website:
 - add section for debugging that explains how to:
-  - configure xpdf-tools for debug-level logging
+  - configure xpdf-api for debug-level logging
   - configure request options for "-verbose" output from native library (which will then be logged in debug mode)
 
 ## why design decisions were made:

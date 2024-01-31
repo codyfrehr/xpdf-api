@@ -69,7 +69,7 @@ public class XpdfUtils {
      * @return temporary directory
      */
     static protected Path getXpdfTempPath() {
-        return Paths.get(System.getProperty("java.io.tmpdir")).resolve( "xpdf-tools");
+        return Paths.get(System.getProperty("java.io.tmpdir")).resolve( "xpdf-api");
     }
 
     /**
