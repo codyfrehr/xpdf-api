@@ -29,12 +29,13 @@
             what is OpenJ9 VM, and why would it be needed? -->
     <!--todo: can consumers of this library override any properties, and will that cause problems..?
               maybe versions need to be hardcoded in dependencies, if so? -->
-    <!--todo: fix any CVEs -->
-    <!--todo: is there a way to structure the project or a way to package it so that stuff in common does not get exposed to client?
-            there are a lot of things that they dont need access to, such as XpdfTarget...
-            these things shouldnt be available to end user, should they..? -->
+    <!--todo: fix any CVEs
+              a good way to test this is to try importing pdf-text-api and/or pdf-text-api-spring-boot-starter packages into other projects, and seeing if you get CVEs
+              currently, there is definitely one on the starter package -->
     <!--todo: analyze deps and make sure no duplicate transitive deps -->
-
+    <!--todo: what happens if project that imports pdf-text-api tries to override one of the properties below?
+              does it work? and should users be able to override versions in pom, in the first place?
+              test this out and think about it -->
     <properties>
         <junit-jupiter.version>5.10.1</junit-jupiter.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
