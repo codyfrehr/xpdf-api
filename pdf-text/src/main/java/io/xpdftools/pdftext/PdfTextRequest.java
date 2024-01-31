@@ -21,8 +21,7 @@ import java.io.File;
  * </pre></blockquote>
  *
  * @implNote A {@code NullPointerException} will be thrown if the required arguments are not provided to the builder.
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 @Builder
 @Getter
@@ -33,7 +32,7 @@ public class PdfTextRequest extends XpdfRequest {
      * Input PDF file.
      *
      * @implNote Required.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     @NonNull
     private final File pdfFile;
@@ -42,14 +41,14 @@ public class PdfTextRequest extends XpdfRequest {
      * Output text file.
      *
      * @implNote If unassigned, a temporary file will get created, and then automatically deleted at JVM termination.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final File textFile;
 
     /**
      * Command options to customize native process.
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final PdfTextOptions options;
 

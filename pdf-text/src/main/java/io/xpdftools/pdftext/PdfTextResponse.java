@@ -10,8 +10,7 @@ import java.io.File;
 /**
  * Represents the result of invoking a native <em>pdftotext</em> library.
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 @Builder
 @Getter
@@ -22,14 +21,14 @@ public class PdfTextResponse extends XpdfResponse {
      * Text file containing text extracted from input PDF file.
      *
      * @implNote If this is a temporary file, it will be automatically deleted on JVM termination.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final File textFile;
 
     /**
      * Standard output streamed from native process.
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final String standardOutput;
 

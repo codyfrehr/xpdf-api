@@ -5,8 +5,7 @@ import lombok.Getter;
 /**
  * A {@link XpdfException} thrown when a native <em>Xpdf</em> process returns a non-zero exit code.
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 @Getter
 public class XpdfNativeExecutionException extends XpdfException {
@@ -14,14 +13,14 @@ public class XpdfNativeExecutionException extends XpdfException {
     /**
      * The standard output of a native <em>Xpdf</em> process.
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final String standardOutput;
 
     /**
      * The error output of a native <em>Xpdf</em> process.
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final String errorOutput;
 

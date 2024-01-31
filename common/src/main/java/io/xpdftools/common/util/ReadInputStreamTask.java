@@ -13,8 +13,7 @@ import java.util.stream.Collectors;
 /**
  * A task that converts an {@code InputStream} connected to a {@code Process} to a {@code String}.
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 @RequiredArgsConstructor
 public class ReadInputStreamTask implements Callable<String> {
@@ -22,7 +21,7 @@ public class ReadInputStreamTask implements Callable<String> {
     /**
      * The {@code InputStream} connected to a {@code Process}.
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final InputStream inputStream;
 

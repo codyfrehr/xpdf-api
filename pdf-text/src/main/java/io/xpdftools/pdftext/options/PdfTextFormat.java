@@ -3,8 +3,7 @@ package io.xpdftools.pdftext.options;
 /**
  * Defines how text extracted from a PDF file should be formatted, or structured.
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 public enum PdfTextFormat {
 
@@ -17,7 +16,7 @@ public enum PdfTextFormat {
      *  spacing within each line will be determined by the specified character pitch.
      * </pre></blockquote>
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     LAYOUT,
 
@@ -29,7 +28,7 @@ public enum PdfTextFormat {
      *  with a single column of text.
      * </pre></blockquote>
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     SIMPLE,
 
@@ -40,7 +39,7 @@ public enum PdfTextFormat {
      *  Only works for pages with a single column of text.
      * </pre></blockquote>
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     SIMPLE_2,
 
@@ -53,7 +52,7 @@ public enum PdfTextFormat {
      *  the specified character pitch.
      * </pre></blockquote>
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     TABLE,
 
@@ -68,7 +67,7 @@ public enum PdfTextFormat {
      *  given on the command line, pdftotext will attempt to compute appropriate value(s).
      * </pre></blockquote>
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     LINE_PRINTER,
 
@@ -79,7 +78,7 @@ public enum PdfTextFormat {
      *  this may or may not be useful.
      * </pre></blockquote>
      *
-     * @since 4.4.0
+     * @since 1.0.0
      */
     RAW,
 

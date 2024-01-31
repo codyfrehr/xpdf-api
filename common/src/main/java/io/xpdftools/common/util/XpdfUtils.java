@@ -10,8 +10,7 @@ import java.nio.file.Paths;
 /**
  * Helpers for a {@link XpdfTool}.
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 public class XpdfUtils {
 
@@ -19,7 +18,7 @@ public class XpdfUtils {
      * Gets the resource name of the <em>pdftotext</em> library native to this system.
      *
      * @return native library resource name
-     * @since 4.4.0
+     * @since 1.0.0
      */
     static public String getPdfTextNativeLibraryResourceName() {
         return String.format("xpdf/%s/%s", getTargetSystem(), getPdfTextNativeLibraryName());
@@ -29,7 +28,7 @@ public class XpdfUtils {
      * Gets the path where the native <em>pdftotext</em> library should be copied so that it can be accessed by OS.
      *
      * @return native library path
-     * @since 4.4.0
+     * @since 1.0.0
      */
     static public Path getPdfTextNativeLibraryPath() {
         return getXpdfTempPath().resolve("pdf-text").resolve("bin").resolve(getPdfTextNativeLibraryName());
@@ -39,7 +38,7 @@ public class XpdfUtils {
      * Gets the temporary directory where the native <em>pdftotext</em> library should write output.
      *
      * @return temporary directory
-     * @since 4.4.0
+     * @since 1.0.0
      */
     static public Path getPdfTextTempOutputPath() {
         return getXpdfTempPath().resolve("pdf-text").resolve("out");
@@ -49,7 +48,7 @@ public class XpdfUtils {
      * Gets the maximum amount of time in seconds allotted to the native <em>pdftotext</em> process before timing out.
      *
      * @return timeout length in seconds for native process
-     * @since 4.4.0
+     * @since 1.0.0
      */
     static public Integer getPdfTextTimeoutSeconds() {
         return 30;

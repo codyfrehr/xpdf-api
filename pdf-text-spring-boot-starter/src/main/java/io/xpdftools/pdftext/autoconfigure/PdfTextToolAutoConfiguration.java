@@ -13,8 +13,7 @@ import java.nio.file.Path;
 /**
  * An autoconfiguration for {@link PdfTextTool} with configuration properties defined in {@link PdfTextToolProperties}.
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 @AutoConfiguration
 @ConditionalOnClass(PdfTextTool.class)

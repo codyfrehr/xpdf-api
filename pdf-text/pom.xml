@@ -14,7 +14,10 @@
                 should you be trying to match xpdf lib versions..?
                 in doing so, you are relinquishing the meaning and purpose of your version numbers..
                 for example, what if you have a major change? you would be unable to convey that because you are trying to match xpdfs major version-->
-        <version>4.4.0-SNAPSHOT</version>
+        <!--todo: also think about versioning from the perspective of additional libraries we may add in the future (ie, PdfImages)
+                  what if we have a minor upgrade to PdfText, but nothing needed for PdfImages?
+                  Will versions of those libraries get out of sync? or will we just release duplicate/unchanged PdfImages lib with new version but no changes? -->
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>

@@ -43,8 +43,7 @@ import static java.util.Collections.emptyList;
  *      .build();
  * </pre></blockquote>
  *
- * @author Cody Frehr
- * @since 4.4.0
+ * @since 1.0.0
  */
 @Builder
 @Getter
@@ -57,7 +56,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      *
      * @implNote If unassigned, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath()},
      * which points to the native library included with this project.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final Path nativeLibraryPath;
 
@@ -65,7 +64,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      * Maximum amount of time in seconds allotted to the native process before timing out.
      *
      * @implNote If unassigned, this value is configured to {@link XpdfUtils#getPdfTextTimeoutSeconds()}.
-     * @since 4.4.0
+     * @since 1.0.0
      */
     private final Integer timeoutSeconds;
 
@@ -123,7 +122,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      * @throws XpdfNativeExecutionException if native process returns non-zero exit code
      * @throws XpdfNativeTimeoutException if native process duration exceeds timeout length
      * @throws XpdfProcessingException if any other exception occurs during processing
-     * @since 4.4.0
+     * @since 1.0.0
      */
     @Override
     public PdfTextResponse process(PdfTextRequest request) throws XpdfException {
