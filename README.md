@@ -5,13 +5,25 @@
 - 
 
 ## todo:
-- in the future, make PdfTextTool extend Callable so that users of sdk can run asynchronously if they would prefer?
-  need to explore more on this topic... https://www.baeldung.com/java-single-thread-executor-service
-  in general, need a way better understanding of threading concepts, and how that would play into manual process we run, and how native xpdf lib would be affected
+- figure out how to use Generics in Xpdf interface and PdfTextTool, if possible.
+  would be nice not to have to declare XpdfTool<PdfTextRequest, PdfTextResponse> when you initialize it. but that just may be whats needed
+- licensing: better understand Xpdf licensing, what license you can/should give this repo (specified in pom). consult Guy if needed
+- build really basic homepage for website, resembling layout of https://kotest.io/docs or even just the simpler https://mockk.io/
+- figure out process to deploy to maven central repo
+  - take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/
+  - guide: https://maven.apache.org/repository/guide-central-repository-upload.html
+    - requirements (link from within page above) https://central.sonatype.org/publish/requirements/ 
+  - figure out maven-release-plugin, to control versioning and release process to maven central
+    a good starting point for this would be to find a popular/respected open-source repo using pom configs, and see if they have maven release plugin configured, and how they do it.
+- make xpdf.io repo public
+  can/should you somehow segregate this repo from your personal github account?
+  would be nice to have some general xpdf.io repo, with some public open-source stuff (xpdf-api) and some private stuff (xpdf-web)
+  but from a legal point of view, what does that mean for your ownership of the repo?
 - in PdfTextTool.process(), do we even need ExecutorService to accomplish what it is we are trying to accomplish?
   maybe we can instead post this question to stackoverflow, to learn a little more and get some decent feedback.
-- decide on package "version" and cleanup corresponding @since javadoc tags
-- javadoc...
+- javadoc: is an actual javadoc artifact needed?
+  ANSWER: YES. spring boot libs for example include javadoc and sources jars
+- more javadoc...
   need to get plugin working that generates javadoc artifact (html pages)
   issues seem to arise in javadocs when you reference this library from other projects.
   for example, in xpdf-apis project, you get a bunch of broken links for types in the "common" package.
@@ -21,13 +33,14 @@
   in other official javadocs, you can click a link to open up full docs for some type in your browser.
   is that an actual website hosting those docs?? or does it just open the html from the javadoc artifact?
 - you should password protect your ssh keys. especially when you go live with servers. otherwise, hacker with access to your keys will have passwordless access to your repos
-- read the xpdf sourcecode readme for licensing/distribution info (ie, must include all docs?)
-- running list of things to do correctly when installing to maven repository:
-  - push sources
-  - write and push javadocs..? (is this mandatory for public sdks? or is this archaic stuff?)
 - there is no way for the client to verify that we are including the authentic xpdf binaries in this solution... 
   - how can you package the binaries with this solution in a credible way?
   - maybe some way to incorporate the pgp key provided on xpdf website into build/distribution process? https://www.xpdfreader.com/download.html
+
+## future improvements
+- in the future, make PdfTextTool extend Callable so that users of sdk can run asynchronously if they would prefer?
+  need to explore more on this topic... https://www.baeldung.com/java-single-thread-executor-service
+  in general, need a way better understanding of threading concepts, and how that would play into manual process we run, and how native xpdf lib would be affected
 
 ## autoconfiguration:
 - followed this guide at first:
@@ -96,4 +109,13 @@
         for example, the choice to not include a "format" option results in a different format than any of the options, themselves.
         choosing nothing/null is an option, in and of itself, and may result in different functionality under the hood of xpdf (and we dont want to obscure that)
 - slf4j chosen because we should let end-user of library choose implementation https://www.slf4j.org/faq.html#configure_logging
-- 
+
+## Release checklist (todo before every deployment of artifact)
+- upgrade major/minor/patch version
+  - major if fundamental contract change (ie, we no longer include xpdf libs and instead interface directly with them via JNA)
+  - minor if new feature or something relatively significant (ie, add compatibility with PdfImages tool or something)
+  - patch if bug fix or upgrading dependencies (ie, clear new CVE that emerged)
+- run snapshot deployment to test process
+  - should deploy jar, sources-jar, and javadoc-jar
+  - should not have any CVEs tagged on artifact in maven repo
+  - you should pull these dependencies and make sure your test projects correctly handle everything
