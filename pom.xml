@@ -8,34 +8,12 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <!--todo: think about versioning scheme...
-        should you be trying to match xpdf lib versions..?
-        in doing so, you are relinquishing the meaning and purpose of your version numbers..
-        for example, what if you have a major change? you would be unable to convey that because you are trying to match xpdfs major version-->
-    <!--todo: also think about versioning from the perspective of additional libraries we may add in the future (ie, PdfImages)
-              what if we have a minor upgrade to PdfText, but nothing needed for PdfImages?
-              Will versions of those libraries get out of sync? or will we just release duplicate/unchanged PdfImages lib with new version but no changes? -->
-    <!--todo: pick a repository to host your artifacts for maven central.
-        take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/ -->
-
     <modules>
         <module>common-api</module>
         <module>pdf-text-api</module>
         <module>pdf-text-api-spring-boot-starter</module>
     </modules>
 
-    <!--todo: you currently have ibm semeru runtime installed.
-            whichjdk.com say you should only use this if you need OpenJ9 VM.
-            what is OpenJ9 VM, and why would it be needed? -->
-    <!--todo: can consumers of this library override any properties, and will that cause problems..?
-              maybe versions need to be hardcoded in dependencies, if so? -->
-    <!--todo: fix any CVEs
-              a good way to test this is to try importing pdf-text-api and/or pdf-text-api-spring-boot-starter packages into other projects, and seeing if you get CVEs
-              currently, there is definitely one on the starter package -->
-    <!--todo: analyze deps and make sure no duplicate transitive deps -->
-    <!--todo: what happens if project that imports pdf-text-api tries to override one of the properties below?
-              does it work? and should users be able to override versions in pom, in the first place?
-              test this out and think about it -->
     <properties>
         <junit-jupiter.version>5.10.1</junit-jupiter.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
@@ -44,10 +22,6 @@
         <lombok.version>1.18.28</lombok.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!--todo: should you specify plugin versions..?-->
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
-        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <mockito.version>4.11.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>2.7.18</spring-boot.version>
@@ -221,16 +195,9 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <!--todo: intellij understands how to execute maven wrapper against correct java version.
-                               but when running wrapper from command line, wrapper thinks java home is 17, and you get a warning.
-                               before running maven on command line, you must set correct java home:
-                               set JAVA_HOME=C:\Program Files\Semeru\jdk-8.0.372.7-openj9
-                               but honestly, this hardly matters...
-                               just install java 8 only on the build system and you wont have to do any weird javac configurations, like bootclasspath
-                       -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
+                    <version>3.11.0</version>
                     <configuration>
                         <annotationProcessorPaths>
                             <path>
@@ -254,38 +221,10 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!--todo: editors like IDEA/eclipse already give you nice hover-features with just the inclusion of sources, but if you want web documentation, then use this plugin to generate web docs.
-                        one issue you will need to figure out is how to generate documentation for lombok stuff, which doesnt seem to be happening currently...
-                        -->
-<!--                <plugin>-->
-<!--                    <groupId>org.apache.maven.plugins</groupId>-->
-<!--                    <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--                    <version>${maven-javadoc-plugin.version}</version>-->
-<!--                    <configuration>-->
-<!--                        &lt;!&ndash;todo: any other configs we should include here?&ndash;&gt;-->
-<!--                        <source>${maven.compiler.source}</source>-->
-<!--                        &lt;!&ndash;todo: why is implNote not handled by plugin? issue on my end..?&ndash;&gt;-->
-<!--                        <tags>-->
-<!--                            <tag>-->
-<!--                                <name>implNote</name>-->
-<!--                                <placement>a</placement>-->
-<!--                                <head>Implementation Note:</head>-->
-<!--                            </tag>-->
-<!--                        </tags>-->
-<!--                    </configuration>-->
-<!--                    <executions>-->
-<!--                        <execution>-->
-<!--                            <id>attach-javadocs</id>-->
-<!--                            <goals>-->
-<!--                                <goal>jar</goal>-->
-<!--                            </goals>-->
-<!--                        </execution>-->
-<!--                    </executions>-->
-<!--                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>${maven-source-plugin.version}</version>
+                    <version>3.3.0</version>
                     <configuration>
                         <!--todo: any other configs we should include here?-->
                     </configuration>
@@ -299,6 +238,39 @@
                         </execution>
                     </executions>
                 </plugin>
+                <!--todo: editors like IDEA/eclipse already give you nice hover-features with just the inclusion of sources, but if you want web documentation, then use this plugin to generate web docs.
+        one issue you will need to figure out is how to generate documentation for lombok stuff, which doesnt seem to be happening currently...
+        -->
+                <!--                <plugin>-->
+                <!--                    <groupId>org.apache.maven.plugins</groupId>-->
+                <!--                    <artifactId>maven-javadoc-plugin</artifactId>-->
+                <!--                    <version>3.6.3</version>-->
+                <!--                    <configuration>-->
+                <!--                        &lt;!&ndash;todo: any other configs we should include here?&ndash;&gt;-->
+                <!--                        <source>${maven.compiler.source}</source>-->
+                <!--                        &lt;!&ndash;todo: why is implNote not handled by plugin? issue on my end..?&ndash;&gt;-->
+                <!--                        <tags>-->
+                <!--                            <tag>-->
+                <!--                                <name>implNote</name>-->
+                <!--                                <placement>a</placement>-->
+                <!--                                <head>Implementation Note:</head>-->
+                <!--                            </tag>-->
+                <!--                        </tags>-->
+                <!--                    </configuration>-->
+                <!--                    <executions>-->
+                <!--                        <execution>-->
+                <!--                            <id>attach-javadocs</id>-->
+                <!--                            <goals>-->
+                <!--                                <goal>jar</goal>-->
+                <!--                            </goals>-->
+                <!--                        </execution>-->
+                <!--                    </executions>-->
+                <!--                </plugin>-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.6.1</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -310,13 +282,17 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-javadoc-plugin</artifactId>-->
+            <!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
