@@ -2,7 +2,6 @@ package io.xpdf.api.pdftext;
 
 import io.xpdf.api.common.XpdfTool;
 import io.xpdf.api.common.exception.*;
-import io.xpdf.api.common.util.ReadInputStreamTask;
 import io.xpdf.api.common.util.XpdfUtils;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,18 +9,18 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -82,7 +81,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                 // copy library from project resources to OS-accessible directory on local system
                 val pdfTextNativeLibraryPath = getPdfTextNativeLibraryPath();
                 if (!pdfTextNativeLibraryPath.toFile().exists()) {
-                    val nativeLibraryResourceStream = XpdfUtils.class.getClassLoader().getResourceAsStream(getPdfTextNativeLibraryResourceName());
+                    val nativeLibraryResourceStream = getClass().getClassLoader().getResourceAsStream(getPdfTextNativeLibraryResourceName());
                     if (nativeLibraryResourceStream == null) {
                         throw new XpdfRuntimeException("Unable to locate native library in project resources");
                     }
@@ -103,7 +102,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
         protected int configureTimeoutSeconds() {
             if (timeoutSeconds == null) {
-                return XpdfUtils.getPdfTextTimeoutSeconds();
+                return getPdfTextTimeoutSeconds();
             } else {
                 return timeoutSeconds;
             }
@@ -128,7 +127,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     public PdfTextResponse process(PdfTextRequest request) throws XpdfException {
         log.debug("Process starting");
         Process process = null;
-        ExecutorService executorService = null;
 
         try {
             // validate request
@@ -148,23 +146,21 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             val processBuilder = new ProcessBuilder(commandParts);
             process = processBuilder.start();
 
-            executorService = Executors.newSingleThreadExecutor();
-            val standardOutput = executorService.submit(new ReadInputStreamTask(process.getInputStream()));
-            val errorOutput = executorService.submit(new ReadInputStreamTask(process.getErrorStream()));
-
             // wait for process finish
             if (process.waitFor(timeoutSeconds, TimeUnit.SECONDS)) {
-                log.debug("Invocation completed; exit code: {}, standard output: {}", process.exitValue(), standardOutput.get());
+                val standardOutput = IOUtils.toString(process.getInputStream(), Charset.defaultCharset());
+                val errorOutput = IOUtils.toString(process.getErrorStream(), Charset.defaultCharset());
+                log.debug("Invocation completed; exit code: {}, standard output: {}", process.exitValue(), standardOutput);
 
                 // handle process finished
                 if (process.exitValue() == 0) {
                     log.debug("Invocation succeeded");
                     return PdfTextResponse.builder()
                             .textFile(textFile)
-                            .standardOutput(standardOutput.get())
+                            .standardOutput(standardOutput)
                             .build();
                 } else {
-                    log.debug("Invocation failed; error output: {}", errorOutput.get());
+                    log.debug("Invocation failed; error output: {}", errorOutput);
                     final String message;
                     switch (process.exitValue()) {
                         case 1:
@@ -183,7 +179,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                             message = "Unknown Xpdf error";
                             break;
                     }
-                    throw new XpdfNativeExecutionException(standardOutput.get(), errorOutput.get(), message);
+                    throw new XpdfNativeExecutionException(standardOutput, errorOutput, message);
                 }
             } else {
                 // handle process timeout
@@ -197,9 +193,6 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             log.debug("Process failed; exception message: {}", e.getMessage());
             throw new XpdfProcessingException(e);
         } finally {
-            if (executorService != null) {
-                executorService.shutdown();
-            }
             if (process != null) {
                 process.destroy();
             }

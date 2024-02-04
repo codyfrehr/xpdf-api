@@ -9,12 +9,12 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.mockk.*
 import io.xpdf.api.common.exception.*
-import io.xpdf.api.common.util.ReadInputStreamTask
 import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdftext.options.PdfTextEncoding
 import io.xpdf.api.pdftext.options.PdfTextEndOfLine
 import io.xpdf.api.pdftext.options.PdfTextFormat
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -24,6 +24,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
+import java.nio.charset.Charset
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
@@ -158,8 +159,6 @@ class PdfTextToolTest {
     @Test
     fun `should process`(capturedOutput: CapturedOutput) {
         // given
-        val standardOutput = "standardOutput"
-        val errorOutput = "errorOutput"
         val standardOutputStream = mockk<ByteArrayInputStream>()
         val errorOutputStream = mockk<ByteArrayInputStream>()
 
@@ -172,9 +171,9 @@ class PdfTextToolTest {
             every { destroy() } just runs
         }
 
-        mockkConstructor(ReadInputStreamTask::class)
-        every { constructedWith<ReadInputStreamTask>(EqMatcher(standardOutputStream)).call() } returns standardOutput
-        every { constructedWith<ReadInputStreamTask>(EqMatcher(errorOutputStream)).call() } returns errorOutput
+        mockkStatic(IOUtils::class)
+        every { IOUtils.toString(standardOutputStream, any<Charset>()) } returns "standardOutput"
+        every { IOUtils.toString(errorOutputStream, any<Charset>()) } returns "errorOutput"
 
         val textFile = mockk<File>()
         val pdfTextToolSpy = spyk(pdfTextTool) {
@@ -188,7 +187,7 @@ class PdfTextToolTest {
 
         // then
         result.textFile shouldBe textFile
-        result.standardOutput shouldBe standardOutput
+        result.standardOutput shouldBe "standardOutput"
 
         capturedOutput.all shouldContain "Process starting"
         capturedOutput.all shouldContain "Validating request"
@@ -212,8 +211,6 @@ class PdfTextToolTest {
                                                                        message: String,
                                                                        capturedOutput: CapturedOutput) {
         // given
-        val standardOutput = "standardOutput"
-        val errorOutput = "errorOutput"
         val standardOutputStream = mockk<ByteArrayInputStream>()
         val errorOutputStream = mockk<ByteArrayInputStream>()
 
@@ -226,9 +223,9 @@ class PdfTextToolTest {
             every { destroy() } just runs
         }
 
-        mockkConstructor(ReadInputStreamTask::class)
-        every { constructedWith<ReadInputStreamTask>(EqMatcher(standardOutputStream)).call() } returns standardOutput
-        every { constructedWith<ReadInputStreamTask>(EqMatcher(errorOutputStream)).call() } returns errorOutput
+        mockkStatic(IOUtils::class)
+        every { IOUtils.toString(standardOutputStream, any<Charset>()) } returns "standardOutput"
+        every { IOUtils.toString(errorOutputStream, any<Charset>()) } returns "errorOutput"
 
         val textFile = mockk<File>()
         val pdfTextToolSpy = spyk(pdfTextTool) {
@@ -256,8 +253,6 @@ class PdfTextToolTest {
     @Test
     fun `should throw exception when processing if timout`(capturedOutput: CapturedOutput) {
         // given
-        val standardOutput = "standardOutput"
-        val errorOutput = "errorOutput"
         val standardOutputStream = mockk<ByteArrayInputStream>()
         val errorOutputStream = mockk<ByteArrayInputStream>()
 
@@ -269,9 +264,9 @@ class PdfTextToolTest {
             every { destroy() } just runs
         }
 
-        mockkConstructor(ReadInputStreamTask::class)
-        every { constructedWith<ReadInputStreamTask>(EqMatcher(standardOutputStream)).call() } returns standardOutput
-        every { constructedWith<ReadInputStreamTask>(EqMatcher(errorOutputStream)).call() } returns errorOutput
+        mockkStatic(IOUtils::class)
+        every { IOUtils.toString(standardOutputStream, any<Charset>()) } returns "standardOutput"
+        every { IOUtils.toString(errorOutputStream, any<Charset>()) } returns "errorOutput"
 
         val textFile = mockk<File>()
         val pdfTextToolSpy = spyk(pdfTextTool) {
