@@ -19,8 +19,6 @@
   can/should you somehow segregate this repo from your personal github account?
   would be nice to have some general xpdf.io repo, with some public open-source stuff (xpdf-api) and some private stuff (xpdf-web)
   but from a legal point of view, what does that mean for your ownership of the repo?
-- in PdfTextTool.process(), do we even need ExecutorService to accomplish what it is we are trying to accomplish?
-  maybe we can instead post this question to stackoverflow, to learn a little more and get some decent feedback.
 - javadoc: is an actual javadoc artifact needed?
   ANSWER: YES. spring boot libs for example include javadoc and sources jars
 - more javadoc...
