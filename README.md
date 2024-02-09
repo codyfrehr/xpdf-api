@@ -36,14 +36,8 @@
   have decided not to host any binaries I didn't compile myself (for
   disk space and support reasons)."
 - WRITE THIS README!
-- javadoc: is an actual javadoc artifact needed?
-  ANSWER: YES. spring boot libs for example include javadoc and sources jars
-- more javadoc...
-  need to get plugin working that generates javadoc artifact (html pages)
-  issues seem to arise in javadocs when you reference this library from other projects.
-  for example, in xpdf-apis project, you get a bunch of broken links for types in the "common" package.
-  those same links are NOT broken when we just exclude javadoc artifact from process altogether.
-- another javadoc issue...
-  should javadocs link to external website that will host javadocs?
-  in other official javadocs, you can click a link to open up full docs for some type in your browser.
-  is that an actual website hosting those docs?? or does it just open the html from the javadoc artifact?
+- javadoc:
+  - is there a way to generate javadocs for lombok components?
+    like, for example - Intellij can read sources and interpret everything just fine.
+    if you download sources for this project from xpdf-web, and inspect PdfTextTool.builder().timeoutSeconds(), you get proper info.
+    but if you look at javadoc generated for same component, you dont get any of that info (like @implNote)

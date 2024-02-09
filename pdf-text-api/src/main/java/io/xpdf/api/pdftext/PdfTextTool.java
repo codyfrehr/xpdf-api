@@ -129,7 +129,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     /**
      * Gets text from a PDF file.
      *
-     * <br><br> This method invokes the native <em>pdftotext</em> library against a PDF file with a set of options.
+     * <br><br> Invokes the native <em>pdftotext</em> library against a PDF file.
      * The native process extracts text from a PDF file into a text file.
      *
      * @param request {@link PdfTextRequest}

@@ -23,5 +23,7 @@ package io.xpdf.api.common;
  * @since 1.0.0
  */
 //todo: should we have an abstract options class as well?
+//      and is there something we could/should do with lombok builders for this situation?
+//todo: should this be abstract in the first place? or just be some non-abstract parent?
 public abstract class XpdfRequest {
 }
