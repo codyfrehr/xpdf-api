@@ -91,11 +91,11 @@ class XpdfUtilsTest {
 
     @ParameterizedTest
     @CsvSource(
-            "linux-32, pdftotext",
-            "linux-64, pdftotext",
-            "mac-64, pdftotext",
-            "windows-32, pdftotext.exe",
-            "windows-64, pdftotext.exe",
+            "linux/bin32, pdftotext",
+            "linux/bin64, pdftotext",
+            "mac/bin64, pdftotext",
+            "windows/bin32, pdftotext.exe",
+            "windows/bin64, pdftotext.exe",
     )
     fun `should get pdf text native library name`(targetSystem: String,
                                            nativeLibraryName: String) {
@@ -114,11 +114,11 @@ class XpdfUtilsTest {
 
     @ParameterizedTest
     @CsvSource(
-            "32, Linux, linux-32",
-            "64, Linux, linux-64",
-            "64, Mac, mac-64",
-            "32, Windows, windows-32",
-            "64, Windows, windows-64",
+            "32, Linux, linux/bin32",
+            "64, Linux, linux/bin64",
+            "64, Mac, mac/bin64",
+            "32, Windows, windows/bin32",
+            "64, Windows, windows/bin64",
     )
     fun `should get target system`(bit: String,
                                    os: String,

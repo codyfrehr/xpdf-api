@@ -2,12 +2,17 @@
 
 ## todo:
 - licensing
-  - what does GPLv3 specify i must do with original, unmodified xpdf source code? doesn't need to be included, does it?
   - what does GPLv3 specify i must do with my code? (just add license and info right?)
-  - another really helpful post https://opensource.stackexchange.com/q/9141
-  - good gpl3 license FAQ: https://opensource.stackexchange.com/a/6814
+    - license and "copyright notice" must be included with every distribution? (including jar on maven) https://gist.github.com/kn9ts/cbe95340d29fc1aaeaa5dd5c059d2e60
+      here's how you can include license in jar with a plugin: https://stackoverflow.com/a/39741925/8784215
+      ...you should go see how other opensource projects do it.
+      otherwise, maybe you can just add it to the project resources for each individual module, but thats annoying to duplicate https://stackoverflow.com/a/37655114/8784215
+      see the maven license plugin https://www.mojohaus.org/license-maven-plugin/examples/example-add-license.html
+    - understand difference between license and copyright, and what that means for this project https://stackoverflow.com/a/13437203/8784215
   - replace placeholders in licensing headers (ie, {{ organization }})
     maybe go find some examples online in github and see how others do it..
+  - part of build process is to ensure all of your dependencies are gpl3 compatible.
+    you should add licensing plugin to help in verification of that https://www.mojohaus.org/license-maven-plugin/
 - clean up SCRIBBLES, or maybe organize into other docs at root that may be needed (ie, CONTRIBUTING https://github.com/spring-projects/spring-boot/blob/main/CONTRIBUTING.adoc)
 - figure out process to deploy to maven central repo
   - take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/
@@ -23,6 +28,13 @@
   but from a legal point of view, what does that mean for your ownership of the repo?
 - build really basic homepage for website, resembling layout of https://kotest.io/docs or even just the simpler https://mockk.io/
   maybe the homepage can redirect automatically to the repo readme until the site is built, so you can just release this thing!
+- show xpdf creators your library, and get their okay to release
+- request xpdf creators to add link to your library on their webpage. Per their readme, they would be willing to do this!
+  "If you compile Xpdf for a system not listed on the web page, please
+  let me know.  If you're willing to make your binary available by ftp
+  or on the web, I'll be happy to add a link from the Xpdf web page.  I
+  have decided not to host any binaries I didn't compile myself (for
+  disk space and support reasons)."
 - WRITE THIS README!
 - javadoc: is an actual javadoc artifact needed?
   ANSWER: YES. spring boot libs for example include javadoc and sources jars
