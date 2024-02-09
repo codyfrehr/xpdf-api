@@ -111,12 +111,12 @@ public class XpdfUtils {
         }
 
         if (os.startsWith("Windows")) {
-            return "64".equals(bit) ? "windows-64" : "windows-32";
+            return "64".equals(bit) ? "windows/bin64" : "windows/bin32";
         } else if (os.startsWith("Linux")) {
-            return "64".equals(bit) ? "linux-64" : "linux-32";
+            return "64".equals(bit) ? "linux/bin64" : "linux/bin32";
         } else if (os.startsWith("Mac")) {
             if ("64".equals(bit)) {
-                return "mac-64";
+                return "mac/bin64";
             } else {
                 throw new XpdfRuntimeException("XpdfTools can only be run against 64-bit JVM on Mac operating system");
             }

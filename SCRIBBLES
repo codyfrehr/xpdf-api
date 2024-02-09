@@ -1,4 +1,4 @@
-## Release checklist (todo before every deployment of artifact)
+## Release checklist (verify before every release of new package)
 - ensure all newly-created classes and poms have the GPL3 license header
 - ensure any newly-added dependencies are GPL3 compatible (only those that will be packaged and distributed; not test dependencies)
 - upgrade major/minor/patch version
@@ -9,6 +9,14 @@
   - should deploy jar, sources-jar, and javadoc-jar
   - should not have any CVEs tagged on artifact in maven repo
   - you should pull these dependencies and make sure your test projects correctly handle everything
+
+## Change instructions (notes for how to approach changing specific aspects of this codebase)
+- if new versions of xpdf binaries added, make sure to also update supporting docs (the Xpdf docs required for GPL3 redistribution, as specified in Xpdf source readme)
+- new binaries should be extracted from source archives. project resource structure matches that of source archives, but unrelated files removed (specifically, non-pdftotext bins and docs)
+
+## licensing, helpful links
+- another really helpful post https://opensource.stackexchange.com/q/9141
+- good gpl3 license FAQ: https://opensource.stackexchange.com/a/6814
 
 ## why design decisions were made:
 ## todo: start recording new notes here. this is important for future development, so we can understand why we took certain design approaches.
