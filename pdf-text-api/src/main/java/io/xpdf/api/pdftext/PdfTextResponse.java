@@ -21,6 +21,7 @@ import io.xpdf.api.common.XpdfResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.io.File;
 
@@ -29,7 +30,7 @@ import java.io.File;
  *
  * @since 1.0.0
  */
-@Builder
+@SuperBuilder
 @Getter
 @ToString
 public class PdfTextResponse extends XpdfResponse {
@@ -41,12 +42,5 @@ public class PdfTextResponse extends XpdfResponse {
      * @since 1.0.0
      */
     private final File textFile;
-
-    /**
-     * Standard output streamed from native process.
-     *
-     * @since 1.0.0
-     */
-    private final String standardOutput;
 
 }

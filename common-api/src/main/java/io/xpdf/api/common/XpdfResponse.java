@@ -17,10 +17,23 @@
  */
 package io.xpdf.api.common;
 
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
+
 /**
  * Represents the result of invoking a native <em>Xpdf</em> library.
  *
  * @since 1.0.0
  */
+@SuperBuilder
+@Getter
 public abstract class XpdfResponse {
+
+    /**
+     * Standard output streamed from native process.
+     *
+     * @since 1.0.0
+     */
+    private final String standardOutput;
+
 }

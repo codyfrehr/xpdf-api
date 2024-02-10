@@ -17,23 +17,15 @@
  */
 package io.xpdf.api.common;
 
-import io.xpdf.api.common.exception.*;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 /**
- * A wrapper of a <em>Xpdf</em> command line tool.
+ * Represents a set of command options to invoke with a native <em>Xpdf</em> library.
  *
  * @since 1.0.0
  */
-public interface XpdfTool<RequestT extends XpdfRequest<OptionsT>, OptionsT extends XpdfOptions, ResponseT extends XpdfResponse> {
-
-    /**
-     * Invokes a native <em>Xpdf</em> library against a PDF file.
-     *
-     * @param request {@link RequestT}
-     * @return {@link ResponseT} result
-     * @throws XpdfException if exception
-     * @since 1.0.0
-     */
-    ResponseT process(RequestT request) throws XpdfException;
-
+@SuperBuilder
+@Getter
+public abstract class XpdfOptions {
 }
