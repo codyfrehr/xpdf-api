@@ -17,12 +17,13 @@
  */
 package io.xpdf.api.pdftext;
 
+import io.xpdf.api.common.XpdfOptions;
 import io.xpdf.api.common.XpdfRequest;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
+import javax.swing.text.html.Option;
 import java.io.File;
 
 /**
@@ -40,19 +41,10 @@ import java.io.File;
  * @implNote A {@code NullPointerException} will be thrown if the required arguments are not provided to the builder.
  * @since 1.0.0
  */
-@Builder
+@SuperBuilder
 @Getter
 @ToString
-public class PdfTextRequest extends XpdfRequest {
-
-    /**
-     * Input PDF file.
-     *
-     * @implNote Required.
-     * @since 1.0.0
-     */
-    @NonNull
-    private final File pdfFile;
+public class PdfTextRequest<OptionsT extends XpdfOptions> extends XpdfRequest<OptionsT> {
 
     /**
      * Output text file.
@@ -61,12 +53,5 @@ public class PdfTextRequest extends XpdfRequest {
      * @since 1.0.0
      */
     private final File textFile;
-
-    /**
-     * Command options to customize native process.
-     *
-     * @since 1.0.0
-     */
-    private final PdfTextOptions options;
 
 }
