@@ -1,6 +1,6 @@
 /*
- * {{ project }}
- * Copyright (C) {{ year }} {{ organization }}
+ * xpdf-api
+ * Copyright (C) 2024 xpdf.io
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

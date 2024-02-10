@@ -1,6 +1,7 @@
 ## Release checklist (verify before every release of new package)
-- ensure all newly-created classes and poms have the GPL3 license header
-- ensure any newly-added dependencies are GPL3 compatible (only those that will be packaged and distributed; not test dependencies)
+- verify all classes (and poms) have correct licensing (run maven license plugin)
+- verify all dependencies are GPL3 compatible (run maven license plugin)
+- ensure all newly-created modules have correct pom structure and metadata
 - upgrade major/minor/patch version
   - major, if fundamental contract change (ie, we no longer include xpdf libs and instead interface directly with them via JNA)
   - minor, if new feature or something relatively significant (ie, add compatibility with PdfImages tool or something)
@@ -13,6 +14,8 @@
 ## Change instructions (notes for how to approach changing specific aspects of this codebase)
 - if new versions of xpdf binaries added, make sure to also update supporting docs (the Xpdf docs required for GPL3 redistribution, as specified in Xpdf source readme)
 - new binaries should be extracted from source archives. project resource structure matches that of source archives, but unrelated files removed (specifically, non-pdftotext bins and docs)
+- new classes should have correct license header, java docs, comments, etc (what else? make specific checklist when you formalize these notes)
+- new modules/poms should have correct license header, pom metadata, etc
 
 ## licensing, helpful links
 - another really helpful post https://opensource.stackexchange.com/q/9141
@@ -54,9 +57,13 @@
     Considering that xpdf.io is purely an api for xpdf source code, and considering its whole whose purpose is realized in accessing xpdf functionality, it's pretty obvious that xpdf.io should be considered a "derivative work"
     Thus -> we license as GPL3
   - This lib includes other open source libraries utilizing Apache 2.0 license, so they are automatically compatible with GPLv3 https://opensource.stackexchange.com/a/8249
-  - This project includes full LICENSE.txt at the root, and a statement in the header of each source file indicating that it is covered by that license
+  - This project includes full LICENSE at the root, indicating that it is covered by that license
     - https://www.gnu.org/licenses/gpl-faq.en.html#LicenseCopyOnly
-    - https://github.com/licenses/license-templates/blob/master/templates/gpl3-header.txt
+  - This lib uses an awesome open source licensing plugin, https://oss.carbou.me/license-maven-plugin/
+    - adds a license header to source files
+    - adds a copy of license to release package (todo)
+    - verifies all files have proper header (todo)
+    - verifies all dependencies are gpl3 compatible (todo)
 
 ## future improvements
 - in the future, make PdfTextTool extend Callable so that users of sdk can run asynchronously if they would prefer?
