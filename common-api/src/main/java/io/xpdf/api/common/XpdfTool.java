@@ -24,16 +24,16 @@ import io.xpdf.api.common.exception.*;
  *
  * @since 1.0.0
  */
-public interface XpdfTool<RequestT extends XpdfRequest<OptionsT>, OptionsT extends XpdfOptions, ResponseT extends XpdfResponse> {
+public interface XpdfTool<Request extends XpdfRequest, Response extends XpdfResponse> {
 
     /**
      * Invokes a native <em>Xpdf</em> library against a PDF file.
      *
-     * @param request {@link RequestT}
-     * @return {@link ResponseT} result
+     * @param request {@link XpdfRequest}
+     * @return {@link XpdfResponse} result
      * @throws XpdfException if exception
      * @since 1.0.0
      */
-    ResponseT process(RequestT request) throws XpdfException;
+    Response process(Request request) throws XpdfException;
 
 }

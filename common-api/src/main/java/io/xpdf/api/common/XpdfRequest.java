@@ -17,35 +17,13 @@
  */
 package io.xpdf.api.common;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.experimental.SuperBuilder;
-
-import java.io.File;
-
 /**
  * Represents a command to invoke a native <em>Xpdf</em> library.
  *
  * @since 1.0.0
  */
-@SuperBuilder
-@Getter
-public abstract class XpdfRequest<OptionsT extends XpdfOptions> {
-
-    /**
-     * Input PDF file.
-     *
-     * @implNote Required.
-     * @since 1.0.0
-     */
-    @NonNull
-    private final File pdfFile;
-
-    /**
-     * Command options to customize native process.
-     *
-     * @since 1.0.0
-     */
-    private final OptionsT options;
-
+//todo: should we have an abstract options class as well?
+//      and is there something we could/should do with lombok builders for this situation?
+//todo: should this be abstract in the first place? or just be some non-abstract parent?
+public abstract class XpdfRequest {
 }
