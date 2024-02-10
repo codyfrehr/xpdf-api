@@ -17,7 +17,6 @@
  */
 package io.xpdf.api.pdftext;
 
-import io.xpdf.api.common.XpdfRequest;
 import io.xpdf.api.common.XpdfTool;
 import io.xpdf.api.common.exception.*;
 import io.xpdf.api.common.util.XpdfUtils;
@@ -66,7 +65,7 @@ import static java.util.Collections.emptyList;
 @Getter
 @ToString
 @Slf4j
-public class PdfTextTool implements XpdfTool<PdfTextRequest<PdfTextOptions>, PdfTextOptions, PdfTextResponse> {
+public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
     /**
      * Path to the native library that should be invoked.
@@ -142,11 +141,10 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest<PdfTextOptions>, Pdf
      * @since 1.0.0
      */
     @Override
-    public PdfTextResponse process(PdfTextRequest<PdfTextOptions> request) throws XpdfException {
+    public PdfTextResponse process(PdfTextRequest request) throws XpdfException {
         log.debug("Process starting");
         Process process = null;
 
-        val opt = PdfTextRequest.builder().pdfFile(null).textFile(null).options(PdfTextOptions.builder().pageStart(1).nativeOptions(null).build()).build();
         try {
             // validate request
             log.debug("Validating request");
@@ -225,7 +223,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest<PdfTextOptions>, Pdf
      * @param request {@link PdfTextRequest}
      * @throws XpdfValidationException if request is invalid
      */
-    protected void validate(PdfTextRequest<PdfTextOptions> request) throws XpdfValidationException {
+    protected void validate(PdfTextRequest request) throws XpdfValidationException {
         if (request == null) {
             throw new XpdfValidationException("PdfTextRequest cannot be null");
         }
@@ -267,7 +265,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest<PdfTextOptions>, Pdf
      * @return text file
      * @throws IOException if canonical path of {@link XpdfUtils#getPdfTextTempOutputPath()} is invalid
      */
-    protected File initializeTextFile(PdfTextRequest<PdfTextOptions> request) throws IOException {
+    protected File initializeTextFile(PdfTextRequest request) throws IOException {
         final File textFile;
         if (request.getTextFile() != null) {
             // use text file provided in request
@@ -292,7 +290,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest<PdfTextOptions>, Pdf
      * @return command parts as {@code List<String>}
      * @throws IOException if canonical path of {@link #nativeLibraryPath} is invalid
      */
-    protected List<String> getCommandParts(PdfTextRequest<PdfTextOptions> request, File textFile) throws IOException {
+    protected List<String> getCommandParts(PdfTextRequest request, File textFile) throws IOException {
         val commandParts = new ArrayList<String>();
 
         commandParts.add(nativeLibraryPath.toFile().getCanonicalPath());

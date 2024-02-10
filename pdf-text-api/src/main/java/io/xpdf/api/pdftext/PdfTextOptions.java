@@ -17,18 +17,17 @@
  */
 package io.xpdf.api.pdftext;
 
-import io.xpdf.api.common.XpdfOptions;
 import io.xpdf.api.pdftext.options.PdfTextEncoding;
 import io.xpdf.api.pdftext.options.PdfTextEndOfLine;
 import io.xpdf.api.pdftext.options.PdfTextFormat;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Map;
 
 /**
- * Represents a set of command options to invoke with a native <em>pdftotext</em> library.
+ * Represents the command options to invoke with the native <em>pdftotext</em> library.
  *
  * <br><br> Example usage:
  * <blockquote><pre>
@@ -44,10 +43,10 @@ import java.util.Map;
  * See {@link #nativeOptions} for a complete list of options.
  * @since 1.0.0
  */
-@SuperBuilder
+@Builder
 @Getter
 @ToString
-public class PdfTextOptions extends XpdfOptions {
+public class PdfTextOptions {
 
     /**
      * Page number of PDF file to begin text extraction from.
