@@ -2,7 +2,7 @@
 <!--
 
     Xpdf API - A collection of components for interacting with native Xpdf libraries.
-    Copyright © 2024 xpdf.io (cfrehr@gmail.com)
+    Copyright © 2024 xpdf.io (info@xpdf.io)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -292,7 +292,7 @@
                     <configuration>
                         <properties>
                             <owner>xpdf.io</owner>
-                            <email>cfrehr@gmail.com</email>
+                            <email>info@xpdf.io</email>
                         </properties>
                         <licenseSets>
                             <licenseSet>
