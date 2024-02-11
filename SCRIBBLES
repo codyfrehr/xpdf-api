@@ -1,6 +1,6 @@
 ## Release checklist (verify before every release of new package)
 - verify all classes (and poms) have correct licensing (run maven license plugin)
-- verify all dependencies are GPL3 compatible (run maven license plugin)
+- verify all dependencies are GPL3 compatible (run maven license plugin - configured to run automatically during test phase)
 - ensure all newly-created modules have correct pom structure and metadata
 - upgrade major/minor/patch version
   - major, if fundamental contract change (ie, we no longer include xpdf libs and instead interface directly with them via JNA)

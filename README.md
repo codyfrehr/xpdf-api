@@ -6,7 +6,6 @@
     do i have to reference original Glyph/Cog copyright or anything?
   - use this awesome open-source licensing plugin to do the following.. https://oss.carbou.me/license-maven-plugin/
     - (TODO) verify that all source files have the correct header (in correct part of lifecycle)
-    - (TODO) verify in build process that all of your dependencies are gpl3 compatible (in correct part of lifecycle)
     - (TODO) add copy of license to package, if possible (in correct part of lifecycle)
 - fix maven javadoc plugin to run only during deployment, not during local install...
 - create official xpdf.io email address, replace property in license plugin, and rerun formatter
