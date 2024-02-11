@@ -324,12 +324,12 @@
                         <execution>
                             <configuration>
                                 <dependencyEnforce>true</dependencyEnforce>
-                                <dependencyExceptionMessage>A custom error message for how to handle approvals in your organization</dependencyExceptionMessage>
+                                <dependencyExceptionMessage>Please verify that the following dependencies are GPLv3 compatible:</dependencyExceptionMessage>
                                 <dependencyPolicies>
                                     <dependencyPolicy>
                                         <type>ARTIFACT_PATTERN</type>
                                         <rule>APPROVE</rule>
-                                        <value>io.xpdf.api</value>
+                                        <value>io.xpdf</value>
                                     </dependencyPolicy>
                                     <dependencyPolicy>
                                         <type>LICENSE_NAME</type>
