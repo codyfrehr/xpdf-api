@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    {{ project }}
-    Copyright (C) {{ year }} {{ organization }}
+
+    Xpdf API - A collection of components for interacting with native Xpdf libraries.
+    Copyright © 2024 xpdf.io (cfrehr@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 3.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,6 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
+
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -24,6 +25,17 @@
     <artifactId>xpdf-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <name>Xpdf API</name>
+    <description>A collection of components for interacting with native Xpdf libraries.</description>
+    <url>https://xpdf.io</url>
+    <licenses>
+        <license>
+            <name>GNU General Public License, v3.0 only</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+        </license>
+    </licenses>
+    <inceptionYear>2024</inceptionYear>
 
     <modules>
         <module>common-api</module>
@@ -271,19 +283,47 @@
                             </tag>
                         </tags>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <!--todo: configure to run later in maven lifecycle, not during "install" phase.
+                              this is only needed prior to deployment of packages to maven central.
+                              people dont need this locally, and if they do, they can run manually-->
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <id>attach-javadocs</id>-->
+<!--                            <goals>-->
+<!--                                <goal>jar</goal>-->
+<!--                            </goals>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>3.6.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>4.3</version>
+                    <configuration>
+                        <properties>
+                            <owner>xpdf.io</owner>
+                            <email>cfrehr@gmail.com</email>
+                        </properties>
+                        <licenseSets>
+                            <licenseSet>
+                                <header>com/mycila/maven/plugin/license/templates/GPL-3-ONLY.txt</header>
+                                <excludes>
+                                    <exclude>src/main/resources/**</exclude>
+                                    <exclude>src/test/**</exclude>
+                                    <exclude>.m2/**</exclude>
+                                </excludes>
+                            </licenseSet>
+                        </licenseSets>
+                    </configuration>
+                    <!--todo: configure to run "checks" during correct part of lifecycle -->
+<!--                    <executions>-->
+<!--                        -->
+<!--                    </executions>-->
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -307,6 +347,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

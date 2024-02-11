@@ -1,15 +1,14 @@
 /*
- * {{ project }}
- * Copyright (C) {{ year }} {{ organization }}
+ * Common - A library of common components.
+ * Copyright © 2024 xpdf.io (cfrehr@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, version 3.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,8 +21,5 @@ package io.xpdf.api.common;
  *
  * @since 1.0.0
  */
-//todo: should we have an abstract options class as well?
-//      and is there something we could/should do with lombok builders for this situation?
-//todo: should this be abstract in the first place? or just be some non-abstract parent?
 public abstract class XpdfRequest {
 }
