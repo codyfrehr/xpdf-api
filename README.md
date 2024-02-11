@@ -2,7 +2,7 @@
 
 ## todo:
 - licensing
-  - understand difference between license and copyright, and what that means for this project https://stackoverflow.com/a/13437203/8784215
+  - understand difference between license, copyright, and trademark, and what that means for this project https://stackoverflow.com/a/13437203/8784215
     do i have to reference original Glyph/Cog copyright or anything?
   - use this awesome open-source licensing plugin to do the following.. https://oss.carbou.me/license-maven-plugin/
     - (TODO) verify that all source files have the correct header (in correct part of lifecycle)
