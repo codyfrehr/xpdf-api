@@ -1,0 +1,24 @@
+- fix documentation todos on PdfTextTool and PdfTextEncoding
+- licensing
+  - understand difference between license, copyright, and trademark, and what that means for this project https://stackoverflow.com/a/13437203/8784215
+    do i have to reference original Glyph/Cog copyright or anything?
+- write README
+- make github repo public
+- setup namecheap xpdf.io domain to automatically redirect to github repo, until website built
+- show xpdf creators your library
+  - verify that the name of the library is acceptable ("xpdf" not trademarked, right?)
+  - explain project at high level, as well as licensing, and get their blessing
+  - request that they add link to your library on their webpage (their readme says they are willing to do this)
+- reorganize SCRIBBLES into official supporting documents
+  - write CONTRIBUTING (is this standard name for developer instructions to contribute? DEVELOPERS seems like a better name for file maybe?)
+  - what other files?
+- set up github CI/CD pipeline
+- set up github issue management
+- figure out process to deploy to maven central repo
+  - take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/
+  - guide: https://maven.apache.org/repository/guide-central-repository-upload.html
+    - requirements (link from within page above) https://central.sonatype.org/publish/requirements/
+      verify all key metadata has been added to poms (ie lombok has <issue management>, <developers>, etc)
+  - figure out maven-release-plugin, to control versioning and release process to maven central
+    a good starting point for this would be to find a popular/respected open-source repo using pom configs, and see if they have maven release plugin configured, and how they do it.
+- build really basic homepage for website, resembling layout of https://kotest.io/docs or even just the simpler https://mockk.io/, or like that license plugin page
