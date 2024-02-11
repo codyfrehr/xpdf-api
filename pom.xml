@@ -165,6 +165,7 @@
     </dependencyManagement>
 
     <dependencies>
+        <!--dependencies that should be in every module-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -201,6 +202,16 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <!--adds files to packages-->
+                <directory>${maven.multiModuleProjectDirectory}</directory>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+                <targetPath>META-INF</targetPath>
+            </resource>
+        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -259,6 +270,7 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.6.3</version>
                     <configuration>
+                        <source>${maven.compiler.source}</source>
                         <tags>
                             <tag>
                                 <name>implNote</name>
@@ -331,6 +343,7 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <!--plugins that should be in every module-->
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>

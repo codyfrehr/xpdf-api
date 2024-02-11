@@ -4,10 +4,7 @@
 - licensing
   - understand difference between license, copyright, and trademark, and what that means for this project https://stackoverflow.com/a/13437203/8784215
     do i have to reference original Glyph/Cog copyright or anything?
-  - use this awesome open-source licensing plugin to do the following.. https://oss.carbou.me/license-maven-plugin/
-    - (TODO) add copy of license to package, if possible (in correct part of lifecycle)
-- create official xpdf.io email address, replace property in license plugin, and rerun formatter
-- fix maven license plugin to add copy of license to release package (if it can do that)
+- create official xpdf.io email address, then replace property in license plugin that currently holds your personal email and rerun formatter
 - add key metadata to poms. see other open source project for examples (ie lombok has <license>, <issue management>, <developers>, etc)
 - clean up SCRIBBLES, or maybe organize into other docs at root that may be needed (ie, CONTRIBUTING https://github.com/spring-projects/spring-boot/blob/main/CONTRIBUTING.adoc)
 - figure out process to deploy to maven central repo
