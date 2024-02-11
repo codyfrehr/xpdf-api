@@ -44,7 +44,6 @@ import static io.xpdf.api.common.util.XpdfUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-//todo: add @implNote here and/or on process method that ensure dev understand implications of virtual processes (or whatever), as mentioned on stack overflow comment: https://stackoverflow.com/a/77933688/8784215
 /**
  * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
  *
@@ -138,6 +137,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      * @throws XpdfNativeExecutionException if native process returns non-zero exit code
      * @throws XpdfNativeTimeoutException if native process duration exceeds timeout length
      * @throws XpdfProcessingException if any other exception occurs during processing
+     * @implNote This method executes the native library with {@link ProcessBuilder} and may become blocking.
      * @since 1.0.0
      */
     @Override

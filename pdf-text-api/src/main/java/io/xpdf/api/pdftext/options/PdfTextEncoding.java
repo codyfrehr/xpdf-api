@@ -16,17 +16,12 @@
  */
 package io.xpdf.api.pdftext.options;
 
-//todo: what does this mean exactly? the encoding of the text in the PDF? or the encoding to apply to text output? or do both of those mean the same thing..?
-//      think about it in terms of the fonts...
-//      a special encoding is needed to interpret ZapfDingbats...
-//      but does that mean the output text is "encoded" that way too? and how does my computer (or the application reading text?) understand that output?
 /**
- * Defines the encoding of text extracted from a PDF file.
+ * Defines the encoding of text to extract from a PDF file.
  *
- * @implNote Encodings defined here are those included with native <em>pdftotext</em> library.
-//todo: fix how you phrase implNote below, after you implement global xpdfrc configs
-//todo: add similar note for EOL option and other options classes
- * Other encodings can be configured via <em>xpdfrc</em> config file.
+ * @implNote Encodings defined here are those included with a native <em>pdftotext</em> library.
+ * Additional encodings can be configured in a <em>xpdfrc</em> config file, which you can then pass as a command option.
+ * See <em>Xpdf</em> documentation for more details.
  * @since 1.0.0
  */
 public enum PdfTextEncoding {
