@@ -31,7 +31,7 @@
     <url>https://xpdf.io</url>
     <licenses>
         <license>
-            <name>GNU General Public License, v3.0 only</name>
+            <name>GNU General Public License (GPL) version 3</name>
             <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
         </license>
     </licenses>
@@ -320,10 +320,41 @@
                             </licenseSet>
                         </licenseSets>
                     </configuration>
-                    <!--todo: configure to run "checks" during correct part of lifecycle -->
-<!--                    <executions>-->
-<!--                        -->
-<!--                    </executions>-->
+                    <executions>
+                        <execution>
+                            <configuration>
+                                <dependencyEnforce>true</dependencyEnforce>
+                                <dependencyExceptionMessage>A custom error message for how to handle approvals in your organization</dependencyExceptionMessage>
+                                <dependencyPolicies>
+                                    <dependencyPolicy>
+                                        <type>ARTIFACT_PATTERN</type>
+                                        <rule>APPROVE</rule>
+                                        <value>io.xpdf.api</value>
+                                    </dependencyPolicy>
+                                    <dependencyPolicy>
+                                        <type>LICENSE_NAME</type>
+                                        <rule>APPROVE</rule>
+                                        <value>Apache License, Version 2.0</value>
+                                    </dependencyPolicy>
+                                    <dependencyPolicy>
+                                        <type>LICENSE_NAME</type>
+                                        <rule>APPROVE</rule>
+                                        <value>Apache-2.0</value>
+                                    </dependencyPolicy>
+                                    <dependencyPolicy>
+                                        <type>LICENSE_NAME</type>
+                                        <rule>APPROVE</rule>
+                                        <value>MIT License</value>
+                                    </dependencyPolicy>
+                                </dependencyPolicies>
+                            </configuration>
+                            <id>gplv3-compatibility-check</id>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
