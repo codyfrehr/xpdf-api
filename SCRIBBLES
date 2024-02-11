@@ -59,11 +59,11 @@
   - This lib includes other open source libraries utilizing Apache 2.0 license, so they are automatically compatible with GPLv3 https://opensource.stackexchange.com/a/8249
   - This project includes full LICENSE at the root, indicating that it is covered by that license
     - https://www.gnu.org/licenses/gpl-faq.en.html#LicenseCopyOnly
+    - this license is copied to META-INF directory in each package, using build resource specification in parent pom
   - This lib uses an awesome open source licensing plugin, https://oss.carbou.me/license-maven-plugin/
     - adds a license header to source files
-    - adds a copy of license to release package (todo)
-    - verifies all files have proper header (todo)
-    - verifies all dependencies are gpl3 compatible (todo)
+    - verifies all files have proper header
+    - verifies all dependencies are gpl3 compatible
 
 ## future improvements
 - in the future, make PdfTextTool extend Callable so that users of sdk can run asynchronously if they would prefer?
