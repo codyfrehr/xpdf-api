@@ -1,6 +1,6 @@
 /*
  * PdfText API - An API for accessing a native pdftotext library.
- * Copyright © 2024 xpdf.io (cfrehr@gmail.com)
+ * Copyright © 2024 xpdf.io (info@xpdf.io)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,6 +44,7 @@ import static io.xpdf.api.common.util.XpdfUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
+//todo: add @implNote here and/or on process method that ensure dev understand implications of virtual processes (or whatever), as mentioned on stack overflow comment: https://stackoverflow.com/a/77933688/8784215
 /**
  * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
  *

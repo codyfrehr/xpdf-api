@@ -4,7 +4,7 @@
 - licensing
   - understand difference between license, copyright, and trademark, and what that means for this project https://stackoverflow.com/a/13437203/8784215
     do i have to reference original Glyph/Cog copyright or anything?
-- create official xpdf.io email address, then replace property in license plugin that currently holds your personal email and rerun formatter
+- fix documentation todos on PdfTextTool and PdfTextEncoding
 - add key metadata to poms. see other open source project for examples (ie lombok has <license>, <issue management>, <developers>, etc)
 - clean up SCRIBBLES, or maybe organize into other docs at root that may be needed (ie, CONTRIBUTING https://github.com/spring-projects/spring-boot/blob/main/CONTRIBUTING.adoc)
 - figure out process to deploy to maven central repo
