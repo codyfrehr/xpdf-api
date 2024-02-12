@@ -1,6 +1,8 @@
 - licensing
   - understand difference between license, copyright, and trademark, and what that means for this project https://stackoverflow.com/a/13437203/8784215
     do i have to reference original Glyph/Cog copyright or anything?
+- package structure - the release package is sooo small in size.
+  is there any reason NOT to group the modules together into a single module??
 - write README
 - make github repo public
 - setup namecheap xpdf.io domain to automatically redirect to github repo, until website built
