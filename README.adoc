@@ -45,7 +45,7 @@ Simple Example:
             .build();
 
     // convert the PDF into a text file
-    PdfTextResponse response = pdfTextTool.process(pdfTextRequest);
+    PdfTextResponse response = pdfTextTool.process(request);
 ----
 
 Complex Example:
@@ -68,7 +68,7 @@ Complex Example:
             .options(options)
             .build();
 
-    PdfTextResponse response = pdfTextTool.process(pdfTextRequest);
+    PdfTextResponse response = pdfTextTool.process(request);
 ----
 
 ## Configuration
