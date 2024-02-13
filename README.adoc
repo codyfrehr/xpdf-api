@@ -1,0 +1,82 @@
+# Xpdf API
+
+Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], an open source library for working with PDF files written in C++.
+Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
+
+Our primary goals are:
+
+* Provide full programmatic access to Xpdf.
+* Act as a pure, unobscured interface to Xpdf.
+
+APIs are available for the following Xpdf functions:
+
+* _pdftotext_ - convert PDF files to text
+
+## How It Works
+
+TODO
+
+## Getting Started
+
+### Dependency
+
+TODO: maven central pdf-text-api link
+
+TODO: maven central pdf-text-api-starter link
+
+### PdfTextTool
+
+Important!! -
+We have provided a couple usages of this tool below, but we highly recommend downloading sources in your IDE so you can full access to our JavaDocs.
+We have made an extra effort to provide you with all the help you need directly from your editor.
+
+TODO: pic of javadoc on hover in intellij
+
+Simple Example:
+
+[source,java,indent=0]
+----
+    // initialize the tool
+    PdfTextTool pdfTextTool = PdfTextTool.builder().build();
+
+    // build a request with a PDF file
+    PdfTextRequest request = PdfTextRequest.builder()
+            .pdfFile(Paths.get("C:/docs/some.pdf"))
+            .build();
+
+    // convert the PDF into a text file
+    PdfTextResponse response = pdfTextTool.process(pdfTextRequest);
+----
+
+Complex Example:
+[source,java,indent=0]
+----
+    PdfTextTool pdfTextTool = PdfTextTool.builder().build();
+
+    // add some options to customize your request
+    PdfTextOptions options = PdfTextOptions.builder()
+            .format(PdfTextFormat.TABLE)
+            .encoding(PdfTextEncoding.UTF_8)
+            .ownerPassword("Secret123")
+            .nativeOptions(Map.ofEntries(Map.entry("-cfg", "C:/config/xpdfrc")))
+            .build();
+
+    // build a request with the options, and specify an output text file
+    PdfTextRequest request = PdfTextRequest.builder()
+            .pdfFile(Paths.get("C:/docs/some.pdf"))
+            .textFile(Paths.get("C:/docs/some.txt"))
+            .options(options)
+            .build();
+
+    PdfTextResponse response = pdfTextTool.process(pdfTextRequest);
+----
+
+## Configuration
+
+If you haven't read the "How it works" section, read that first and return here.
+
+TODO: configurations
+
+## License
+
+Xpdf API is Open Source software released under the https://www.gnu.org/licenses/gpl-3.0.html[GNU General Public License, version 3 (GPLv3)].

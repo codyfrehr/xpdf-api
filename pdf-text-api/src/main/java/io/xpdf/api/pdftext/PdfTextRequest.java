@@ -32,7 +32,7 @@ import java.io.File;
  *  PdfTextRequest.builder()
  *      .pdfFile(Paths.get("C:/docs/some.pdf"))
  *      .textFile(Paths.get("C:/docs/some.txt"))
- *      .options(PdfTextOptions.builder().format(PdfTextFormat.RAW).build())
+ *      .options(PdfTextOptions.builder().format(PdfTextFormat.TABLE).build())
  *      .build();
  * </pre></blockquote>
  *
