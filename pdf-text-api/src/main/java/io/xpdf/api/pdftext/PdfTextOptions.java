@@ -34,7 +34,7 @@ import java.util.Map;
  *      .format(PdfTextFormat.RAW)
  *      .encoding(PdfTextEncoding.UTF_8)
  *      .ownerPassword("Secret123")
- *      .nativeOptions(Map.ofEntries(Map.entry("-cfg", "C:/config/xpdfrc")))
+ *      .nativeOptions(Map.ofEntries(Map.entry("-cfg", "~/config/xpdfrc")))
  *      .build();
  * </pre></blockquote>
  *
