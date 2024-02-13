@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Xpdf API Parent - The Xpdf API parent project.
+    Xpdf API - A collection of components for interacting with native Xpdf libraries.
     Copyright © 2024 xpdf.io (info@xpdf.io)
 
     This program is free software: you can redistribute it and/or modify
@@ -21,13 +21,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.xpdf.api</groupId>
-    <artifactId>xpdf-api-parent</artifactId>
+    <groupId>io.xpdf</groupId>
+    <artifactId>xpdf-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Xpdf API Parent</name>
-    <description>The Xpdf API parent project.</description>
+    <name>Xpdf API</name>
+    <description>A collection of components for interacting with native Xpdf libraries.</description>
     <url>https://xpdf.io</url>
     <licenses>
         <license>
@@ -38,8 +38,9 @@
     <inceptionYear>2024</inceptionYear>
 
     <modules>
-        <module>xpdf-api</module>
-        <module>xpdf-api-spring-boot-starter</module>
+        <module>common-api</module>
+        <module>pdf-text-api</module>
+        <module>pdf-text-api-spring-boot-starter</module>
     </modules>
 
     <properties>
@@ -63,8 +64,13 @@
                 <version>2.13.0</version>
             </dependency>
             <dependency>
-                <groupId>io.xpdf.api</groupId>
-                <artifactId>xpdf-api</artifactId>
+                <groupId>io.xpdf</groupId>
+                <artifactId>common-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.xpdf</groupId>
+                <artifactId>pdf-text-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -304,7 +310,7 @@
                             <dependencyPolicy>
                                 <type>ARTIFACT_PATTERN</type>
                                 <rule>APPROVE</rule>
-                                <value>io.xpdf.api</value>
+                                <value>io.xpdf</value>
                             </dependencyPolicy>
                             <dependencyPolicy>
                                 <type>LICENSE_NAME</type>
