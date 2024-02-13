@@ -57,9 +57,8 @@
     Considering that xpdf.io is purely an api for xpdf source code, and considering its whole whose purpose is realized in accessing xpdf functionality, it's pretty obvious that xpdf.io should be considered a "derivative work"
     Thus -> we license as GPL3
   - This lib includes other open source libraries utilizing Apache 2.0 license, so they are automatically compatible with GPLv3 https://opensource.stackexchange.com/a/8249
-  - This project includes full LICENSE at the root, indicating that it is covered by that license
+  - This project includes full LICENSE at the root and in resources/META-INF of all child modules, indicating that it is covered by that license
     - https://www.gnu.org/licenses/gpl-faq.en.html#LicenseCopyOnly
-    - this license is copied to META-INF directory in each package, using build resource specification in parent pom
   - This lib uses an awesome open source licensing plugin, https://oss.carbou.me/license-maven-plugin/
     - adds a license header to source files
     - verifies all files have proper header
