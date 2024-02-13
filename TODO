@@ -1,9 +1,13 @@
 - licensing
   - understand difference between license, copyright, and trademark, and what that means for this project https://stackoverflow.com/a/13437203/8784215
     do i have to reference original Glyph/Cog copyright or anything?
+- test all code examples from readme and javadocs to ensure they are working!
+- this project should probably not include a .m2 folder!
+  confirm whether or not other open source maven projects do something similar, and then decide to keep or remove
 - write README
 - make github repo public
-- setup namecheap xpdf.io domain to automatically redirect to github repo, until website built
+- setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
+  but first, need to install ssl cert for website
 - show xpdf creators your library
   - verify that the name of the library is acceptable ("xpdf" not trademarked, right?)
   - explain project at high level, as well as licensing, and get their blessing

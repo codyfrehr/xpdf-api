@@ -52,7 +52,7 @@ import static java.util.Collections.emptyList;
  *
  * <br><br> Example usage:
  * <blockquote><pre>
- *  PdfTextTool.builder()
+ *  PdfTextTool pdfTextTool = PdfTextTool.builder()
  *      .nativeLibraryPath(Paths.get("C:/libs/pdftotext.exe"))
  *      .timeoutSeconds(60)
  *      .build();
@@ -69,8 +69,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     /**
      * Path to the native library that should be invoked.
      *
-     * @implNote If unassigned, this value is configured to {@link XpdfUtils#getPdfTextNativeLibraryPath()},
-     * which points to the native library included with this project.
+     * @implNote If unassigned, this value will point to the native library included with this project.
      * @since 1.0.0
      */
     private final Path nativeLibraryPath;

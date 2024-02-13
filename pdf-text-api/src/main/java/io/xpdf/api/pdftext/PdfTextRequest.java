@@ -30,8 +30,8 @@ import java.io.File;
  * <br><br> Example usage:
  * <blockquote><pre>
  *  PdfTextRequest.builder()
- *      .pdfFile(Paths.get("C:/docs/some.pdf"))
- *      .textFile(Paths.get("C:/docs/some.txt"))
+ *      .pdfFile(new File("C:/docs/some.pdf"))
+ *      .textFile(new File("C:/docs/some.txt"))
  *      .options(PdfTextOptions.builder().format(PdfTextFormat.TABLE).build())
  *      .build();
  * </pre></blockquote>

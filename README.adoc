@@ -1,4 +1,4 @@
-# Xpdf API
+= Xpdf API
 
 Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], an open source library for working with PDF files written in C++.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
@@ -8,29 +8,47 @@ Our primary goals are:
 * Provide full programmatic access to Xpdf.
 * Act as a pure, unobscured interface to Xpdf.
 
-APIs are available for the following Xpdf functions:
+APIs are available for the following Xpdf functions (with more to come):
 
 * _pdftotext_ - convert PDF files to text
 
-## How It Works
+== Getting Started
 
-TODO
+=== Requirements
 
-## Getting Started
+* JDK 8+
+* Windows, Linux, or Mac OS
 
-### Dependency
+=== Dependency
 
-TODO: maven central pdf-text-api link
+TODO: automatically inject maven central references with latest versions
 
-TODO: maven central pdf-text-api-starter link
+[source,xml]
+----
+ <dependency>
+     <groupId>io.xpdf.api</groupId>
+     <artifactId>pdf-text-api</artifactId>
+     <version>1.0.0</version>
+ </dependency>
+----
 
-### PdfTextTool
+...or a Spring Boot starter, for the _fancy_ developers!
 
-Important!! -
-We have provided a couple usages of this tool below, but we highly recommend downloading sources in your IDE so you can full access to our JavaDocs.
-We have made an extra effort to provide you with all the help you need directly from your editor.
+[source,xml]
+----
+ <dependency>
+     <groupId>io.xpdf.api</groupId>
+     <artifactId>pdf-text-api-spring-boot-starter</artifactId>
+     <version>1.0.0</version>
+ </dependency>
+----
 
-TODO: pic of javadoc on hover in intellij
+=== PdfTextTool
+
+*Important:* We provide a couple usages of this tool below, but we highly recommend downloading sources in your IDE so you have full access to our JavaDocs.
+We made an extra effort to provide you with all the help you need, directly from your editor.
+
+image:_doc/readme/javadoc_nativeoptions.jpg[IntelliJ JavaDoc]
 
 Simple Example:
 
@@ -61,7 +79,7 @@ Complex Example:
             .nativeOptions(Map.ofEntries(Map.entry("-cfg", "C:/config/xpdfrc")))
             .build();
 
-    // build a request with the options, and specify an output text file
+    // build a request with options, and specify an output text file
     PdfTextRequest request = PdfTextRequest.builder()
             .pdfFile(Paths.get("C:/docs/some.pdf"))
             .textFile(Paths.get("C:/docs/some.txt"))
@@ -71,12 +89,30 @@ Complex Example:
     PdfTextResponse response = pdfTextTool.process(request);
 ----
 
-## Configuration
+== How It Works
 
-If you haven't read the "How it works" section, read that first and return here.
+If you understand how to use Xpdf, then you should understand how to use this library.
+
+== Configuration
+
+Important:
+
+If you haven't read the "How it works" section, read that first, then return here.
 
 TODO: configurations
 
-## License
+== Getting Help
+
+TODO
+
+== Reporting Issues
+
+TODO
+
+== Building From Source
+
+You do not need to build this project locally to use Xpdf API - binaries are freely available in the Maven Central Repository.
+But if you wish to anyway, you will need JDK 8
+== License
 
 Xpdf API is Open Source software released under the https://www.gnu.org/licenses/gpl-3.0.html[GNU General Public License, version 3 (GPLv3)].
