@@ -1,5 +1,5 @@
 /*
- * Common - A library of common components.
+ * Common - The components shared between Xpdf APIs.
  * Copyright © 2024 xpdf.io (info@xpdf.io)
  *
  * This program is free software: you can redistribute it and/or modify
