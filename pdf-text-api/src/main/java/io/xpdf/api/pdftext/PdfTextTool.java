@@ -53,7 +53,7 @@ import static java.util.Collections.emptyList;
  * <br><br> Example usage:
  * <blockquote><pre>
  *  PdfTextTool pdfTextTool = PdfTextTool.builder()
- *      .nativeLibraryPath(Paths.get("C:/libs/pdftotext.exe"))
+ *      .nativeLibraryPath(Paths.get("~/libs/pdftotext.exe"))
  *      .timeoutSeconds(60)
  *      .build();
  * </pre></blockquote>
@@ -69,7 +69,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     /**
      * Path to the native library that should be invoked.
      *
-     * @implNote If unassigned, this value will point to the native library included with this project.
+     * @implNote If unassigned, this will default to the native library included with this project.
      * @since 1.0.0
      */
     private final Path nativeLibraryPath;
@@ -77,7 +77,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     /**
      * Maximum amount of time in seconds allotted to the native process before timing out.
      *
-     * @implNote If unassigned, this value is configured to {@link XpdfUtils#getPdfTextTimeoutSeconds()}.
+     * @implNote If unassigned, this will default to 30 seconds.
      * @since 1.0.0
      */
     private final Integer timeoutSeconds;
