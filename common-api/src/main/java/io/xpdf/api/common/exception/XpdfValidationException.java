@@ -19,7 +19,7 @@ package io.xpdf.api.common.exception;
 import lombok.experimental.StandardException;
 
 /**
- * A {@link XpdfException} thrown when attempting to execute a native <em>Xpdf</em> process with invalid command options.
+ * An {@link XpdfException} thrown when attempting to invoke an <em>Xpdf</em> executable with invalid command options.
  *
  * @since 1.0.0
  */

@@ -25,13 +25,13 @@ import lombok.ToString;
 import java.io.File;
 
 /**
- * Represents a command to invoke a native <em>pdftotext</em> library.
+ * Represents a command to invoke the <em>pdftotext</em> executable with.
  *
  * <br><br> Example usage:
  * <blockquote><pre>
  *  PdfTextRequest.builder()
- *      .pdfFile(new File("~/docs/some.pdf"))
- *      .textFile(new File("~/docs/some.txt"))
+ *      .pdfFile(new File("C:/docs/some.pdf"))
+ *      .textFile(new File("C:/docs/some.txt"))
  *      .options(PdfTextOptions.builder().format(PdfTextFormat.TABLE).build())
  *      .build();
  * </pre></blockquote>
@@ -62,7 +62,7 @@ public class PdfTextRequest extends XpdfRequest {
     private final File textFile;
 
     /**
-     * Command options to customize native process.
+     * Command options to customize execution.
      *
      * @since 1.0.0
      */

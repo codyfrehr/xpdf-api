@@ -1,4 +1,7 @@
 = Xpdf API
+TODO: automatically inject build status, like spring boot project does
+TODO: look at other readme with .adoc structure, and see what other ways there are to format this. for example, spring boot has tabs for "Security" and "Code of Conduct" - pretty cool!
+:toc:
 
 Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], an open source library for working with PDF files written in C++.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
@@ -16,12 +19,12 @@ APIs are available for the following Xpdf functions (with more to come):
 
 === Requirements
 
-* JDK 8+
+* JDK 8 or later
 * Windows, Linux, or Mac OS
 
-=== Dependency
-
+=== Dependencies
 TODO: automatically inject maven central references with latest versions
+TODO: is there a way to provide a code block with tabs, so users can choose between all dependencies in single block?
 
 [source,xml]
 ----
@@ -43,14 +46,15 @@ TODO: automatically inject maven central references with latest versions
  </dependency>
 ----
 
-=== PdfTextTool
+=== PdfTextTool API
+TODO: do we want image in source code? or should we host on website, and link to that?
 
-*Important:* We provide a couple usages of this tool below, but we highly recommend downloading sources in your IDE so you have full access to our JavaDocs.
+*Important:* We provide a couple usages of this tool below, but we highly recommend downloading sources in your IDE so that you have full access to our JavaDocs.
 We made an extra effort to provide you with all the help you need, directly from your editor.
 
 image:_doc/readme/javadoc_nativeoptions.jpg[IntelliJ JavaDoc]
 
-Simple Example:
+*Simple Example:*
 
 [source,java,indent=0]
 ----
@@ -59,14 +63,14 @@ Simple Example:
 
     // build a request with a PDF file
     PdfTextRequest request = PdfTextRequest.builder()
-            .pdfFile(new File("~/docs/some.pdf"))
+            .pdfFile(new File("C:/docs/some.pdf"))
             .build();
 
     // convert the PDF into a text file
     PdfTextResponse response = pdfTextTool.process(request);
 ----
 
-Complex Example:
+*Complex Example:*
 [source,java,indent=0]
 ----
     PdfTextTool pdfTextTool = PdfTextTool.builder().build();
@@ -76,42 +80,45 @@ Complex Example:
             .format(PdfTextFormat.TABLE)
             .encoding(PdfTextEncoding.UTF_8)
             .ownerPassword("Secret123")
-            .nativeOptions(Map.ofEntries(Map.entry("-cfg", "~/config/xpdfrc")))
+            .nativeOptions(Map.ofEntries(Map.entry("-cfg", "C:/config/xpdfrc")))
             .build();
 
     // build a request with options, and specify an output text file
     PdfTextRequest request = PdfTextRequest.builder()
-            .pdfFile(new File("~/docs/some.pdf"))
-            .textFile(new File("~/docs/some.txt"))
+            .pdfFile(new File("C:/docs/some.pdf"))
+            .textFile(new File("C:/docs/some.txt"))
             .options(options)
             .build();
 
     PdfTextResponse response = pdfTextTool.process(request);
 ----
 
-== How It Works
+== How It Works [[how_it_works]]
+TODO
 
-If you understand how to use Xpdf, then you should understand how to use this library.
+If you understand how to use Xpdf, then you should understand how Xpdf API works.
 
 == Configuration
+TODO
 
-Important:
+*Important:* Before proceeding, you should read <<how_it_works, How It Works>> because understanding what happens under the hood is essential to understanding how it can be customized.
 
-If you haven't read the "How it works" section, read that first, then return here.
+=== Basic
 
-TODO: configurations
+=== Starters
+
+=== Logging?
+
 
 == Getting Help
-
 TODO
 
 == Reporting Issues
-
 TODO
 
 == Building From Source
 
-You do not need to build this project locally to use Xpdf API (binaries are available in Maven Central Repository).
+You do not need to build this project locally to use Xpdf API (packages are available in the Maven Central Repository).
 
 But if you wish to build anyway, all you need is JDK 8 and our provided Maven wrapper.
 

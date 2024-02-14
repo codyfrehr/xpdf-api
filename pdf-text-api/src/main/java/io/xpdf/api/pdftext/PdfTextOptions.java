@@ -26,7 +26,10 @@ import lombok.ToString;
 import java.util.Map;
 
 /**
- * Represents a set of command options to invoke with a native <em>pdftotext</em> library.
+ * Represents a set of command options specific to the <em>pdftotext</em> executable.
+ *
+ * <br><br> Not all <em>pdftotext</em> options have been implemented by this class.
+ * See {@link #nativeOptions} for a complete list of command options and instructions on how to include them in your request.
  *
  * <br><br> Example usage:
  * <blockquote><pre>
@@ -34,12 +37,12 @@ import java.util.Map;
  *      .format(PdfTextFormat.RAW)
  *      .encoding(PdfTextEncoding.UTF_8)
  *      .ownerPassword("Secret123")
- *      .nativeOptions(Map.ofEntries(Map.entry("-cfg", "~/config/xpdfrc")))
+ *      .nativeOptions(Map.ofEntries(Map.entry("-cfg", "C:/config/xpdfrc")))
  *      .build();
  * </pre></blockquote>
  *
- * @implNote Not all options specified by the native <em>pdftotext</em> library have been implemented by this class.
- * See {@link #nativeOptions} for a complete list of options.
+ * @implNote See <em>pdftotext</em> documentation for detailed information about each of the options.
+ * You can find source documentation alongside the executable file in the package resources.
  * @since 1.0.0
  */
 @Builder
@@ -56,7 +59,7 @@ public class PdfTextOptions {
      * </pre></blockquote>
      *
      * @implNote Must be positive.
-     * If unassigned, native library starts from first page.
+     * If unassigned, <em>pdftotext</em> starts from first page.
      * @since 1.0.0
      */
     private final Integer pageStart;
@@ -70,7 +73,7 @@ public class PdfTextOptions {
      * </pre></blockquote>
      *
      * @implNote Must be positive and greater than or equal to {@link #pageStart}.
-     * If unassigned, native library stops on last page.
+     * If unassigned, <em>pdftotext</em> stops on last page.
      * @since 1.0.0
      */
     private final Integer pageStop;
@@ -88,7 +91,7 @@ public class PdfTextOptions {
      *  {@literal -raw}
      * </pre></blockquote>
      *
-     * @implNote If unassigned, native library outputs text in reading order.
+     * @implNote If unassigned, <em>pdftotext</em> outputs text in reading order.
      * @since 1.0.0
      */
     private final PdfTextFormat format;
@@ -101,7 +104,7 @@ public class PdfTextOptions {
      *  {@literal -enc <string>}
      * </pre></blockquote>
      *
-     * @implNote If unassigned, native library defaults to {@link PdfTextEncoding#LATIN_1}.
+     * @implNote If unassigned, <em>pdftotext</em> defaults to {@link PdfTextEncoding#LATIN_1}.
      * @since 1.0.0
      */
     private final PdfTextEncoding encoding;
@@ -114,7 +117,7 @@ public class PdfTextOptions {
      *  {@literal -eol <string>}
      * </pre></blockquote>
      *
-     * @implNote If unassigned, native library uses line-ending convention matching OS it targets.
+     * @implNote If unassigned, <em>pdftotext</em> uses line-ending convention matching OS it targets.
      * @since 1.0.0
      */
     private final PdfTextEndOfLine endOfLine;
@@ -127,7 +130,7 @@ public class PdfTextOptions {
      *  {@literal -nopgbrk}
      * </pre></blockquote>
      *
-     * @implNote If unassigned, native library includes page breaks.
+     * @implNote If unassigned, <em>pdftotext</em> includes page breaks.
      * @since 1.0.0
      */
     private final Boolean pageBreakExcluded;
@@ -157,14 +160,14 @@ public class PdfTextOptions {
     private final String userPassword;
 
     /**
-     * Options to pass directly into the invocation of the native library.
+     * Options to pass directly into the shell command invoking the executable.
      *
-     * <br><br> Useful for including options specified by the native library, which have not been implemented by this class.
-     * Each entry in the map should represent a native option, where the key is the option and the value is the parameter associated with that option.
-     * If the native option has no associated parameter, then just map it to a null or empty string.
+     * <br><br> Useful for including <em>pdftotext</em> options which have not been implemented by this class.
+     * Each entry in the map should represent a part of the shell command, where the key is the option and the value is the parameter associated with that option.
+     * If the option has no associated parameter, then just map it to a null or empty string.
      *
      * <br><br> No validation is performed against this input.
-     * The options you provide here will be passed directly into the invocation, as is.
+     * The options you provide here will be passed directly into the shell command, as is.
      * Be aware that you can inadvertently duplicate an option if you both (a) manually include it here, and (b) assign a value to this class's implementation of that option.
      *
      * <br><br> Example usage:
@@ -213,6 +216,8 @@ public class PdfTextOptions {
      * </pre></blockquote>
      *
      * @implNote No validation is performed against this input.
+     * See <em>pdftotext</em> documentation for detailed information about each of the options.
+     * You can find source documentation alongside the executable file in the package resources.
      * @since 1.0.0
      */
     private final Map<String, String> nativeOptions;

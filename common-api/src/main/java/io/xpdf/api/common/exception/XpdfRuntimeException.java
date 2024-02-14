@@ -19,7 +19,7 @@ package io.xpdf.api.common.exception;
 import lombok.experimental.StandardException;
 
 /**
- * A <em>Xpdf</em> {@code RuntimeException}.
+ * An <em>Xpdf</em> {@code RuntimeException}.
  *
  * @since 1.0.0
  */

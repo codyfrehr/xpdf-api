@@ -45,19 +45,21 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 /**
- * A wrapper of the <em>Xpdf</em> command line tool <em>pdftotext</em>.
+ * A wrapper of the <em>pdftotext</em> command line tool.
  *
- * <br><br> Automatically configures itself to target the <em>pdftotext</em> library native to your OS and JVM architecture.
- * The {@link #process} method invokes the native library to extract text from a PDF file.
+ * <br><br> Targets the <em>pdftotext</em> executable native to your OS and JVM architecture.
+ * The {@link #process} method executes a shell command to invoke the executable, which converts a PDF file into a text file.
  *
  * <br><br> Example usage:
  * <blockquote><pre>
- *  PdfTextTool pdfTextTool = PdfTextTool.builder()
- *      .nativeLibraryPath(Paths.get("~/libs/pdftotext.exe"))
+ *  PdfTextTool.builder()
+ *      .nativeLibraryPath(Paths.get("C:/libs/pdftotext.exe"))
  *      .timeoutSeconds(60)
  *      .build();
  * </pre></blockquote>
  *
+ * @implNote See <em>pdftotext</em> documentation for more detailed information about this function.
+ * You can find source documentation alongside the executable file in the package resources.
  * @since 1.0.0
  */
 @Builder
@@ -67,15 +69,15 @@ import static java.util.Collections.emptyList;
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
     /**
-     * Path to the native library that should be invoked.
+     * Path to the executable that should be invoked.
      *
-     * @implNote If unassigned, this will default to the native library included with this project.
+     * @implNote If unassigned, this will default to the executable included with this project.
      * @since 1.0.0
      */
     private final Path nativeLibraryPath;
 
     /**
-     * Maximum amount of time in seconds allotted to the native process before timing out.
+     * Maximum amount of time in seconds allotted to a process before timing out.
      *
      * @implNote If unassigned, this will default to 30 seconds.
      * @since 1.0.0
@@ -98,18 +100,18 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                 if (!pdfTextNativeLibraryPath.toFile().exists()) {
                     val nativeLibraryResourceStream = getClass().getClassLoader().getResourceAsStream(getPdfTextNativeLibraryResourceName());
                     if (nativeLibraryResourceStream == null) {
-                        throw new XpdfRuntimeException("Unable to locate native library in project resources");
+                        throw new XpdfRuntimeException("Unable to locate executable in project resources");
                     }
                     try {
                         FileUtils.copyInputStreamToFile(nativeLibraryResourceStream, pdfTextNativeLibraryPath.toFile());
                     } catch (IOException e) {
-                        throw new XpdfRuntimeException("Unable to copy native library from resources to local system");
+                        throw new XpdfRuntimeException("Unable to copy executable from resources to local system");
                     }
                 }
                 return pdfTextNativeLibraryPath;
             } else {
                 if (!nativeLibraryPath.toFile().exists()) {
-                    throw new XpdfRuntimeException("The configured native library does not exist at the path specified");
+                    throw new XpdfRuntimeException("The configured executable does not exist at the path specified");
                 }
                 return nativeLibraryPath;
             }
@@ -125,18 +127,21 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     }
 
     /**
-     * Gets text from a PDF file.
+     * Converts a PDF file into a text file.
      *
-     * <br><br> Invokes the native <em>pdftotext</em> library against a PDF file.
-     * The native process extracts text from a PDF file into a text file.
+     * <br><br> Invokes the <em>pdftotext</em> executable against a PDF file.
+     * This executable converts a PDF file into a text file.
+     *
+     * <br><br> This method utilizes Java's {@link ProcessBuilder} API to execute a shell command that launches the executable.
+     * Be aware that this method may become blocking for very large PDF files.
      *
      * @param request {@link PdfTextRequest}
-     * @return {@link PdfTextResponse} with text file containing text extracted from PDF
+     * @return {@link PdfTextResponse} with text file containing text from PDF
      * @throws XpdfValidationException if request is invalid
-     * @throws XpdfNativeExecutionException if native process returns non-zero exit code
-     * @throws XpdfNativeTimeoutException if native process duration exceeds timeout length
+     * @throws XpdfNativeExecutionException if process returns non-zero exit code
+     * @throws XpdfNativeTimeoutException if process duration exceeds timeout length
      * @throws XpdfProcessingException if any other exception occurs during processing
-     * @implNote This method executes the native library with {@link ProcessBuilder} and may become blocking.
+     * @implNote This method executes a shell command and may become blocking.
      * @since 1.0.0
      */
     @Override
@@ -158,7 +163,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
             val commandParts = getCommandParts(request, textFile);
 
             // process commands
-            log.debug("Invoking native library; command: {}", commandParts.toString());
+            log.debug("Invoking executable; command: {}", commandParts.toString());
             val processBuilder = new ProcessBuilder(commandParts);
             process = processBuilder.start();
 
@@ -258,7 +263,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     }
 
     /**
-     * Gets the text file that the native process should write to.
+     * Gets the text file that the executable should write to.
      *
      * @param request {@link PdfTextRequest}
      * @return text file
@@ -282,7 +287,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     }
 
     /**
-     * Gets the complete list of command parts for {@code Process}.
+     * Gets the complete list of command parts for a {@code Process}.
      *
      * @param request {@link PdfTextRequest}
      * @param textFile text file
@@ -301,7 +306,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     }
 
     /**
-     * Gets the command options to invoke with the native library.
+     * Gets the command options to invoke the executable with.
      *
      * @param options {@link PdfTextOptions}
      * @return command options as {@code List<String>}

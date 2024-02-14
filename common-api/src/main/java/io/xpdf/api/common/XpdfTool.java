@@ -19,14 +19,14 @@ package io.xpdf.api.common;
 import io.xpdf.api.common.exception.*;
 
 /**
- * A wrapper of a <em>Xpdf</em> command line tool.
+ * A wrapper of an <em>Xpdf</em> command line tool.
  *
  * @since 1.0.0
  */
 public interface XpdfTool<Request extends XpdfRequest, Response extends XpdfResponse> {
 
     /**
-     * Invokes a native <em>Xpdf</em> library against a PDF file.
+     * Invokes a native <em>Xpdf</em> executable against a PDF file.
      *
      * @param request {@link XpdfRequest}
      * @return {@link XpdfResponse} result

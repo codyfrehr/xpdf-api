@@ -17,7 +17,7 @@
 package io.xpdf.api.common;
 
 /**
- * Represents a command to invoke a native <em>Xpdf</em> library.
+ * Represents a command to invoke an <em>Xpdf</em> executable with.
  *
  * @since 1.0.0
  */

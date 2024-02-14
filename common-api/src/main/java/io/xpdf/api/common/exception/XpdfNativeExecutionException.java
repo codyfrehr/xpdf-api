@@ -19,7 +19,7 @@ package io.xpdf.api.common.exception;
 import lombok.Getter;
 
 /**
- * A {@link XpdfException} thrown when a native <em>Xpdf</em> process returns a non-zero exit code.
+ * An {@link XpdfException} thrown when the invoked <em>Xpdf</em> executable returns a non-zero exit code.
  *
  * @since 1.0.0
  */
@@ -27,14 +27,14 @@ import lombok.Getter;
 public class XpdfNativeExecutionException extends XpdfException {
 
     /**
-     * The standard output of a native <em>Xpdf</em> process.
+     * Standard output streamed from invocation of <em>Xpdf</em> executable.
      *
      * @since 1.0.0
      */
     private final String standardOutput;
 
     /**
-     * The error output of a native <em>Xpdf</em> process.
+     * Error output streamed from invocation of <em>Xpdf</em> executable.
      *
      * @since 1.0.0
      */
