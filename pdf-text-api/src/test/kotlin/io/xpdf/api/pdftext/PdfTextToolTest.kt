@@ -52,7 +52,7 @@ class PdfTextToolTest {
     private val pdfTextTool = PdfTextTool.builder().build()
 
     @Test
-    fun `should initialize and copy native library to local system`() {
+    fun `should initialize and copy executable to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
         every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns false
@@ -71,7 +71,7 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should initialize and not copy native library to local system`() {
+    fun `should initialize and not copy executable to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
         every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns true
@@ -89,7 +89,7 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should initialize with native library`() {
+    fun `should initialize with executable`() {
         // given
         val nativeLibraryPath = mockk<Path> {
             every { toFile().exists() } returns true
@@ -103,14 +103,14 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should throw exception when initializing if unable to get native library resource stream`() {
+    fun `should throw exception when initializing if unable to get executable resource stream`() {
         // given
         mockkStatic(XpdfUtils::class)
         every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns false
         every { XpdfUtils.getPdfTextNativeLibraryResourceName() } returns "notexists"
 
         // when then
-        shouldThrowWithMessage<XpdfRuntimeException>("Unable to locate native library in project resources") {
+        shouldThrowWithMessage<XpdfRuntimeException>("Unable to locate executable in project resources") {
             PdfTextTool.builder().build()
         }
 
@@ -118,7 +118,7 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should throw exception when initializing if unable to copy native library to local system`() {
+    fun `should throw exception when initializing if unable to copy executable to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
         every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns false
@@ -127,7 +127,7 @@ class PdfTextToolTest {
         every { FileUtils.copyInputStreamToFile(any(), any()) } throws IOException()
 
         // when then
-        shouldThrowWithMessage<XpdfRuntimeException>("Unable to copy native library from resources to local system") {
+        shouldThrowWithMessage<XpdfRuntimeException>("Unable to copy executable from resources to local system") {
             PdfTextTool.builder().build()
         }
 
@@ -136,14 +136,14 @@ class PdfTextToolTest {
     }
 
     @Test
-    fun `should throw exception when initializing with native library that does not exist`() {
+    fun `should throw exception when initializing with executable that does not exist`() {
         // given
         val nativeLibraryPath = mockk<Path> {
             every { toFile().exists() } returns false
         }
 
         // when then
-        shouldThrowWithMessage<XpdfRuntimeException>("The configured native library does not exist at the path specified") {
+        shouldThrowWithMessage<XpdfRuntimeException>("The configured executable does not exist at the path specified") {
             PdfTextTool.builder().nativeLibraryPath(nativeLibraryPath).build()
         }
     }
@@ -209,7 +209,7 @@ class PdfTextToolTest {
         capturedOutput.all shouldContain "Validating request"
         capturedOutput.all shouldContain "Configuring output text file"
         capturedOutput.all shouldContain "Building command"
-        capturedOutput.all shouldContain "Invoking native library; command: [part1, part2, part3]"
+        capturedOutput.all shouldContain "Invoking executable; command: [part1, part2, part3]"
         capturedOutput.all shouldContain "Invocation completed; exit code: 0, standard output: standardOutput"
         capturedOutput.all shouldContain "Invocation succeeded"
         capturedOutput.all shouldContain "Process finished"
@@ -259,7 +259,7 @@ class PdfTextToolTest {
         capturedOutput.all shouldContain "Validating request"
         capturedOutput.all shouldContain "Configuring output text file"
         capturedOutput.all shouldContain "Building command"
-        capturedOutput.all shouldContain "Invoking native library; command: [part1, part2, part3]"
+        capturedOutput.all shouldContain "Invoking executable; command: [part1, part2, part3]"
         capturedOutput.all shouldContain "Invocation completed; exit code: ${exitCode}, standard output: standardOutput"
         capturedOutput.all shouldContain "Invocation failed; error output: errorOutput"
         capturedOutput.all shouldContain "Process failed; exception message: $message"
@@ -300,7 +300,7 @@ class PdfTextToolTest {
         capturedOutput.all shouldContain "Validating request"
         capturedOutput.all shouldContain "Configuring output text file"
         capturedOutput.all shouldContain "Building command"
-        capturedOutput.all shouldContain "Invoking native library; command: [part1, part2, part3]"
+        capturedOutput.all shouldContain "Invoking executable; command: [part1, part2, part3]"
         capturedOutput.all shouldContain "Invocation timed out"
         capturedOutput.all shouldContain "Process failed; exception message: Timeout reached before process could finish"
         capturedOutput.all shouldContain "Process finished"

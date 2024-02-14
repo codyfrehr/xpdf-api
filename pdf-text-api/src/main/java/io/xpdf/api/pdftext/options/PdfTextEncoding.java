@@ -20,8 +20,9 @@ package io.xpdf.api.pdftext.options;
  * Defines the encoding of text to extract from a PDF file.
  *
  * @implNote Encodings defined here are those included with a native <em>pdftotext</em> library.
- * Additional encodings can be configured in a <em>xpdfrc</em> config file, which you can then pass as a command option.
- * See <em>Xpdf</em> documentation for more details.
+ * Additional encodings can be configured in an <em>xpdfrc</em> config file, which you can then pass as a command option.
+ * See <em>Xpdf</em> documentation for more detailed information about configuration.
+ * You can find source documentation alongside the executable file in the package resources.
  * @since 1.0.0
  */
 public enum PdfTextEncoding {

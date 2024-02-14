@@ -288,7 +288,7 @@
                             <licenseSet>
                                 <header>com/mycila/maven/plugin/license/templates/GPL-3-ONLY.txt</header>
                                 <excludes>
-                                    <exclude>.m2/**</exclude>
+                                    <exclude>*.adoc</exclude>
                                     <exclude>src/main/resources/**</exclude>
                                     <exclude>src/test/resources/**</exclude>
                                 </excludes>

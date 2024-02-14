@@ -19,7 +19,7 @@ package io.xpdf.api.common.exception;
 import lombok.experimental.StandardException;
 
 /**
- * A {@link XpdfException} thrown during the processing of a <em>Xpdf</em> request.
+ * An {@link XpdfException} thrown during the processing of an <em>Xpdf</em> request.
  *
  * @since 1.0.0
  */

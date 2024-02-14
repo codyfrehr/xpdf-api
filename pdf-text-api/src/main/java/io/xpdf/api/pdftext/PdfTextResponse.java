@@ -24,7 +24,7 @@ import lombok.ToString;
 import java.io.File;
 
 /**
- * Represents the result of invoking a native <em>pdftotext</em> library.
+ * Represents the result of invoking the <em>pdftotext</em> executable.
  *
  * @since 1.0.0
  */
@@ -34,7 +34,7 @@ import java.io.File;
 public class PdfTextResponse extends XpdfResponse {
 
     /**
-     * Text file containing text extracted from input PDF file.
+     * Text file containing text from input PDF.
      *
      * @implNote If this is a temporary file, it will be automatically deleted on JVM termination.
      * @since 1.0.0
@@ -42,7 +42,7 @@ public class PdfTextResponse extends XpdfResponse {
     private final File textFile;
 
     /**
-     * Standard output streamed from native process.
+     * Standard output from the shell process that invoked the executable.
      *
      * @since 1.0.0
      */
