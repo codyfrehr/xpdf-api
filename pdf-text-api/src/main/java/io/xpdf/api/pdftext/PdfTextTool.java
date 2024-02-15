@@ -138,8 +138,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      * @param request {@link PdfTextRequest}
      * @return {@link PdfTextResponse} with text file containing text from PDF
      * @throws XpdfValidationException if request is invalid
-     * @throws XpdfNativeExecutionException if process returns non-zero exit code
-     * @throws XpdfNativeTimeoutException if process duration exceeds timeout length
+     * @throws XpdfExecutionException if process returns non-zero exit code
+     * @throws XpdfTimeoutException if process duration exceeds timeout length
      * @throws XpdfProcessingException if any other exception occurs during processing
      * @implNote This method executes a shell command and may become blocking.
      * @since 1.0.0
@@ -200,12 +200,12 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                             message = "Unknown Xpdf error";
                             break;
                     }
-                    throw new XpdfNativeExecutionException(standardOutput, errorOutput, message);
+                    throw new XpdfExecutionException(standardOutput, errorOutput, message);
                 }
             } else {
                 // handle process timeout
                 log.debug("Invocation timed out");
-                throw new XpdfNativeTimeoutException("Timeout reached before process could finish");
+                throw new XpdfTimeoutException("Timeout reached before process could finish");
             }
         } catch (XpdfException | XpdfRuntimeException e) {
             log.debug("Process failed; exception message: {}", e.getMessage());

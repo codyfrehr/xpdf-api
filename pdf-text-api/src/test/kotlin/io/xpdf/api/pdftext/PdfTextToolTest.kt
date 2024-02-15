@@ -251,7 +251,7 @@ class PdfTextToolTest {
         }
 
         // when then
-        shouldThrowWithMessage<XpdfNativeExecutionException>(message) {
+        shouldThrowWithMessage<XpdfExecutionException>(message) {
             pdfTextToolSpy.process(mockk())
         }
 
@@ -292,7 +292,7 @@ class PdfTextToolTest {
         }
 
         // when then
-        shouldThrowWithMessage<XpdfNativeTimeoutException>("Timeout reached before process could finish") {
+        shouldThrowWithMessage<XpdfTimeoutException>("Timeout reached before process could finish") {
             pdfTextToolSpy.process(mockk())
         }
 
