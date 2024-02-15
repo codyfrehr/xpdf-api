@@ -16,7 +16,7 @@
  */
 package io.xpdf.api.common;
 
-import io.xpdf.api.common.exception.*;
+import io.xpdf.api.common.exception.XpdfException;
 
 /**
  * A wrapper of an <em>Xpdf</em> command line tool.
