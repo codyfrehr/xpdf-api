@@ -31,7 +31,7 @@ import java.nio.file.Path;
 @ConfigurationProperties(prefix = "xpdf-api.pdf-text")
 public class PdfTextToolProperties {
 
-    private Path nativeLibraryPath;
+    private Path executablePath;
     private Integer timeoutSeconds;
 
 }

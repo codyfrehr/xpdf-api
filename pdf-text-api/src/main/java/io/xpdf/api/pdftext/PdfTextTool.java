@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,7 +52,7 @@ import static java.util.Collections.emptyList;
  * <br><br> Example usage:
  * <blockquote><pre>
  *  PdfTextTool.builder()
- *      .nativeLibraryPath(Paths.get("C:/libs/pdftotext.exe"))
+ *      .executableFile(new File("C:/libs/pdftotext.exe"))
  *      .timeoutSeconds(60)
  *      .build();
  * </pre></blockquote>
@@ -69,12 +68,12 @@ import static java.util.Collections.emptyList;
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
     /**
-     * Path to the executable that should be invoked.
+     * Executable file that should be invoked.
      *
      * @implNote If unassigned, this will default to the executable included with this project.
      * @since 1.0.0
      */
-    private final Path nativeLibraryPath;
+    private final File executableFile;
 
     /**
      * Maximum amount of time in seconds allotted to a process before timing out.
@@ -87,33 +86,33 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
     public static class PdfTextToolBuilder {
 
         public PdfTextTool build() {
-            val nativeLibraryPathBuilder = configureNativeLibraryPath();
+            val executableFileBuilder = configureExecutableFile();
             val timeoutSecondsBuilder = configureTimeoutSeconds();
 
-            return new PdfTextTool(nativeLibraryPathBuilder, timeoutSecondsBuilder);
+            return new PdfTextTool(executableFileBuilder, timeoutSecondsBuilder);
         }
 
-        protected Path configureNativeLibraryPath() {
-            if (nativeLibraryPath == null) {
-                // copy library from project resources to OS-accessible directory on local system
-                val pdfTextNativeLibraryPath = getPdfTextNativeLibraryPath();
-                if (!pdfTextNativeLibraryPath.toFile().exists()) {
-                    val nativeLibraryResourceStream = getClass().getClassLoader().getResourceAsStream(getPdfTextNativeLibraryResourceName());
-                    if (nativeLibraryResourceStream == null) {
+        protected File configureExecutableFile() {
+            if (executableFile == null) {
+                // copy executable from project resources to OS-accessible directory on local system
+                val executablePath = getPdfTextExecutablePath();
+                if (!executablePath.toFile().exists()) {
+                    val executableResourceStream = getClass().getClassLoader().getResourceAsStream(getPdfTextExecutableResourceName());
+                    if (executableResourceStream == null) {
                         throw new XpdfRuntimeException("Unable to locate executable in project resources");
                     }
                     try {
-                        FileUtils.copyInputStreamToFile(nativeLibraryResourceStream, pdfTextNativeLibraryPath.toFile());
+                        FileUtils.copyInputStreamToFile(executableResourceStream, executablePath.toFile());
                     } catch (IOException e) {
                         throw new XpdfRuntimeException("Unable to copy executable from resources to local system");
                     }
                 }
-                return pdfTextNativeLibraryPath;
+                return executablePath.toFile();
             } else {
-                if (!nativeLibraryPath.toFile().exists()) {
-                    throw new XpdfRuntimeException("The configured executable does not exist at the path specified");
+                if (!executableFile.exists()) {
+                    throw new XpdfRuntimeException("The configured executable does not exist");
                 }
-                return nativeLibraryPath;
+                return executableFile;
             }
         }
 
@@ -292,12 +291,12 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      * @param request {@link PdfTextRequest}
      * @param textFile text file
      * @return command parts as {@code List<String>}
-     * @throws IOException if canonical path of {@link #nativeLibraryPath} is invalid
+     * @throws IOException if canonical path of {@link #executableFile} is invalid
      */
     protected List<String> getCommandParts(PdfTextRequest request, File textFile) throws IOException {
         val commandParts = new ArrayList<String>();
 
-        commandParts.add(nativeLibraryPath.toFile().getCanonicalPath());
+        commandParts.add(executableFile.getCanonicalPath());
         commandParts.addAll(getCommandOptions(request.getOptions()));
         commandParts.add(request.getPdfFile().getCanonicalPath());
         commandParts.add(textFile.getCanonicalPath());

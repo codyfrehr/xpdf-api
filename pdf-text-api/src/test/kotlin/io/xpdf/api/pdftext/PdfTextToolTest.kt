@@ -41,7 +41,6 @@ import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import java.util.UUID.randomUUID
@@ -55,7 +54,7 @@ class PdfTextToolTest {
     fun `should initialize and copy executable to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextExecutablePath().toFile().exists() } returns false
 
         mockkStatic(FileUtils::class)
         every { FileUtils.copyInputStreamToFile(any(), any()) } just runs
@@ -74,7 +73,7 @@ class PdfTextToolTest {
     fun `should initialize and not copy executable to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns true
+        every { XpdfUtils.getPdfTextExecutablePath().toFile().exists() } returns true
 
         mockkStatic(FileUtils::class)
 
@@ -91,23 +90,23 @@ class PdfTextToolTest {
     @Test
     fun `should initialize with executable`() {
         // given
-        val nativeLibraryPath = mockk<Path> {
-            every { toFile().exists() } returns true
+        val executableFile = mockk<File> {
+            every { exists() } returns true
         }
 
         // when
-        val result = PdfTextTool.builder().nativeLibraryPath(nativeLibraryPath).build()
+        val result = PdfTextTool.builder().executableFile(executableFile).build()
 
         // then
-        result.nativeLibraryPath shouldBe nativeLibraryPath
+        result.executableFile shouldBe executableFile
     }
 
     @Test
     fun `should throw exception when initializing if unable to get executable resource stream`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns false
-        every { XpdfUtils.getPdfTextNativeLibraryResourceName() } returns "notexists"
+        every { XpdfUtils.getPdfTextExecutablePath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextExecutableResourceName() } returns "notexists"
 
         // when then
         shouldThrowWithMessage<XpdfRuntimeException>("Unable to locate executable in project resources") {
@@ -121,7 +120,7 @@ class PdfTextToolTest {
     fun `should throw exception when initializing if unable to copy executable to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextNativeLibraryPath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextExecutablePath().toFile().exists() } returns false
 
         mockkStatic(FileUtils::class)
         every { FileUtils.copyInputStreamToFile(any(), any()) } throws IOException()
@@ -138,13 +137,13 @@ class PdfTextToolTest {
     @Test
     fun `should throw exception when initializing with executable that does not exist`() {
         // given
-        val nativeLibraryPath = mockk<Path> {
-            every { toFile().exists() } returns false
+        val executableFile = mockk<File> {
+            every { exists() } returns false
         }
 
         // when then
-        shouldThrowWithMessage<XpdfRuntimeException>("The configured executable does not exist at the path specified") {
-            PdfTextTool.builder().nativeLibraryPath(nativeLibraryPath).build()
+        shouldThrowWithMessage<XpdfRuntimeException>("The configured executable does not exist") {
+            PdfTextTool.builder().executableFile(executableFile).build()
         }
     }
 
@@ -471,12 +470,12 @@ class PdfTextToolTest {
             every { canonicalPath } returns "textPath"
         }
 
-        val nativeLibraryPath = mockk<Path> {
-            every { toFile().exists() } returns true
-            every { toFile().canonicalPath } returns "cmdPath"
+        val executableFile = mockk<File> {
+            every { exists() } returns true
+            every { canonicalPath } returns "cmdPath"
         }
 
-        val pdfTextTool = PdfTextTool.builder().nativeLibraryPath(nativeLibraryPath).build()
+        val pdfTextTool = PdfTextTool.builder().executableFile(executableFile).build()
         val pdfTextToolSpy = spyk(pdfTextTool) {
             every { getCommandOptions(any()) } returns listOf("opt1", "opt2")
         }

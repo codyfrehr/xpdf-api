@@ -26,7 +26,7 @@ import io.xpdf.api.common.exception.*;
 public interface XpdfTool<Request extends XpdfRequest, Response extends XpdfResponse> {
 
     /**
-     * Invokes a native <em>Xpdf</em> executable against a PDF file.
+     * Invokes an <em>Xpdf</em> executable against a PDF file.
      *
      * @param request {@link XpdfRequest}
      * @return {@link XpdfResponse} result
