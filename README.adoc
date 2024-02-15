@@ -1,7 +1,6 @@
 = Xpdf API
-TODO: automatically inject build status, like spring boot project does
-TODO: look at other readme with .adoc structure, and see what other ways there are to format this. for example, spring boot has tabs for "Security" and "Code of Conduct" - pretty cool!
-:toc:
+//TODO: automatically inject build status, like spring boot project does
+//TODO: look at other readme with .adoc structure, and see what other ways there are to format this. for example, spring boot has tabs for "Security" and "Code of Conduct" - pretty cool!
 
 Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], an open source library for working with PDF files written in C++.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
@@ -23,8 +22,8 @@ APIs are available for the following Xpdf functions (with more to come):
 * Windows, Linux, or Mac OS
 
 === Dependencies
-TODO: automatically inject maven central references with latest versions
-TODO: is there a way to provide a code block with tabs, so users can choose between all dependencies in single block?
+//TODO: automatically inject maven central references with latest versions
+//TODO: is there a way to provide a code block with tabs, so users can choose between all dependencies in single block?
 
 [source,xml]
 ----
@@ -46,15 +45,17 @@ TODO: is there a way to provide a code block with tabs, so users can choose betw
  </dependency>
 ----
 
-=== PdfTextTool API
-TODO: do we want image in source code? or should we host on website, and link to that?
+== PdfText API
+//TODO: do we want image in source code? or should we host on website, and link to that?
 
-*Important:* We provide a couple usages of this tool below, but we highly recommend downloading sources in your IDE so that you have full access to our JavaDocs.
+*Important:* We provide information about this tool below, but we highly recommend downloading sources in your IDE so that you have full access to our JavaDocs.
 We made an extra effort to provide you with all the help you need, directly from your editor.
 
-image:_doc/readme/javadoc_nativeoptions.jpg[IntelliJ JavaDoc]
+image:_doc/readme/javadoc_pdftextoptions.jpg[IntelliJ JavaDoc]
 
-*Simple Example:*
+=== Usage
+
+Simple example:
 
 [source,java,indent=0]
 ----
@@ -70,7 +71,8 @@ image:_doc/readme/javadoc_nativeoptions.jpg[IntelliJ JavaDoc]
     PdfTextResponse response = pdfTextTool.process(request);
 ----
 
-*Complex Example:*
+Complex example:
+
 [source,java,indent=0]
 ----
     PdfTextTool pdfTextTool = PdfTextTool.builder().build();
@@ -93,21 +95,47 @@ image:_doc/readme/javadoc_nativeoptions.jpg[IntelliJ JavaDoc]
     PdfTextResponse response = pdfTextTool.process(request);
 ----
 
-== How It Works [[how_it_works]]
-TODO
+=== Configuration
+//TODO
 
-If you understand how to use Xpdf, then you should understand how Xpdf API works.
+==== PdfTextTool
 
-== Configuration
-TODO
+`PdfTextTool` represents Xpdf's _pdftotext_ command line tool.
+It is a simple service that allows you to programmatically execute shell commands against _pdftotext_, which is included with this project in an executable format for Windows, Linux, and Mac operating system.
 
-*Important:* Before proceeding, you should read <<how_it_works, How It Works>> because understanding what happens under the hood is essential to understanding how it can be customized.
+Default configuration of `PdfTextTool` is to use the executable provided in our project resources, with a 30 second timeout on individual invocations.
 
-=== Basic
+[source,java,indent=0]
+----
+    PdfTextTool pdfTextTool = PdfTextTool.builder().build();
+----
 
-=== Starters
+If you want to use your own installation of _pdftotext_, then you can download it from Xpdf https://www.xpdfreader.com/download.html[here]. Timeout can be configured also, but unless you are working with truly massive PDF files, most executions happen in under a second.
+[source,java,indent=0]
+----
+    PdfTextTool.builder()
+            .executableFile(new File("C:/libs/pdftotext.exe"))
+            .timeoutSeconds(60)
+            .build();
+----
 
-=== Logging?
+If you are using our Spring Boot starter, just plug in the following properties.
+[source,yaml,indent=0]
+----
+io.xpdf.api.pdftext:
+      executable-path: "C:/libs/pdftotext.exe"
+      timeout-seconds: 60
+----
+
+==== PdfTextRequest
+
+`PdfTextRequest` represents an individual shell command to invoke _pdftotext_.
+
+==== PdfTextRequest
+
+`PdfTextResponse` represents the result of invoking _pdftotext_.
+
+==== Logging
 
 
 == Getting Help
