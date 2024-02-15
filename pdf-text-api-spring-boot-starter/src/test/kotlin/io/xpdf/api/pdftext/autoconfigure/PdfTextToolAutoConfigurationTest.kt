@@ -16,7 +16,6 @@
  */
 package io.xpdf.api.pdftext.autoconfigure
 
-import io.kotest.matchers.comparables.shouldBeEqualComparingTo
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
