@@ -28,7 +28,7 @@ import java.nio.file.Path;
  * @since 1.0.0
  */
 @Data
-@ConfigurationProperties(prefix = "xpdf-api.pdf-text")
+@ConfigurationProperties(prefix = "io.xpdf.api.pdftext")
 public class PdfTextToolProperties {
 
     private Path executablePath;

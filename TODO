@@ -1,10 +1,6 @@
 - licensing
   - understand difference between license, copyright, and trademark, and what that means for this project https://stackoverflow.com/a/13437203/8784215
     do i have to reference original Glyph/Cog copyright or anything?
-- find all places you use "native", "library", "executable", etc in javadocs and cleanup wording - "native" is just a filler word.
-- rename "nativeLibraryPath" to "executablePath" or "executableFile" ?
-- rename XpdfNativeExecutionException and XpdfNativeTimeoutException
-- add javadoc note in key classes/methods/properties (ie, nativeOptions) that users should reference our included Xpdf docs for complete documentation on something
 - test all code examples from readme and javadocs to ensure they are working!
 - rename modules from "pdf-text-api" to "pdf-text-tool"..? (and common-api to common-tool)
   ...we may want to reserve the artifact id "pdf-text-api" for an actual JNI/JNA api package, in the future

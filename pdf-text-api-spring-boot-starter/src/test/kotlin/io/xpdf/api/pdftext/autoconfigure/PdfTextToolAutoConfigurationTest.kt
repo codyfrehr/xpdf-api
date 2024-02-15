@@ -52,14 +52,14 @@ class PdfTextToolAutoConfigurationTest {
     @Test
     fun `should autoconfigure pdf text tool from properties`() {
         // given
-        val executableFile: File = Paths.get(System.getProperty("java.io.tmpdir"), "executable").toFile().apply {
+        val executableFile: File = Paths.get(System.getProperty("java.io.tmpdir"), "executableName").toFile().apply {
             createNewFile()
             deleteOnExit()
         }
 
         TestPropertyValues.of(
-                "xpdf-api.pdf-text.executable-path=${executableFile.canonicalPath}",
-                "xpdf-api.pdf-text.timeout-seconds=99"
+                "io.xpdf.api.pdftext.executable-path=${executableFile.canonicalPath}",
+                "io.xpdf.api.pdftext.timeout-seconds=99"
         ).applyTo(context)
 
         context.register(PdfTextToolAutoConfiguration::class.java)
@@ -69,7 +69,7 @@ class PdfTextToolAutoConfigurationTest {
         val pdfTextTool = context.getBean(PdfTextTool::class.java)
 
         // then
-        pdfTextTool.executableFile.canonicalPath shouldBeEqualComparingTo executableFile.canonicalPath
+        pdfTextTool.executableFile.canonicalPath shouldBe executableFile.canonicalPath
         pdfTextTool.timeoutSeconds shouldBe 99
     }
 

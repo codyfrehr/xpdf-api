@@ -20,7 +20,6 @@ import io.xpdf.api.common.XpdfTool;
 import io.xpdf.api.common.exception.XpdfRuntimeException;
 import lombok.val;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
