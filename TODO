@@ -2,13 +2,9 @@
   - understand difference between license, copyright, and trademark, and what that means for this project https://stackoverflow.com/a/13437203/8784215
     do i have to reference original Glyph/Cog copyright or anything?
 - test all code examples from readme and javadocs to ensure they are working!
-- rename modules from "pdf-text-api" to "pdf-text-tool"..? (and common-api to common-tool)
-  ...we may want to reserve the artifact id "pdf-text-api" for an actual JNI/JNA api package, in the future
-  also - are we 100% sure about the group id "io.xpdf.api"? (i think so, but just give it a final thought)
 - should we impose a default timeout of 30 seconds on the tool?
   on one hand, its a very nice safeguard that 99% of use cases will fall into, and will prevent user's apps from inadvertently hanging.
   on the other hand, it imposes a constraint on the user they didnt choose (maybe we can provide option to make unlimited?)
-- add m2 directory back in as an gitignored directory
 - write README
 - make github repo public
   ...and now that it will be public, you should make some of your other repos private.
