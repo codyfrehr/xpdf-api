@@ -20,6 +20,7 @@ import io.xpdf.api.common.XpdfTool;
 import io.xpdf.api.common.exception.XpdfRuntimeException;
 import lombok.val;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -31,27 +32,27 @@ import java.nio.file.Paths;
 public class XpdfUtils {
 
     /**
-     * Gets the resource name of the <em>pdftotext</em> library native to this system.
+     * Gets the resource name of the <em>pdftotext</em> executable native to this system.
      *
-     * @return native library resource name
+     * @return executable resource name
      * @since 1.0.0
      */
-    static public String getPdfTextNativeLibraryResourceName() {
-        return String.format("xpdf/%s/%s", getTargetSystem(), getPdfTextNativeLibraryName());
+    static public String getPdfTextExecutableResourceName() {
+        return String.format("xpdf/%s/%s", getTargetSystem(), getPdfTextExecutableName());
     }
 
     /**
-     * Gets the path where the native <em>pdftotext</em> library should be copied so that it can be accessed by OS.
+     * Gets the path where the native <em>pdftotext</em> executable should be copied so that it can be accessed by OS.
      *
-     * @return native library path
+     * @return executable path
      * @since 1.0.0
      */
-    static public Path getPdfTextNativeLibraryPath() {
-        return getXpdfTempPath().resolve("pdf-text").resolve("bin").resolve(getPdfTextNativeLibraryName());
+    static public Path getPdfTextExecutablePath() {
+        return getXpdfTempPath().resolve("pdf-text").resolve("bin").resolve(getPdfTextExecutableName());
     }
 
     /**
-     * Gets the temporary directory where the native <em>pdftotext</em> library should write output.
+     * Gets the temporary directory where the <em>pdftotext</em> executable should write output.
      *
      * @return temporary directory
      * @since 1.0.0
@@ -61,9 +62,9 @@ public class XpdfUtils {
     }
 
     /**
-     * Gets the maximum amount of time in seconds allotted to the native <em>pdftotext</em> process before timing out.
+     * Gets the maximum amount of time in seconds allotted to the <em>pdftotext</em> process before timing out.
      *
-     * @return timeout length in seconds for native process
+     * @return timeout length in seconds for process
      * @since 1.0.0
      */
     static public Integer getPdfTextTimeoutSeconds() {
@@ -71,16 +72,16 @@ public class XpdfUtils {
     }
 
     /**
-     * Gets the name of the native <em>pdftotext</em> library.
+     * Gets the name of the native <em>pdftotext</em> executable.
      *
-     * @return native library name
+     * @return executable name
      */
-    static protected String getPdfTextNativeLibraryName() {
+    static protected String getPdfTextExecutableName() {
         return String.format("pdftotext%s", getTargetSystem().contains("windows") ? ".exe" : "");
     }
 
     /**
-     * Gets the temporary directory utilized by native <em>Xpdf</em> libraries.
+     * Gets the temporary directory utilized by native <em>Xpdf</em> executables.
      *
      * @return temporary directory
      */
@@ -90,7 +91,7 @@ public class XpdfUtils {
 
     /**
      * Gets the OS and JVM bit architecture specific to this system.
-     * This helps to locate the correct <em>Xpdf</em> library for this system in the project resources.
+     * This helps to locate the correct <em>Xpdf</em> executable for this system in the project resources.
      *
      * @return representation of OS and bits
      */

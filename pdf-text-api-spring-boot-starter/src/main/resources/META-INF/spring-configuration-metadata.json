@@ -1,7 +1,7 @@
 {
   "properties": [
     {
-      "name": "xpdf-api.pdf-text.native-library-path"
+      "name": "xpdf-api.pdf-text.executable-path"
     },
     {
       "name": "xpdf-api.pdf-text.timeout-seconds"

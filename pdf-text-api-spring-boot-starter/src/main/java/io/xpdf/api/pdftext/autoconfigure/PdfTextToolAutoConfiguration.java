@@ -39,16 +39,16 @@ public class PdfTextToolAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public PdfTextTool pdfTextTool(PdfTextToolProperties pdfTextToolProperties) {
-        Path nativeLibraryPath = pdfTextToolProperties.getNativeLibraryPath() == null
-                ? XpdfUtils.getPdfTextNativeLibraryPath()
-                : pdfTextToolProperties.getNativeLibraryPath();
+        Path executablePath = pdfTextToolProperties.getExecutablePath() == null
+                ? XpdfUtils.getPdfTextExecutablePath()
+                : pdfTextToolProperties.getExecutablePath();
 
         Integer timeoutSeconds = pdfTextToolProperties.getTimeoutSeconds() == null
                 ? XpdfUtils.getPdfTextTimeoutSeconds()
                 : pdfTextToolProperties.getTimeoutSeconds();
 
         return PdfTextTool.builder()
-                .nativeLibraryPath(nativeLibraryPath)
+                .executableFile(executablePath.toFile())
                 .timeoutSeconds(timeoutSeconds)
                 .build();
     }

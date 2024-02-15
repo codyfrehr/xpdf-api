@@ -51,23 +51,23 @@ class XpdfUtilsTest {
     }
 
     @Test
-    fun `should get pdf text native library resource name`() {
+    fun `should get pdf text executable resource name`() {
         // given
         every { XpdfUtils.getTargetSystem() } returns "targetSystem"
-        every { XpdfUtils.getPdfTextNativeLibraryName() } returns "nativeLibraryName"
+        every { XpdfUtils.getPdfTextExecutableName() } returns "executableName"
 
         // when then
-        XpdfUtils.getPdfTextNativeLibraryResourceName() shouldBe "xpdf/targetSystem/nativeLibraryName"
+        XpdfUtils.getPdfTextExecutableResourceName() shouldBe "xpdf/targetSystem/executableName"
     }
 
     @Test
-    fun `should get pdf text native library path`() {
+    fun `should get pdf text executable path`() {
         // given
         every { XpdfUtils.getXpdfTempPath() } returns Paths.get("tempPath")
-        every { XpdfUtils.getPdfTextNativeLibraryName() } returns "nativeLibraryName"
+        every { XpdfUtils.getPdfTextExecutableName() } returns "executableName"
 
         // when then
-        XpdfUtils.getPdfTextNativeLibraryPath() shouldBe Paths.get("tempPath", "pdf-text", "bin", "nativeLibraryName")
+        XpdfUtils.getPdfTextExecutablePath() shouldBe Paths.get("tempPath", "pdf-text", "bin", "executableName")
     }
 
     @Test
@@ -96,13 +96,13 @@ class XpdfUtilsTest {
             "windows/bin32, pdftotext.exe",
             "windows/bin64, pdftotext.exe",
     )
-    fun `should get pdf text native library name`(targetSystem: String,
-                                           nativeLibraryName: String) {
+    fun `should get pdf text executable name`(targetSystem: String,
+                                              executableName: String) {
         // given
         every { XpdfUtils.getTargetSystem() } returns targetSystem
 
         // when then
-        XpdfUtils.getPdfTextNativeLibraryName() shouldBe nativeLibraryName
+        XpdfUtils.getPdfTextExecutableName() shouldBe executableName
     }
 
     @Test

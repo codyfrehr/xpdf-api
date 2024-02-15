@@ -16,6 +16,7 @@
  */
 package io.xpdf.api.pdftext.autoconfigure
 
+import io.kotest.matchers.comparables.shouldBeEqualComparingTo
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -51,13 +52,13 @@ class PdfTextToolAutoConfigurationTest {
     @Test
     fun `should autoconfigure pdf text tool from properties`() {
         // given
-        val nativeLibrary: File = Paths.get(System.getProperty("java.io.tmpdir"), "nativeLibrary").toFile().apply {
+        val executableFile: File = Paths.get(System.getProperty("java.io.tmpdir"), "executable").toFile().apply {
             createNewFile()
             deleteOnExit()
         }
 
         TestPropertyValues.of(
-                "xpdf-api.pdf-text.native-library-path=${nativeLibrary.canonicalPath}",
+                "xpdf-api.pdf-text.executable-path=${executableFile.canonicalPath}",
                 "xpdf-api.pdf-text.timeout-seconds=99"
         ).applyTo(context)
 
@@ -68,19 +69,22 @@ class PdfTextToolAutoConfigurationTest {
         val pdfTextTool = context.getBean(PdfTextTool::class.java)
 
         // then
-        pdfTextTool.nativeLibraryPath shouldBe nativeLibrary.toPath()
+        pdfTextTool.executableFile.canonicalPath shouldBeEqualComparingTo executableFile.canonicalPath
         pdfTextTool.timeoutSeconds shouldBe 99
     }
 
     @Test
     fun `should autoconfigure pdf text tool from xpdf utils`() {
         // given
-        val nativeLibraryPath = mockk<Path> {
-            every { toFile().exists() } returns true
+        val executableFile = mockk<File> {
+            every { exists() } returns true
+        }
+        val executablePath = mockk<Path> {
+            every { toFile() } returns executableFile
         }
 
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextNativeLibraryPath() } returns nativeLibraryPath
+        every { XpdfUtils.getPdfTextExecutablePath() } returns executablePath
         every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 99
 
         context.register(PdfTextToolAutoConfiguration::class.java)
@@ -90,7 +94,7 @@ class PdfTextToolAutoConfigurationTest {
         val pdfTextTool = context.getBean(PdfTextTool::class.java)
 
         // then
-        pdfTextTool.nativeLibraryPath shouldBe nativeLibraryPath
+        pdfTextTool.executableFile shouldBe executableFile
         pdfTextTool.timeoutSeconds shouldBe 99
 
         unmockkStatic(XpdfUtils::class)
