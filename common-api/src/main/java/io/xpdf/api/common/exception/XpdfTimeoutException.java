@@ -24,6 +24,6 @@ import lombok.experimental.StandardException;
  * @since 1.0.0
  */
 @StandardException
-public class XpdfNativeTimeoutException extends XpdfException {
+public class XpdfTimeoutException extends XpdfException {
 
 }

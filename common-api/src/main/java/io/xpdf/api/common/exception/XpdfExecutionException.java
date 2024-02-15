@@ -24,7 +24,7 @@ import lombok.Getter;
  * @since 1.0.0
  */
 @Getter
-public class XpdfNativeExecutionException extends XpdfException {
+public class XpdfExecutionException extends XpdfException {
 
     /**
      * Standard output streamed from invocation of <em>Xpdf</em> executable.
@@ -40,9 +40,9 @@ public class XpdfNativeExecutionException extends XpdfException {
      */
     private final String errorOutput;
 
-    public XpdfNativeExecutionException(String standardOutput,
-                                        String errorOutput,
-                                        String message) {
+    public XpdfExecutionException(String standardOutput,
+                                  String errorOutput,
+                                  String message) {
         super(message);
         this.standardOutput = standardOutput;
         this.errorOutput = errorOutput;
