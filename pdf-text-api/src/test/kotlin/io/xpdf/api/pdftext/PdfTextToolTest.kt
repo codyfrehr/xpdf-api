@@ -440,7 +440,7 @@ class PdfTextToolTest {
         every { randomUUID() } returns randomUuid
 
         val request = mockk<PdfTextRequest> {
-            every { getTextFile() } returns null
+            every { textFile } returns null
         }
 
         val textFile = mockk<File>(relaxed = true)
