@@ -52,7 +52,7 @@ import static java.util.Collections.emptyList;
  * <br><br> Example usage:
  * <blockquote><pre>
  *  PdfTextTool.builder()
- *      .executableFile(new File("C:/libs/pdftotext.exe"))
+ *      .executableFile(new File("~/libs/pdftotext"))
  *      .timeoutSeconds(60)
  *      .build();
  * </pre></blockquote>

@@ -46,16 +46,19 @@ APIs are available for the following Xpdf functions (with more to come):
 ----
 
 == PdfText API
-//TODO: do we want image in source code? or should we host on website, and link to that?
 
-*Important:* We provide information about this tool below, but we highly recommend downloading sources in your IDE so that you have full access to our JavaDocs.
+*Important:*
+
+* We highly recommend downloading sources in your IDE so that you have full access to our JavaDocs.
 We made an extra effort to provide you with all the help you need, directly from your editor.
+* We strongly encourage you to read the _pdftotext_ source documentation for a complete overview of the tool and the options available to customize its execution.
+Documentation can be found alongside the executable file in the package resources.
 
 image:_doc/readme/javadoc_pdftextoptions.jpg[IntelliJ JavaDoc]
 
-=== Usage
+=== Examples
 
-Simple example:
+==== Simple Example
 
 [source,java,indent=0]
 ----
@@ -64,14 +67,14 @@ Simple example:
 
     // build a request with a PDF file
     PdfTextRequest request = PdfTextRequest.builder()
-            .pdfFile(new File("C:/docs/some.pdf"))
+            .pdfFile(new File("~/docs/some.pdf"))
             .build();
 
     // convert the PDF into a text file
     PdfTextResponse response = pdfTextTool.process(request);
 ----
 
-Complex example:
+==== Complex Example
 
 [source,java,indent=0]
 ----
@@ -82,13 +85,13 @@ Complex example:
             .format(PdfTextFormat.TABLE)
             .encoding(PdfTextEncoding.UTF_8)
             .ownerPassword("Secret123")
-            .nativeOptions(Map.ofEntries(Map.entry("-cfg", "C:/config/xpdfrc")))
+            .nativeOptions(Map.ofEntries(Map.entry("-cfg", "~/configs/xpdfrc")))
             .build();
 
     // build a request with options, and specify an output text file
     PdfTextRequest request = PdfTextRequest.builder()
-            .pdfFile(new File("C:/docs/some.pdf"))
-            .textFile(new File("C:/docs/some.txt"))
+            .pdfFile(new File("~/docs/some.pdf"))
+            .textFile(new File("~/docs/some.txt"))
             .options(options)
             .build();
 
@@ -96,25 +99,25 @@ Complex example:
 ----
 
 === Configuration
-//TODO
 
 ==== PdfTextTool
 
-`PdfTextTool` represents Xpdf's _pdftotext_ command line tool.
-It is a simple service that allows you to programmatically execute shell commands against _pdftotext_, which is included with this project in an executable format for Windows, Linux, and Mac operating system.
+`PdfTextTool` represents the Xpdf _pdftotext_ command line tool.
+It is a simple service that allows you to programmatically execute shell commands against _pdftotext_, which is included with this project in an executable format for Windows, Linux, and Mac operating systems.
 
-Default configuration of `PdfTextTool` is to use the executable provided in our project resources, with a 30 second timeout on individual invocations.
+Default configuration of `PdfTextTool` is to use the executable provided in the package resources, with a 30 second timeout on individual invocations.
 
 [source,java,indent=0]
 ----
-    PdfTextTool pdfTextTool = PdfTextTool.builder().build();
+    PdfTextTool.builder().build();
 ----
 
-If you want to use your own installation of _pdftotext_, then you can download it from Xpdf https://www.xpdfreader.com/download.html[here]. Timeout can be configured also, but unless you are working with truly massive PDF files, most executions happen in under a second.
+If you want to use your own installation of _pdftotext_, then you can download it from Xpdf https://www.xpdfreader.com/download.html[here].
+Timeout can also be configured, but unless you are working with truly massive PDF files, most executions happen in under a second.
 [source,java,indent=0]
 ----
     PdfTextTool.builder()
-            .executableFile(new File("C:/libs/pdftotext.exe"))
+            .executableFile(new File("~/libs/pdftotext"))
             .timeoutSeconds(60)
             .build();
 ----
@@ -123,7 +126,7 @@ If you are using our Spring Boot starter, just plug in the following properties.
 [source,yaml,indent=0]
 ----
 io.xpdf.api.pdftext:
-      executable-path: "C:/libs/pdftotext.exe"
+      executable-path: "~/libs/pdftotext"
       timeout-seconds: 60
 ----
 
@@ -131,20 +134,94 @@ io.xpdf.api.pdftext:
 
 `PdfTextRequest` represents an individual shell command to invoke _pdftotext_.
 
-==== PdfTextRequest
+A shell command to invoke _pdftotext_ requires an input PDF file and an output text file.
+Here is a side-by-side comparison of a `PdfTextRequest` and the corresponding shell command it represents.
+[source,java,indent=0]
+----
+    PdfTextRequest.builder()
+            .pdfFile(new File("~/docs/some.pdf"))
+            .textFile(new File("~/docs/some.txt"))
+            .build();
+----
+[source,bash,indent=0]
+----
+  $ pdftotext "~/docs/some.pdf" "~/docs/some.txt"
+----
 
-`PdfTextResponse` represents the result of invoking _pdftotext_.
+If you only care about the output text and not necessarily the text file itself, then you may exclude this field from your `PdfTextRequest`.
+A text file will be automatically initialized for you in your Java temp directory and deleted when your JVM terminates.
+[source,java,indent=0]
+----
+    PdfTextRequest.builder()
+            .pdfFile(new File("~/docs/some.pdf"))
+            .textFile(new File("~/docs/some.txt"))
+            .build();
+----
+[source,bash,indent=0]
+----
+  $ pdftotext "~/docs/some.pdf" "/tmp/03cb3e01-f281-4cd1-8ae3-210ae6076afa.txt"
+----
+
+==== PdfTextOptions
+
+`PdfTextOptions` represents a set of command options accepted by _pdftotext_ that will customize its execution.
+
+Suppose you have a PDF file that is UTF-8 encoded and has tabulated data.
+Encoding is something you should definitely tell _pdftotext_ about.
+How the output text should be laid out for you is more of an opinionated matter, however.
+[source,java,indent=0]
+----
+    PdfTextOptions options = PdfTextOptions.builder()
+            .encoding(PdfTextEncoding.UTF_8)
+            .format(PdfTextFormat.TABLE)
+            .build();
+
+    PdfTextRequest request = PdfTextRequest.builder()
+            .pdfFile(new File("~/docs/some.pdf"))
+            .textFile(new File("~/docs/some.txt"))
+            .options(options)
+            .build();
+----
+[source,bash,indent=0]
+----
+  $ pdftotext -enc "UTF-8" -table "~/docs/some.pdf" "~/docs/some.txt"
+----
+
+We provide a mechanism for you to manually inject options into a command.
+We have implemented many (but not all) of the options specified in the _pdftotext_ source documentation, so this is helpful for including options not implemented by `PdfTextOptions`.
+But you can do this for any option, implemented or unimplemented.
+
+*Important:* No validation is performed on options entered this way - they will be injected directly into the shell command, as is.
+Also be aware that you may inadvertently duplicate an option in the shell command if you both manually inject it and assign a value to the `PdfTextOptions` implementation of that option.
+
+[source,java,indent=0]
+----
+    PdfTextOptions.builder()
+            .encoding(PdfTextEncoding.UTF_8)
+            .nativeOptions(Map.ofEntries(
+                    Map.entry("-enc", "UTF-8"),
+                    Map.entry("-table", null),
+                    Map.entry("-opw", "Secret123")))
+            .build();
+----
+[source,bash,indent=0]
+----
+  $ pdftotext -enc "UTF-8" -table -opw "Secret123" "~/docs/some.pdf" "~/docs/some.txt"
+----
 
 ==== Logging
 
+We have added an SLF4J logger to our `PdfTextTool`, leaving its implementation up to you.
 
-== Getting Help
-TODO
+We provide meaningful debug logs for those needing to drill down (which we hope never happens). If you want to drill really deep, inject the "-verbose" option into the shell command to get the full trace from _pdftotext_!
 
-== Reporting Issues
-TODO
+//TODO== Getting Help
+//TODO
 
-== Building From Source
+//TODO== Reporting Issues
+//TODO
+
+== Building from Source
 
 You do not need to build this project locally to use Xpdf API (packages are available in the Maven Central Repository).
 
@@ -152,7 +229,7 @@ But if you wish to build anyway, all you need is JDK 8 and our provided Maven wr
 
 [source,bash,indent=0]
 ----
-    $ ./mvnw install
+  $ ./mvnw install
 ----
 
 == License
