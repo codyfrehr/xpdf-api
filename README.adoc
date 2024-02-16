@@ -25,6 +25,8 @@ APIs are available for the following Xpdf functions (with more to come):
 //TODO: automatically inject maven central references with latest versions
 //TODO: is there a way to provide a code block with tabs, so users can choose between all dependencies in single block?
 
+Basic toolkit...
+
 [source,xml]
 ----
  <dependency>
@@ -47,18 +49,17 @@ APIs are available for the following Xpdf functions (with more to come):
 
 == PdfText API
 
-*Important:*
-
-* We highly recommend downloading sources in your IDE so that you have full access to our JavaDocs.
+We strongly recommend downloading sources in your IDE so that you have full access to our JavaDocs.
 We made an extra effort to provide you with all the help you need, directly from your editor.
-* We strongly encourage you to read the _pdftotext_ source documentation for a complete overview of the tool and the options available to customize its execution.
+
+We also strongly encourage you to read the _pdftotext_ source documentation for a complete overview of the tool and the options available to customize its execution.
 Documentation can be found alongside the executable file in the package resources.
 
 image:_doc/readme/javadoc_pdftextoptions.jpg[IntelliJ JavaDoc]
 
 === Examples
 
-==== Simple Example
+__Just convert my PDF file into a text file - who cares how it's configured!__
 
 [source,java,indent=0]
 ----
@@ -74,7 +75,7 @@ image:_doc/readme/javadoc_pdftextoptions.jpg[IntelliJ JavaDoc]
     PdfTextResponse response = pdfTextTool.process(request);
 ----
 
-==== Complex Example
+__Convert my PDF file into a text file, but let me customize it - I care about the data!__
 
 [source,java,indent=0]
 ----
@@ -98,9 +99,7 @@ image:_doc/readme/javadoc_pdftextoptions.jpg[IntelliJ JavaDoc]
     PdfTextResponse response = pdfTextTool.process(request);
 ----
 
-=== Configuration
-
-==== PdfTextTool
+=== PdfTextTool
 
 `PdfTextTool` represents the Xpdf _pdftotext_ command line tool.
 It is a simple service that allows you to programmatically execute shell commands against _pdftotext_, which is included with this project in an executable format for Windows, Linux, and Mac operating systems.
@@ -114,6 +113,7 @@ Default configuration of `PdfTextTool` is to use the executable provided in the 
 
 If you want to use your own installation of _pdftotext_, then you can download it from Xpdf https://www.xpdfreader.com/download.html[here].
 Timeout can also be configured, but unless you are working with truly massive PDF files, most executions happen in under a second.
+
 [source,java,indent=0]
 ----
     PdfTextTool.builder()
@@ -124,18 +124,20 @@ Timeout can also be configured, but unless you are working with truly massive PD
 
 If you are using our Spring Boot starter, just plug in the following properties.
 [source,yaml,indent=0]
+
 ----
 io.xpdf.api.pdftext:
       executable-path: "~/libs/pdftotext"
       timeout-seconds: 60
 ----
 
-==== PdfTextRequest
+=== PdfTextRequest
 
 `PdfTextRequest` represents an individual shell command to invoke _pdftotext_.
 
 A shell command to invoke _pdftotext_ requires an input PDF file and an output text file.
 Here is a side-by-side comparison of a `PdfTextRequest` and the corresponding shell command it represents.
+
 [source,java,indent=0]
 ----
     PdfTextRequest.builder()
@@ -143,6 +145,7 @@ Here is a side-by-side comparison of a `PdfTextRequest` and the corresponding sh
             .textFile(new File("~/docs/some.txt"))
             .build();
 ----
+
 [source,bash,indent=0]
 ----
   $ pdftotext "~/docs/some.pdf" "~/docs/some.txt"
@@ -150,6 +153,7 @@ Here is a side-by-side comparison of a `PdfTextRequest` and the corresponding sh
 
 If you only care about the output text and not necessarily the text file itself, then you may exclude this field from your `PdfTextRequest`.
 A text file will be automatically initialized for you in your Java temp directory and deleted when your JVM terminates.
+
 [source,java,indent=0]
 ----
     PdfTextRequest.builder()
@@ -157,18 +161,20 @@ A text file will be automatically initialized for you in your Java temp director
             .textFile(new File("~/docs/some.txt"))
             .build();
 ----
+
 [source,bash,indent=0]
 ----
   $ pdftotext "~/docs/some.pdf" "/tmp/03cb3e01-f281-4cd1-8ae3-210ae6076afa.txt"
 ----
 
-==== PdfTextOptions
+=== PdfTextOptions
 
 `PdfTextOptions` represents a set of command options accepted by _pdftotext_ that will customize its execution.
 
 Suppose you have a PDF file that is UTF-8 encoded and has tabulated data.
 Encoding is something you should definitely tell _pdftotext_ about.
 How the output text should be laid out for you is more of an opinionated matter, however.
+
 [source,java,indent=0]
 ----
     PdfTextOptions options = PdfTextOptions.builder()
@@ -182,6 +188,7 @@ How the output text should be laid out for you is more of an opinionated matter,
             .options(options)
             .build();
 ----
+
 [source,bash,indent=0]
 ----
   $ pdftotext -enc "UTF-8" -table "~/docs/some.pdf" "~/docs/some.txt"
@@ -204,12 +211,19 @@ Also be aware that you may inadvertently duplicate an option in the shell comman
                     Map.entry("-opw", "Secret123")))
             .build();
 ----
+
 [source,bash,indent=0]
 ----
   $ pdftotext -enc "UTF-8" -table -opw "Secret123" "~/docs/some.pdf" "~/docs/some.txt"
 ----
 
-==== Logging
+=== PdfTextResponse
+
+`PdfTextResponse` represents the result of invoking _pdftotext_.
+
+It will include the text file created from a PDF, as well as any standard output that may have been captured from the shell process.
+
+=== Debugging
 
 We have added an SLF4J logger to our `PdfTextTool`, leaving its implementation up to you.
 
