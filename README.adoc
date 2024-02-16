@@ -53,6 +53,7 @@ We strongly recommend downloading sources in your IDE so that you have full acce
 We made an extra effort to provide you with all the help you need, directly from your editor.
 
 We also strongly encourage you to read the _pdftotext_ source documentation for a complete overview of the tool and the options available to customize its execution.
+//TODO: link to docs in repo..?
 Documentation can be found alongside the executable file in the package resources.
 
 image:_doc/readme/javadoc_pdftextoptions.jpg[IntelliJ JavaDoc]
@@ -158,7 +159,6 @@ A text file will be automatically initialized for you in your Java temp director
 ----
     PdfTextRequest.builder()
             .pdfFile(new File("~/docs/some.pdf"))
-            .textFile(new File("~/docs/some.txt"))
             .build();
 ----
 
@@ -227,7 +227,7 @@ It will include the text file created from a PDF, as well as any standard output
 
 We have added an SLF4J logger to our `PdfTextTool`, leaving its implementation up to you.
 
-We provide meaningful debug logs for those needing to drill down (which we hope never happens). If you want to drill really deep, inject the "-verbose" option into the shell command to get the full trace from _pdftotext_!
+We provide meaningful debug logs for those needing to drill down (which we hope never happens). If you want a trace from _pdftotext_ itself, then inject the "-verbose" option into the shell command and inspect the standard output on your `PdfTextResponse`.
 
 //TODO== Getting Help
 //TODO
