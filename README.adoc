@@ -2,7 +2,7 @@
 //TODO: automatically inject build status, like spring boot project does
 //TODO: look at other readme with .adoc structure, and see what other ways there are to format this. for example, spring boot has tabs for "Security" and "Code of Conduct" - pretty cool!
 
-Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], an open source library for working with PDF files written in C++.
+Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], the open source library for operating on PDF files written in C++.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
 
 Our primary goals are:
@@ -25,8 +25,6 @@ APIs are available for the following Xpdf functions (with more to come):
 //TODO: automatically inject maven central references with latest versions
 //TODO: is there a way to provide a code block with tabs, so users can choose between all dependencies in single block?
 
-Basic toolkit...
-
 [source,xml]
 ----
  <dependency>
@@ -36,7 +34,7 @@ Basic toolkit...
  </dependency>
 ----
 
-...or a Spring Boot starter, for the _fancy_ developers!
+...or a Spring Boot starter, for _fancy_ developers!
 
 [source,xml]
 ----
@@ -123,9 +121,9 @@ Timeout can also be configured, but unless you are working with truly massive PD
             .build();
 ----
 
-If you are using our Spring Boot starter, just plug in the following properties.
-[source,yaml,indent=0]
+If you are using our Spring Boot starter, then use the following properties to configure the `PdfTextTool` bean.
 
+[source,yaml,indent=0]
 ----
 io.xpdf.api.pdftext:
       executable-path: "~/libs/pdftotext"
@@ -224,11 +222,11 @@ Also be aware that you may inadvertently duplicate an option in the shell comman
 
 It will include the text file created from a PDF, as well as any standard output that may have been captured from the shell process.
 
-=== Debugging
+=== Logging and Debugging
 
 We have added an SLF4J logger to our `PdfTextTool`, leaving its implementation up to you.
 
-We provide meaningful debug logs for those needing to drill down (which we hope never happens). If you want a trace from _pdftotext_ itself, then inject the "-verbose" option into the shell command and inspect the standard output on your `PdfTextResponse`.
+We provide meaningful debug logs for those needing such details. If you want the trace from _pdftotext_ itself, then inject the "-verbose" command option into `PdfTextOptions` and inspect the standard output on your `PdfTextResponse`.
 
 //TODO== Getting Help
 //TODO
@@ -249,4 +247,4 @@ But if you wish to build anyway, all you need is JDK 8 and our provided Maven wr
 
 == License
 
-Xpdf API is Open Source software released under the https://www.gnu.org/licenses/gpl-3.0.html[GNU General Public License, version 3 (GPLv3)].
+Xpdf API is Open Source software released under the https://www.gnu.org/licenses/gpl-3.0.html[GNU General Public License, version 3 (GPLv3)] only.
