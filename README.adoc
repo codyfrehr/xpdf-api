@@ -204,7 +204,8 @@ Also be aware that you may inadvertently duplicate an option in the shell comman
 [source,java,indent=0]
 ----
     PdfTextOptions.builder()
-            .encoding(PdfTextEncoding.UTF_8)
+            .pageStart(1)
+            .pageStop(5)
             .nativeOptions(Map.ofEntries(
                     Map.entry("-enc", "UTF-8"),
                     Map.entry("-table", null),
@@ -214,7 +215,7 @@ Also be aware that you may inadvertently duplicate an option in the shell comman
 
 [source,bash,indent=0]
 ----
-  $ pdftotext -enc "UTF-8" -table -opw "Secret123" "~/docs/some.pdf" "~/docs/some.txt"
+  $ pdftotext -f "1" -l "5" -enc "UTF-8" -table -opw "Secret123" "~/docs/some.pdf" "~/docs/some.txt"
 ----
 
 === PdfTextResponse
