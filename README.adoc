@@ -1,7 +1,5 @@
-= Xpdf API
+= Xpdf API image:https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main[]
 //TODO: look at other readme with .adoc structure, and see what other ways there are to format this. for example, spring boot has tabs for "Security" and "Code of Conduct" - pretty cool!
-
-image::https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main[]
 
 Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], the open source library for operating on PDF files written in C++.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
