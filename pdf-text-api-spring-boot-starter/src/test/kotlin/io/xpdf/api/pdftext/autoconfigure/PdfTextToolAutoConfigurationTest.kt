@@ -77,6 +77,7 @@ class PdfTextToolAutoConfigurationTest {
         // given
         val executableFile = mockk<File> {
             every { exists() } returns true
+            every { setExecutable(any()) } returns true
         }
         val executablePath = mockk<Path> {
             every { toFile() } returns executableFile

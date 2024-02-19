@@ -107,10 +107,16 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                         throw new XpdfRuntimeException("Unable to copy executable from resources to local system");
                     }
                 }
+                if (!executablePath.toFile().setExecutable(true)) {
+                    throw new XpdfRuntimeException("Unable to set execute permissions on executable");
+                }
                 return executablePath.toFile();
             } else {
                 if (!executableFile.exists()) {
                     throw new XpdfRuntimeException("The configured executable does not exist");
+                }
+                if (!executableFile.setExecutable(true)) {
+                    throw new XpdfRuntimeException("Unable to set execute permissions on executable");
                 }
                 return executableFile;
             }
@@ -168,8 +174,8 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
             // wait for process finish
             if (process.waitFor(timeoutSeconds, TimeUnit.SECONDS)) {
-                val standardOutput = IOUtils.toString(process.getInputStream(), Charset.defaultCharset());
-                val errorOutput = IOUtils.toString(process.getErrorStream(), Charset.defaultCharset());
+                val standardOutput = StringUtils.trimToNull(IOUtils.toString(process.getInputStream(), Charset.defaultCharset()));
+                val errorOutput = StringUtils.trimToNull(IOUtils.toString(process.getErrorStream(), Charset.defaultCharset()));
                 log.debug("Invocation completed; exit code: {}, standard output: {}", process.exitValue(), standardOutput);
 
                 // handle process finished
