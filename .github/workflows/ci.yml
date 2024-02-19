@@ -1,0 +1,32 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-install:
+    name: Build, Test, and Install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: '8'
+          distribution: 'liberica'
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Compile
+        run: ./mvnw clean compile
+      - name: Test
+        run: ./mvnw test
+      - name: License Check
+        run: ./mvnw license:check
+      - name: Install
+        run: ./mvnw install -DskipTests
