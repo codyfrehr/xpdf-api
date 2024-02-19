@@ -1,6 +1,3 @@
-- licensing
-  - understand difference between license, copyright, and trademark, and what that means for this project https://stackoverflow.com/a/13437203/8784215
-    do i have to reference original Glyph/Cog copyright or anything?
 - should make use of the term "RICH text" or "rich PDF" in your javadocs and documentation, and make a special note about how this only works on PDF files with RICH TEXT
 - test all code examples from readme and javadocs to ensure they are working!
 - should we impose a default timeout of 30 seconds on the tool?
@@ -8,21 +5,16 @@
   on the other hand, it imposes a constraint on the user they didnt choose (maybe we can provide option to make unlimited?)
 - write README
   - add special note somewhere about how this will only work on PDF files with RICH TEXT
-- make github repo public
-  ...and now that it will be public, you should make some of your other repos private.
-  will also break links on your resume - go fix your resume to (1) fix github profile link, (2) fix github project links, (3) add info about newly completely open source project :D
 - update github project "About" section, and other general settings for the repo
 - setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
   but first, need to get hosting for site and install ssl cert
-- show xpdf creators your library
-  - verify that the name of the library is acceptable ("xpdf" not trademarked, right?)
-  - explain project at high level, as well as licensing, and get their blessing
-  - request that they add link to your library on their webpage (their readme says they are willing to do this)
+- request derek to add link to your library on their webpage
 - reorganize SCRIBBLES into official supporting documents
   - write CONTRIBUTING (is this standard name for developer instructions to contribute? DEVELOPERS seems like a better name for file maybe?)
   - what other files?
 - set up github CI/CD pipeline
 - set up github issue management
+- fix broken github links on resume and website
 - figure out process to deploy to maven central repo
   - take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/
   - guide: https://maven.apache.org/repository/guide-central-repository-upload.html
