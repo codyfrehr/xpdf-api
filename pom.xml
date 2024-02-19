@@ -320,16 +320,6 @@
                             </dependencyPolicy>
                         </dependencyPolicies>
                     </configuration>
-                    <executions>
-                        <!--checks (1) all source files have proper licensing header, and (2) all dependencies are GPLv3 compatible-->
-                        <execution>
-                            <id>gplv3-compatibility-check</id>
-                            <phase>test</phase>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

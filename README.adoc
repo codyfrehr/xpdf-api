@@ -1,6 +1,7 @@
 = Xpdf API
-//TODO: automatically inject build status, like spring boot project does
 //TODO: look at other readme with .adoc structure, and see what other ways there are to format this. for example, spring boot has tabs for "Security" and "Code of Conduct" - pretty cool!
+
+image::https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main[]
 
 Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], the open source library for operating on PDF files written in C++.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
@@ -54,7 +55,7 @@ We also strongly encourage you to read the _pdftotext_ source documentation for 
 //TODO: link to docs in repo..?
 Documentation can be found alongside the executable file in the package resources.
 
-image:_doc/readme/javadoc_pdftextoptions.jpg[IntelliJ JavaDoc]
+image::_doc/readme/javadoc_pdftextoptions.jpg[]
 
 === Examples
 
