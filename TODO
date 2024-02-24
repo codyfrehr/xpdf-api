@@ -4,6 +4,7 @@
   - setup cucumber test to properly run in pipeline
   - look at the apache commons github pipeline and their examples of how to run test matrix, so you can run this test against all architectures
   - do final cleanup of dependencies, and optimize imports
+  - figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
 - update github project "About" section, and other general settings for the repo
 - setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
   but first, need to get hosting for site and install ssl cert
