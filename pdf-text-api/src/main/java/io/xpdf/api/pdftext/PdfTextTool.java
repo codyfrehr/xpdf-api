@@ -27,7 +27,6 @@ import lombok.val;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.HttpClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +67,6 @@ import static java.util.Collections.emptyList;
 @Slf4j
 public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
 
-    private final HttpClient httpClient = null;
     /**
      * Executable file that should be invoked.
      *

@@ -15,7 +15,7 @@ Feature: PdfTextTool
       | pdfFile   | textFile |
       | small.pdf |          |
     When the PdfTextTool processes the PdfTextRequest
-    Then the output text should match "Thisa is a very small file\s*"
+    Then the output text should match "This is a very small file\s*"
 
 
   Scenario: Convert pdf to text with explicit output text file path
