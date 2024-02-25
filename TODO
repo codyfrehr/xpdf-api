@@ -2,7 +2,7 @@
 - test all code examples from readme and javadocs to ensure they are working!
 - cucumber stuff...
   - setup cucumber test to properly run in pipeline
-  - look at the apache commons github pipeline and their examples of how to run test matrix, so you can run this test against all architectures
+    lots of great info on maven surefire page: https://maven.apache.org/surefire/maven-surefire-plugin/examples/cucumber.html
   - do final cleanup of dependencies, and optimize imports
   - figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
 - update github project "About" section, and other general settings for the repo

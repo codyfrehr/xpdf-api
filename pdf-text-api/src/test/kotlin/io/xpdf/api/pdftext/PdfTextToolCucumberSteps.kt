@@ -33,7 +33,7 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.nio.file.Paths
 
-class PdfTextToolSteps {
+class PdfTextToolCucumberSteps {
     private var toolDto: PdfTextToolDto? = null
     private var requestDto: PdfTextRequestDto? = null
     private var optionsDto: PdfTextOptionsDto? = null
