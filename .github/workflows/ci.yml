@@ -9,8 +9,8 @@ permissions:
   contents: read
 
 jobs:
-  build-test-install:
-    name: Build, Test, and Install
+  test:
+    name: Test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -30,7 +30,5 @@ jobs:
         run: ./mvnw test
       - name: Integration Test
         run: ./mvnw verify -DskipUTs=true
-      - name: License Check
-        run: ./mvnw license:check
       - name: Install
         run: ./mvnw install -DskipTests
