@@ -54,7 +54,10 @@ class PdfTextToolTest {
     fun `should initialize and copy executable to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+            every { exists() } returns false
+            every { setExecutable(any()) } returns true
+        }
 
         mockkStatic(FileUtils::class)
         every { FileUtils.copyInputStreamToFile(any(), any()) } just runs
@@ -73,7 +76,10 @@ class PdfTextToolTest {
     fun `should initialize and not copy executable to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath().toFile().exists() } returns true
+        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+            every { exists() } returns true
+            every { setExecutable(any()) } returns true
+        }
 
         mockkStatic(FileUtils::class)
 
@@ -92,6 +98,7 @@ class PdfTextToolTest {
         // given
         val executableFile = mockk<File> {
             every { exists() } returns true
+            every { setExecutable(any()) } returns true
         }
 
         // when
@@ -105,7 +112,10 @@ class PdfTextToolTest {
     fun `should throw exception when initializing if unable to get executable resource stream`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+            every { exists() } returns false
+            every { setExecutable(any()) } returns true
+        }
         every { XpdfUtils.getPdfTextExecutableResourceName() } returns "notexists"
 
         // when then
@@ -120,7 +130,10 @@ class PdfTextToolTest {
     fun `should throw exception when initializing if unable to copy executable to local system`() {
         // given
         mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath().toFile().exists() } returns false
+        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+            every { exists() } returns false
+            every { setExecutable(any()) } returns true
+        }
 
         mockkStatic(FileUtils::class)
         every { FileUtils.copyInputStreamToFile(any(), any()) } throws IOException()
@@ -135,6 +148,23 @@ class PdfTextToolTest {
     }
 
     @Test
+    fun `should throw exception when initializing if unable to set execute permission`() {
+        // given
+        mockkStatic(XpdfUtils::class)
+        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+            every { exists() } returns true
+            every { setExecutable(any()) } returns false
+        }
+
+        // when then
+        shouldThrowWithMessage<XpdfRuntimeException>("Unable to set execute permissions on executable") {
+            PdfTextTool.builder().build()
+        }
+
+        unmockkStatic(XpdfUtils::class)
+    }
+
+    @Test
     fun `should throw exception when initializing with executable that does not exist`() {
         // given
         val executableFile = mockk<File> {
@@ -143,6 +173,20 @@ class PdfTextToolTest {
 
         // when then
         shouldThrowWithMessage<XpdfRuntimeException>("The configured executable does not exist") {
+            PdfTextTool.builder().executableFile(executableFile).build()
+        }
+    }
+
+    @Test
+    fun `should throw exception when initializing with executable if unable to set execute permission`() {
+        // given
+        val executableFile = mockk<File> {
+            every { exists() } returns true
+            every { setExecutable(any()) } returns false
+        }
+
+        // when then
+        shouldThrowWithMessage<XpdfRuntimeException>("Unable to set execute permissions on executable") {
             PdfTextTool.builder().executableFile(executableFile).build()
         }
     }
@@ -212,6 +256,9 @@ class PdfTextToolTest {
         capturedOutput.all shouldContain "Invocation completed; exit code: 0, standard output: standardOutput"
         capturedOutput.all shouldContain "Invocation succeeded"
         capturedOutput.all shouldContain "Process finished"
+
+        unmockkConstructor(ProcessBuilder::class)
+        unmockkStatic(IOUtils::class)
     }
 
     @ParameterizedTest
@@ -263,6 +310,9 @@ class PdfTextToolTest {
         capturedOutput.all shouldContain "Invocation failed; error output: errorOutput"
         capturedOutput.all shouldContain "Process failed; exception message: $message"
         capturedOutput.all shouldContain "Process finished"
+
+        unmockkConstructor(ProcessBuilder::class)
+        unmockkStatic(IOUtils::class)
     }
 
     @Test
@@ -303,6 +353,9 @@ class PdfTextToolTest {
         capturedOutput.all shouldContain "Invocation timed out"
         capturedOutput.all shouldContain "Process failed; exception message: Timeout reached before process could finish"
         capturedOutput.all shouldContain "Process finished"
+
+        unmockkConstructor(ProcessBuilder::class)
+        unmockkStatic(IOUtils::class)
     }
 
     @Test
@@ -472,6 +525,7 @@ class PdfTextToolTest {
 
         val executableFile = mockk<File> {
             every { exists() } returns true
+            every { setExecutable(any()) } returns true
             every { canonicalPath } returns "cmdPath"
         }
 

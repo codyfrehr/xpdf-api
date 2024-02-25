@@ -36,7 +36,7 @@ public class XpdfUtils {
      * @return executable resource name
      * @since 1.0.0
      */
-    static public String getPdfTextExecutableResourceName() {
+    public static String getPdfTextExecutableResourceName() {
         return String.format("xpdf/%s/%s", getTargetSystem(), getPdfTextExecutableName());
     }
 
@@ -46,7 +46,7 @@ public class XpdfUtils {
      * @return executable path
      * @since 1.0.0
      */
-    static public Path getPdfTextExecutablePath() {
+    public static Path getPdfTextExecutablePath() {
         return getXpdfTempPath().resolve("pdf-text").resolve("bin").resolve(getPdfTextExecutableName());
     }
 
@@ -56,7 +56,7 @@ public class XpdfUtils {
      * @return temporary directory
      * @since 1.0.0
      */
-    static public Path getPdfTextTempOutputPath() {
+    public static Path getPdfTextTempOutputPath() {
         return getXpdfTempPath().resolve("pdf-text").resolve("out");
     }
 
@@ -66,7 +66,7 @@ public class XpdfUtils {
      * @return timeout length in seconds for process
      * @since 1.0.0
      */
-    static public Integer getPdfTextTimeoutSeconds() {
+    public static Integer getPdfTextTimeoutSeconds() {
         return 30;
     }
 
@@ -75,7 +75,7 @@ public class XpdfUtils {
      *
      * @return executable name
      */
-    static protected String getPdfTextExecutableName() {
+    protected static String getPdfTextExecutableName() {
         return String.format("pdftotext%s", getTargetSystem().contains("windows") ? ".exe" : "");
     }
 
@@ -84,7 +84,7 @@ public class XpdfUtils {
      *
      * @return temporary directory
      */
-    static protected Path getXpdfTempPath() {
+    protected static Path getXpdfTempPath() {
         return Paths.get(System.getProperty("java.io.tmpdir")).resolve( "xpdf-api");
     }
 
@@ -94,7 +94,7 @@ public class XpdfUtils {
      *
      * @return representation of OS and bits
      */
-    static protected String getTargetSystem() {
+    protected static String getTargetSystem() {
         // get JVM bit architecture
         val bit = System.getProperty("sun.arch.data.model");
 

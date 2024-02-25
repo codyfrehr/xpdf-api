@@ -13,7 +13,10 @@ permissions:
 jobs:
   build-test-install:
     name: Build, Test, and Install
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Setup JDK 8
         uses: actions/setup-java@v4
@@ -26,6 +29,8 @@ jobs:
         run: ./mvnw clean compile
       - name: Test
         run: ./mvnw test
+      - name: Integration Test
+        run: ./mvnw verify -DskipUTs=true
       - name: License Check
         run: ./mvnw license:check
       - name: Install
