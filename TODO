@@ -1,10 +1,6 @@
 - should make use of the term "RICH text" or "rich PDF" in your javadocs and readme, and make a special note about how this only works on PDF files with RICH TEXT
 - test all code examples from readme and javadocs to ensure they are working!
-- cucumber stuff...
-  - setup cucumber test to properly run in pipeline
-    lots of great info on maven surefire page: https://maven.apache.org/surefire/maven-surefire-plugin/examples/cucumber.html
-  - do final cleanup of dependencies, and optimize imports
-  - figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
+- figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
 - update github project "About" section, and other general settings for the repo
 - setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
   but first, need to get hosting for site and install ssl cert
@@ -13,7 +9,7 @@
   - write CONTRIBUTING (is this standard name for developer instructions to contribute? DEVELOPERS seems like a better name for file maybe?)
   - what other files?
 - setup coverage check in pipeline and codeQL check
-- setup cucumber integration tests
+- add CVE check to pipeline
 - set up github issue management
 - fix broken github links on resume and website
 - figure out process to deploy to maven central repo

@@ -45,7 +45,9 @@
 
     <properties>
         <cucumber.version>7.15.0</cucumber.version>
+        <cucumber-junit-platform.version>7.15.0</cucumber-junit-platform.version>
         <junit-jupiter.version>5.10.2</junit-jupiter.version>
+        <junit-platform-suite.version>1.10.2</junit-platform-suite.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <kotlin.version>1.9.22</kotlin.version>
         <slf4j.version>2.0.11</slf4j.version>
@@ -54,6 +56,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <mockito.version>4.11.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <skipUTs>false</skipUTs>
         <spring-boot.version>2.7.18</spring-boot.version>
     </properties>
 
@@ -105,7 +108,7 @@
             <dependency>
                 <groupId>io.cucumber</groupId>
                 <artifactId>cucumber-junit-platform-engine</artifactId>
-                <version>7.15.0</version>
+                <version>${cucumber-junit-platform.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -147,7 +150,7 @@
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-suite-engine</artifactId>
-                <version>1.10.2</version>
+                <version>${junit-platform-suite.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -191,14 +194,6 @@
         </dependency>
         <!--test-->
         <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-junit-platform-engine</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.kotest</groupId>
             <artifactId>kotest-assertions-core-jvm</artifactId>
         </dependency>
@@ -217,10 +212,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -310,31 +301,22 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
-<!--                    <configuration>-->
-<!--                        <test>**/RunPdfTextToolCucumberTest</test>-->
-<!--                    </configuration>-->
-                    <dependencies>
-<!--                        <dependency>-->
-<!--                            <groupId>org.junit.jupiter</groupId>-->
-<!--                            <artifactId>junit-jupiter-engine</artifactId>-->
-<!--                            <version>${junit-jupiter.version}</version>-->
-<!--                        </dependency>-->
-<!--                        <dependency>-->
-<!--                            <groupId>org.junit.vintage</groupId>-->
-<!--                            <artifactId>junit-vintage-engine</artifactId>-->
-<!--                            <version>${junit-jupiter.version}</version>-->
-<!--                        </dependency>-->
-<!--                        <dependency>-->
-<!--                            <groupId>io.cucumber</groupId>-->
-<!--                            <artifactId>cucumber-junit-platform-engine</artifactId>-->
-<!--                            <version>7.15.0</version>-->
-<!--                        </dependency>-->
-<!--                        <dependency>-->
-<!--                            <groupId>org.junit.platform</groupId>-->
-<!--                            <artifactId>junit-platform-suite-engine</artifactId>-->
-<!--                            <version>1.10.2</version>-->
-<!--                        </dependency>-->
-                    </dependencies>
+                    <configuration>
+                        <skipTests>${skipUTs}</skipTests>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>3.2.5</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>com.mycila</groupId>
@@ -405,6 +387,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

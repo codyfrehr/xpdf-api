@@ -58,8 +58,9 @@ class PdfTextToolCucumberSteps {
      */
     @Given("a PdfTextTool with {int} second timeout and dynamic executable file")
     fun `a PdfTextTool with TIMEOUT_SECONDS second timeout and dynamic executable file`(timeoutSeconds: Int) {
-        val executableResourceUri = this::class.java.classLoader.getResource(XpdfUtils.getPdfTextExecutableResourceName())!!.toURI()
-        val executableFile = Paths.get(executableResourceUri).toFile()
+        val executableResourceStream = this::class.java.classLoader.getResourceAsStream(XpdfUtils.getPdfTextExecutableResourceName())!!
+        val executableFile = Paths.get(System.getProperty("java.io.tmpdir")).resolve("some.exe").toFile()
+        FileUtils.copyInputStreamToFile(executableResourceStream, executableFile)
         executableFile.setExecutable(true)
 
         toolDto = PdfTextToolDto(executableFile, timeoutSeconds)

@@ -24,4 +24,4 @@ import org.junit.platform.suite.api.Suite
 @Suite
 @SelectClasspathResource("io/xpdf/api/pdftext")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "io.xpdf.api.pdftext"  )
-class RunPdfTextToolCucumberTest
+class PdfTextToolCucumberIT

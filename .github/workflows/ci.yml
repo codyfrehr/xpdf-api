@@ -29,6 +29,8 @@ jobs:
         run: ./mvnw clean compile
       - name: Test
         run: ./mvnw test
+      - name: Integration Test
+        run: ./mvnw verify -DskipUTs=true
       - name: License Check
         run: ./mvnw license:check
       - name: Install
