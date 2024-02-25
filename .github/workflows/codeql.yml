@@ -17,11 +17,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: CodeQL Autobuild
-        uses: github/codeql-action/autobuild@v3
       - name: CodeQL Init
         uses: github/codeql-action/init@v3
         with:
           languages: 'java'
+      - name: CodeQL Autobuild
+        uses: github/codeql-action/autobuild@v3
       - name: CodeQL Analyze
         uses: github/codeql-action/analyze@v3
