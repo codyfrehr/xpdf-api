@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  analyze:
-    name: Analyze
+  cwe-check:
+    name: CWE Check
     runs-on: ubuntu-latest
     permissions:
       security-events: write
