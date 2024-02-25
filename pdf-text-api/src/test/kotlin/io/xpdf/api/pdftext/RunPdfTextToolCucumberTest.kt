@@ -16,8 +16,12 @@
  */
 package io.xpdf.api.pdftext
 
-import io.cucumber.junit.Cucumber
-import org.junit.runner.RunWith
+import io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME
+import org.junit.platform.suite.api.ConfigurationParameter
+import org.junit.platform.suite.api.SelectClasspathResource
+import org.junit.platform.suite.api.Suite
 
-@RunWith(Cucumber::class)
+@Suite
+@SelectClasspathResource("io/xpdf/api/pdftext")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "io.xpdf.api.pdftext"  )
 class RunPdfTextToolCucumberTest

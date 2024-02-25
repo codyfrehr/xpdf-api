@@ -104,8 +104,8 @@
             </dependency>
             <dependency>
                 <groupId>io.cucumber</groupId>
-                <artifactId>cucumber-junit</artifactId>
-                <version>${cucumber.version}</version>
+                <artifactId>cucumber-junit-platform-engine</artifactId>
+                <version>7.15.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -145,9 +145,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-                <version>${junit-jupiter.version}</version>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-suite-engine</artifactId>
+                <version>1.10.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -191,6 +191,14 @@
         </dependency>
         <!--test-->
         <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.kotest</groupId>
             <artifactId>kotest-assertions-core-jvm</artifactId>
         </dependency>
@@ -209,6 +217,10 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -298,11 +310,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
+<!--                    <configuration>-->
+<!--                        <test>**/RunPdfTextToolCucumberTest</test>-->
+<!--                    </configuration>-->
                     <dependencies>
 <!--                        <dependency>-->
 <!--                            <groupId>org.junit.jupiter</groupId>-->
 <!--                            <artifactId>junit-jupiter-engine</artifactId>-->
-<!--                            &lt;!&ndash; todo: is version needed to be specified here?&ndash;&gt;-->
 <!--                            <version>${junit-jupiter.version}</version>-->
 <!--                        </dependency>-->
 <!--                        <dependency>-->
@@ -314,6 +328,11 @@
 <!--                            <groupId>io.cucumber</groupId>-->
 <!--                            <artifactId>cucumber-junit-platform-engine</artifactId>-->
 <!--                            <version>7.15.0</version>-->
+<!--                        </dependency>-->
+<!--                        <dependency>-->
+<!--                            <groupId>org.junit.platform</groupId>-->
+<!--                            <artifactId>junit-platform-suite-engine</artifactId>-->
+<!--                            <version>1.10.2</version>-->
 <!--                        </dependency>-->
                     </dependencies>
                 </plugin>
