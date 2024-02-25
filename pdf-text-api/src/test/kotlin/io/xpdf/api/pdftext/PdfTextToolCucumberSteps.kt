@@ -29,6 +29,7 @@ import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdftext.options.PdfTextEncoding
 import io.xpdf.api.pdftext.options.PdfTextEndOfLine
 import io.xpdf.api.pdftext.options.PdfTextFormat
+import io.xpdf.api.pdftext.util.PdfTextUtils
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.nio.file.Paths
@@ -58,7 +59,7 @@ class PdfTextToolCucumberSteps {
      */
     @Given("a PdfTextTool with {int} second timeout and dynamic executable file")
     fun `a PdfTextTool with TIMEOUT_SECONDS second timeout and dynamic executable file`(timeoutSeconds: Int) {
-        val executableResourceStream = this::class.java.classLoader.getResourceAsStream(XpdfUtils.getPdfTextExecutableResourceName())!!
+        val executableResourceStream = this::class.java.classLoader.getResourceAsStream(PdfTextUtils.getPdfTextExecutableResourceName())!!
         val executableFile = Paths.get(System.getProperty("java.io.tmpdir")).resolve("some.exe").toFile()
         FileUtils.copyInputStreamToFile(executableResourceStream, executableFile)
         executableFile.setExecutable(true)

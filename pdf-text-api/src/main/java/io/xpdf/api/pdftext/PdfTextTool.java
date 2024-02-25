@@ -18,7 +18,7 @@ package io.xpdf.api.pdftext;
 
 import io.xpdf.api.common.XpdfTool;
 import io.xpdf.api.common.exception.*;
-import io.xpdf.api.common.util.XpdfUtils;
+import io.xpdf.api.pdftext.util.PdfTextUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -39,7 +39,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static io.xpdf.api.common.util.XpdfUtils.*;
+import static io.xpdf.api.pdftext.util.PdfTextUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -272,7 +272,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      *
      * @param request {@link PdfTextRequest}
      * @return text file
-     * @throws IOException if canonical path of {@link XpdfUtils#getPdfTextTempOutputPath()} is invalid
+     * @throws IOException if canonical path of {@link PdfTextUtils#getPdfTextTempOutputPath()} is invalid
      */
     protected File initializeTextFile(PdfTextRequest request) throws IOException {
         final File textFile;
