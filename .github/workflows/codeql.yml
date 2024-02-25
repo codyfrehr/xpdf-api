@@ -1,0 +1,27 @@
+name: CodeQL
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  codeql-analysis:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        run: ./mvnw clean install -DskipTests
+      - name: CodeQL Init
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'java'
+      - name: CodeQL Analyze
+        uses: github/codeql-action/analyze@v3
