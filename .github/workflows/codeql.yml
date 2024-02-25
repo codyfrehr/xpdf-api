@@ -1,0 +1,29 @@
+name: CodeQL
+on:
+  push:
+    branches: [ 'main' ]
+  pull_request:
+    branches: [ 'main' ]
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  cwe-check:
+    name: CWE Check
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: CodeQL Init
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'java-kotlin'
+      - name: CodeQL Autobuild
+        uses: github/codeql-action/autobuild@v3
+      - name: CodeQL Analyze
+        uses: github/codeql-action/analyze@v3

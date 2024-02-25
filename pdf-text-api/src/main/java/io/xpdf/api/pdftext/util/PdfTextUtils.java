@@ -16,13 +16,13 @@
  */
 package io.xpdf.api.pdftext.util;
 
-import io.xpdf.api.common.XpdfTool;
 import io.xpdf.api.common.util.XpdfUtils;
+import io.xpdf.api.pdftext.PdfTextTool;
 
 import java.nio.file.Path;
 
 /**
- * Helpers for a {@link XpdfTool}.
+ * Helpers for a {@link PdfTextTool}.
  *
  * @since 1.0.0
  */

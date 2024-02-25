@@ -2,15 +2,15 @@
 - test all code examples from readme and javadocs to ensure they are working!
 - figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
 - update github project "About" section, and other general settings for the repo
-- setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
   but first, need to get hosting for site and install ssl cert
-- request derek to add link to your library on their webpage
 - reorganize SCRIBBLES into official supporting documents
   - write CONTRIBUTING (is this standard name for developer instructions to contribute? DEVELOPERS seems like a better name for file maybe?)
   - what other files?
-- setup coverage check in pipeline and codeQL check
-- add CVE check to pipeline
-- set up github issue management
+- setup coverage check in pipeline
+- setup cve check in pipeline with snyk + add badge to readme
+    https://github.com/snyk/actions
+    https://support.snyk.io/hc/en-us/articles/360003997277-Badge-Support-for-Repositories
+- set up github issue management and security management
 - fix broken github links on resume and website
 - figure out process to deploy to maven central repo
   - take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/
@@ -19,4 +19,8 @@
       verify all key metadata has been added to poms (ie lombok has <issue management>, <developers>, etc)
   - figure out maven-release-plugin, to control versioning and release process to maven central
     a good starting point for this would be to find a popular/respected open-source repo using pom configs, and see if they have maven release plugin configured, and how they do it.
+- add badge to readme for maven artifact https://search.maven.org/artifact/org.apache.commons/commons-lang3/3.14.0/jar?eh=
+- add badge for javadocs https://javadoc.io/
+- setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
+- request derek to add link to your library on their webpage
 - build really basic homepage for website, resembling layout of https://kotest.io/docs or even just the simpler https://mockk.io/, or like that license plugin page
