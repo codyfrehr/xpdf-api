@@ -1,11 +1,9 @@
 name: CI
 on:
   push:
-    branches:
-      - main
+    branches: [ 'main' ]
   pull_request:
-    branches:
-      - main
+    branches: [ 'main' ]
 
 permissions:
   contents: read
@@ -16,7 +14,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+      fail-fast: false
     steps:
       - name: Setup JDK 8
         uses: actions/setup-java@v4

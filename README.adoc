@@ -6,11 +6,11 @@
 //TODO: add badge for codeQL?
 
 image:https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main[]
-image:https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml/badge.svg?branch=codeql[]
+image:https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml/badge.svg?branch=main[]
 
 {empty}
 
-Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], the open source library for operating on PDF files written in C++.
+Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], the open source library for operating on PDF files.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
 
 Our primary goals are:
