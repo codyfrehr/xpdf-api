@@ -16,8 +16,8 @@
  */
 package io.xpdf.api.pdftext.autoconfigure;
 
-import io.xpdf.api.common.util.XpdfUtils;
 import io.xpdf.api.pdftext.PdfTextTool;
+import io.xpdf.api.pdftext.util.PdfTextUtils;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -40,11 +40,11 @@ public class PdfTextToolAutoConfiguration {
     @ConditionalOnMissingBean
     public PdfTextTool pdfTextTool(PdfTextToolProperties pdfTextToolProperties) {
         Path executablePath = pdfTextToolProperties.getExecutablePath() == null
-                ? XpdfUtils.getPdfTextExecutablePath()
+                ? PdfTextUtils.getPdfTextExecutablePath()
                 : pdfTextToolProperties.getExecutablePath();
 
         Integer timeoutSeconds = pdfTextToolProperties.getTimeoutSeconds() == null
-                ? XpdfUtils.getPdfTextTimeoutSeconds()
+                ? PdfTextUtils.getPdfTextTimeoutSeconds()
                 : pdfTextToolProperties.getTimeoutSeconds();
 
         return PdfTextTool.builder()

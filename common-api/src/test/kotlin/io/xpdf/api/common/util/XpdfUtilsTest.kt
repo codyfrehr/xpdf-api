@@ -18,7 +18,6 @@ package io.xpdf.api.common.util
 
 import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.matchers.shouldBe
-import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import io.xpdf.api.common.exception.XpdfRuntimeException
@@ -48,61 +47,6 @@ class XpdfUtilsTest {
         System.setProperty("java.io.tmpdir", javaTmpDir)
         System.setProperty("sun.arch.data.model", originalSunArchDataModel)
         System.setProperty("os.name", originalOsName)
-    }
-
-    @Test
-    fun `should get pdf text executable resource name`() {
-        // given
-        every { XpdfUtils.getTargetSystem() } returns "targetSystem"
-        every { XpdfUtils.getPdfTextExecutableName() } returns "executableName"
-
-        // when then
-        XpdfUtils.getPdfTextExecutableResourceName() shouldBe "xpdf/targetSystem/executableName"
-    }
-
-    @Test
-    fun `should get pdf text executable path`() {
-        // given
-        every { XpdfUtils.getXpdfTempPath() } returns Paths.get("tempPath")
-        every { XpdfUtils.getPdfTextExecutableName() } returns "executableName"
-
-        // when then
-        XpdfUtils.getPdfTextExecutablePath() shouldBe Paths.get("tempPath", "pdf-text", "bin", "executableName")
-    }
-
-    @Test
-    fun `should get pdf text temp output path`() {
-        // given
-        every { XpdfUtils.getXpdfTempPath() } returns Paths.get("tempPath")
-
-        // when then
-        XpdfUtils.getPdfTextTempOutputPath() shouldBe Paths.get("tempPath", "pdf-text", "out")
-    }
-
-    @Test
-    fun `should get pdf text timeout seconds`() {
-        // given
-        every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 99
-
-        // when then
-        XpdfUtils.getPdfTextTimeoutSeconds() shouldBe 99
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-            "linux/bin32, pdftotext",
-            "linux/bin64, pdftotext",
-            "mac/bin64, pdftotext",
-            "windows/bin32, pdftotext.exe",
-            "windows/bin64, pdftotext.exe",
-    )
-    fun `should get pdf text executable name`(targetSystem: String,
-                                              executableName: String) {
-        // given
-        every { XpdfUtils.getTargetSystem() } returns targetSystem
-
-        // when then
-        XpdfUtils.getPdfTextExecutableName() shouldBe executableName
     }
 
     @Test

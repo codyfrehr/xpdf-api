@@ -25,7 +25,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.mockk.*
 import io.xpdf.api.common.exception.*
-import io.xpdf.api.common.util.XpdfUtils
+import io.xpdf.api.pdftext.util.PdfTextUtils
 import io.xpdf.api.pdftext.options.PdfTextEncoding
 import io.xpdf.api.pdftext.options.PdfTextEndOfLine
 import io.xpdf.api.pdftext.options.PdfTextFormat
@@ -53,8 +53,8 @@ class PdfTextToolTest {
     @Test
     fun `should initialize and copy executable to local system`() {
         // given
-        mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+        mockkStatic(PdfTextUtils::class)
+        every { PdfTextUtils.getPdfTextExecutablePath().toFile() } returns mockk {
             every { exists() } returns false
             every { setExecutable(any()) } returns true
         }
@@ -68,15 +68,15 @@ class PdfTextToolTest {
         // then
         verify { FileUtils.copyInputStreamToFile(any(), any()) }
 
-        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(PdfTextUtils::class)
         unmockkStatic(FileUtils::class)
     }
 
     @Test
     fun `should initialize and not copy executable to local system`() {
         // given
-        mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+        mockkStatic(PdfTextUtils::class)
+        every { PdfTextUtils.getPdfTextExecutablePath().toFile() } returns mockk {
             every { exists() } returns true
             every { setExecutable(any()) } returns true
         }
@@ -89,7 +89,7 @@ class PdfTextToolTest {
         // then
         verify(exactly = 0) { FileUtils.copyInputStreamToFile(any(), any()) }
 
-        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(PdfTextUtils::class)
         unmockkStatic(FileUtils::class)
     }
 
@@ -111,26 +111,26 @@ class PdfTextToolTest {
     @Test
     fun `should throw exception when initializing if unable to get executable resource stream`() {
         // given
-        mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+        mockkStatic(PdfTextUtils::class)
+        every { PdfTextUtils.getPdfTextExecutablePath().toFile() } returns mockk {
             every { exists() } returns false
             every { setExecutable(any()) } returns true
         }
-        every { XpdfUtils.getPdfTextExecutableResourceName() } returns "notexists"
+        every { PdfTextUtils.getPdfTextExecutableResourceName() } returns "notexists"
 
         // when then
         shouldThrowWithMessage<XpdfRuntimeException>("Unable to locate executable in project resources") {
             PdfTextTool.builder().build()
         }
 
-        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(PdfTextUtils::class)
     }
 
     @Test
     fun `should throw exception when initializing if unable to copy executable to local system`() {
         // given
-        mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+        mockkStatic(PdfTextUtils::class)
+        every { PdfTextUtils.getPdfTextExecutablePath().toFile() } returns mockk {
             every { exists() } returns false
             every { setExecutable(any()) } returns true
         }
@@ -143,15 +143,15 @@ class PdfTextToolTest {
             PdfTextTool.builder().build()
         }
 
-        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(PdfTextUtils::class)
         unmockkStatic(FileUtils::class)
     }
 
     @Test
     fun `should throw exception when initializing if unable to set execute permission`() {
         // given
-        mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath().toFile() } returns mockk {
+        mockkStatic(PdfTextUtils::class)
+        every { PdfTextUtils.getPdfTextExecutablePath().toFile() } returns mockk {
             every { exists() } returns true
             every { setExecutable(any()) } returns false
         }
@@ -161,7 +161,7 @@ class PdfTextToolTest {
             PdfTextTool.builder().build()
         }
 
-        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(PdfTextUtils::class)
     }
 
     @Test
@@ -194,8 +194,8 @@ class PdfTextToolTest {
     @Test
     fun `should initialize and get timeout from xpdf utils`() {
         // given
-        mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 99
+        mockkStatic(PdfTextUtils::class)
+        every { PdfTextUtils.getPdfTextTimeoutSeconds() } returns 99
 
         // when
         val result = PdfTextTool.builder().build()
@@ -203,7 +203,7 @@ class PdfTextToolTest {
         // then
         result.timeoutSeconds shouldBe 99
 
-        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(PdfTextUtils::class)
     }
 
     @Test
@@ -485,8 +485,8 @@ class PdfTextToolTest {
     @Test
     fun `should initialize text file when file not provided in request`() {
         // given
-        mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextTempOutputPath().toFile().canonicalPath } returns "outPath"
+        mockkStatic(PdfTextUtils::class)
+        every { PdfTextUtils.getPdfTextTempOutputPath().toFile().canonicalPath } returns "outPath"
 
         val randomUuid = randomUUID()
         mockkStatic(UUID::class)
@@ -507,7 +507,7 @@ class PdfTextToolTest {
 
         verify { Paths.get("outPath", textFileName) }
 
-        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(PdfTextUtils::class)
         unmockkStatic(UUID::class)
         unmockkStatic(Paths::class)
     }

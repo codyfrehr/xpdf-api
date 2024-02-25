@@ -21,8 +21,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
-import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdftext.PdfTextTool
+import io.xpdf.api.pdftext.util.PdfTextUtils
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -83,9 +83,9 @@ class PdfTextToolAutoConfigurationTest {
             every { toFile() } returns executableFile
         }
 
-        mockkStatic(XpdfUtils::class)
-        every { XpdfUtils.getPdfTextExecutablePath() } returns executablePath
-        every { XpdfUtils.getPdfTextTimeoutSeconds() } returns 99
+        mockkStatic(PdfTextUtils::class)
+        every { PdfTextUtils.getPdfTextExecutablePath() } returns executablePath
+        every { PdfTextUtils.getPdfTextTimeoutSeconds() } returns 99
 
         context.register(PdfTextToolAutoConfiguration::class.java)
         context.refresh()
@@ -97,7 +97,7 @@ class PdfTextToolAutoConfigurationTest {
         pdfTextTool.executableFile shouldBe executableFile
         pdfTextTool.timeoutSeconds shouldBe 99
 
-        unmockkStatic(XpdfUtils::class)
+        unmockkStatic(PdfTextUtils::class)
     }
 
     @Test
