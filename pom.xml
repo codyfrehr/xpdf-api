@@ -379,6 +379,11 @@
                             <dependencyPolicy>
                                 <type>LICENSE_NAME</type>
                                 <rule>APPROVE</rule>
+                                <value>GNU Lesser General Public License</value>
+                            </dependencyPolicy>
+                            <dependencyPolicy>
+                                <type>LICENSE_NAME</type>
+                                <rule>APPROVE</rule>
                                 <value>MIT License</value>
                             </dependencyPolicy>
                         </dependencyPolicies>
