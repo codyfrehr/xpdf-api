@@ -16,6 +16,9 @@
 - new binaries should be extracted from source archives. project resource structure matches that of source archives, but unrelated files removed (specifically, non-pdftotext bins and docs)
 - new classes should have correct license header, java docs, comments, etc (what else? make specific checklist when you formalize these notes)
 - new modules/poms should have correct license header, pom metadata, etc
+- any newly added dependencies must be put in 1 of the 3 correct sections (normal deps, test deps, or cve deps), and must adhere to parent pom versioning strategy
+- any newly added dependencies must be compatible with GPL3 license.
+  if dependency license is GPL3 compatible and name of dependency license (found in dep pom) is not in exception list, then exception can be added to license check plugin on pom
 
 ## licensing, helpful links
 - another really helpful post https://opensource.stackexchange.com/q/9141
