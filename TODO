@@ -24,3 +24,4 @@
 - setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
 - request derek to add link to your library on their webpage
 - build really basic homepage for website, resembling layout of https://kotest.io/docs or even just the simpler https://mockk.io/, or like that license plugin page
+- add dependabot to repo for automatic security updates
