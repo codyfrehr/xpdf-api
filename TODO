@@ -1,17 +1,11 @@
 - should make use of the term "RICH text" or "rich PDF" in your javadocs and readme, and make a special note about how this only works on PDF files with RICH TEXT
 - test all code examples from readme and javadocs to ensure they are working!
 - figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
-- update github project "About" section, and other general settings for the repo
-  but first, need to get hosting for site and install ssl cert
-- reorganize SCRIBBLES into official supporting documents
-  - write CONTRIBUTING (is this standard name for developer instructions to contribute? DEVELOPERS seems like a better name for file maybe?)
-  - what other files?
-- setup coverage check in pipeline
-- setup cve check in pipeline with snyk + add badge to readme
-    https://github.com/snyk/actions
-    https://support.snyk.io/hc/en-us/articles/360003997277-Badge-Support-for-Repositories
+- setup coverage check in pipeline + add badge
 - set up github issue management and security management
-- fix broken github links on resume and website
+- setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
+- update github project "About" section with xpdf.io url after getting hosting for site and ssl cert configured
+- explore and update other general settings for the repo
 - figure out process to deploy to maven central repo
   - take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/
   - guide: https://maven.apache.org/repository/guide-central-repository-upload.html
@@ -21,9 +15,12 @@
     a good starting point for this would be to find a popular/respected open-source repo using pom configs, and see if they have maven release plugin configured, and how they do it.
 - add badge to readme for maven artifact https://search.maven.org/artifact/org.apache.commons/commons-lang3/3.14.0/jar?eh=
 - add badge for javadocs https://javadoc.io/
-- setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
 - request derek to add link to your library on their webpage
 - build really basic homepage for website, resembling layout of https://kotest.io/docs or even just the simpler https://mockk.io/, or like that license plugin page
 - add dependabot to repo for automatic security updates? not sure how i feel about auto updates...
   at very least, make sure notifications set up for failing pipeline security tests.
   and make sure repo security well configured, and snyk configured as well as possible (login to snyk website for additional configs)
+- fix broken github links on resume and website
+- reorganize SCRIBBLES into official supporting documents
+  - write CONTRIBUTING (is this standard name for developer instructions to contribute? DEVELOPERS seems like a better name for file maybe?)
+  - what other files?
