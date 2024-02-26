@@ -240,6 +240,7 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
         </dependency>
+        <!--CVE overrides-->
     </dependencies>
 
     <build>
