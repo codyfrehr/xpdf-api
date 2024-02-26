@@ -50,6 +50,7 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <!--test-->
+        <!--CVE overrides-->
     </dependencies>
 
 </project>
