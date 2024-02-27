@@ -1,7 +1,6 @@
 - should make use of the term "RICH text" or "rich PDF" in your javadocs and readme, and make a special note about how this only works on PDF files with RICH TEXT
 - test all code examples from readme and javadocs to ensure they are working!
 - figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
-- setup coverage check in pipeline + add badge
 - set up github issue management and security management
 - explore and update other general settings for the repo
 - figure out process to deploy to maven central repo
