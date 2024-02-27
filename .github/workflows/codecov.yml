@@ -1,0 +1,29 @@
+name: Codecov
+on:
+  push:
+    branches: [ 'main' ]
+  pull_request:
+    branches: [ 'main' ]
+
+permissions:
+  contents: read
+
+jobs:
+  analysis:
+    name: Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: '8'
+          distribution: 'liberica'
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test
+        run: ./mvnw clean test jacoco:report
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: codyfrehr/xpdf-api

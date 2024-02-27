@@ -3,8 +3,6 @@
 - figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
 - setup coverage check in pipeline + add badge
 - set up github issue management and security management
-- setup namecheap xpdf.io domain to automatically redirect to github repo, until website built https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/
-- update github project "About" section with xpdf.io url after getting hosting for site and ssl cert configured
 - explore and update other general settings for the repo
 - figure out process to deploy to maven central repo
   - take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/
