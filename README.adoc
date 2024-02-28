@@ -50,16 +50,22 @@ APIs are available for the following Xpdf functions (with more to come):
  </dependency>
 ----
 
-== PdfText API
+=== Documentation
 
 We strongly recommend downloading sources in your IDE so that you have full access to our JavaDocs.
 We made an extra effort to provide you with all the help you need, directly from your editor.
 
-We also strongly encourage you to read the _pdftotext_ source documentation for a complete overview of the tool and the options available to customize its execution.
-//TODO: link to docs in repo..?
-Documentation can be found alongside the executable file in the package resources.
-
 image::_doc/readme/javadoc_pdftextoptions.jpg[]
+
+We also strongly encourage you to read the Xpdf source documentation for a complete overview of each function and the options available to customize its execution.
+Documentation can be found alongside the executable files in the package resources, or can be downloaded from https://www.xpdfreader.com/download.html[Xpdf] directly.
+
+== PdfText API
+
+PdfText API is an API for _pdftotext_, a function that converts a PDF file into a text file.
+
+* Will extract text from a PDF file with text embedded in the document.
+* Will NOT perform OCR to extract text from a scanned image of a document.
 
 === Examples
 
@@ -152,10 +158,10 @@ Here is a side-by-side comparison of a `PdfTextRequest` and the corresponding sh
 
 [source,bash,indent=0]
 ----
-  $ pdftotext "~/docs/some.pdf" "~/docs/some.txt"
+  $ ./pdftotext "~/docs/some.pdf" "~/docs/some.txt"
 ----
 
-If you only care about the output text and not necessarily the text file itself, then you may exclude this field from your `PdfTextRequest`.
+If you plan to read the output text file at runtime and do not care about saving the text file, then you may exclude this field from your `PdfTextRequest`.
 A text file will be automatically initialized for you in your Java temp directory and deleted when your JVM terminates.
 
 [source,java,indent=0]
@@ -167,7 +173,7 @@ A text file will be automatically initialized for you in your Java temp director
 
 [source,bash,indent=0]
 ----
-  $ pdftotext "~/docs/some.pdf" "/tmp/03cb3e01-f281-4cd1-8ae3-210ae6076afa.txt"
+  $ ./pdftotext "~/docs/some.pdf" "/tmp/03cb3e01-f281-4cd1-8ae3-210ae6076afa.txt"
 ----
 
 === PdfTextOptions
@@ -194,7 +200,7 @@ How the output text should be laid out for you is more of an opinionated matter,
 
 [source,bash,indent=0]
 ----
-  $ pdftotext -enc "UTF-8" -table "~/docs/some.pdf" "~/docs/some.txt"
+  $ ./pdftotext -enc "UTF-8" -table "~/docs/some.pdf" "~/docs/some.txt"
 ----
 
 We provide a mechanism for you to manually inject options into a command.
@@ -218,7 +224,7 @@ Also be aware that you may inadvertently duplicate an option in the shell comman
 
 [source,bash,indent=0]
 ----
-  $ pdftotext -f "1" -l "5" -enc "UTF-8" -table -opw "Secret123" "~/docs/some.pdf" "~/docs/some.txt"
+  $ ./pdftotext -f "1" -l "5" -enc "UTF-8" -table -opw "Secret123" "~/docs/some.pdf" "~/docs/some.txt"
 ----
 
 === PdfTextResponse
@@ -247,7 +253,7 @@ But if you wish to build anyway, all you need is JDK 8 and our provided Maven wr
 
 [source,bash,indent=0]
 ----
-  $ ./mvnw install
+  $ ./mvnw install -DskipTests
 ----
 
 == License
