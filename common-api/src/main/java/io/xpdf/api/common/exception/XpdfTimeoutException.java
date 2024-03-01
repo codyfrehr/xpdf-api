@@ -16,14 +16,15 @@
  */
 package io.xpdf.api.common.exception;
 
-import lombok.experimental.StandardException;
-
 /**
  * An {@link XpdfException} thrown when the shell process invoking an <em>Xpdf</em> executable exceeds the configured timeout length.
  *
  * @since 1.0.0
  */
-@StandardException
 public class XpdfTimeoutException extends XpdfException {
+
+	public XpdfTimeoutException(String message) {
+		super(message);
+	}
 
 }

@@ -298,9 +298,11 @@ class PdfTextToolTest {
         }
 
         // when then
-        shouldThrowWithMessage<XpdfExecutionException>(message) {
+        val exception = shouldThrowWithMessage<XpdfExecutionException>(message) {
             pdfTextToolSpy.process(mockk())
         }
+        exception.standardOutput shouldBe "standardOutput"
+        exception.errorOutput shouldBe "errorOutput"
 
         capturedOutput.all shouldContain "Process starting"
         capturedOutput.all shouldContain "Validating request"

@@ -40,9 +40,9 @@ public class XpdfExecutionException extends XpdfException {
      */
     private final String errorOutput;
 
-    public XpdfExecutionException(String standardOutput,
-                                  String errorOutput,
-                                  String message) {
+    public XpdfExecutionException(String message,
+                                  String standardOutput,
+                                  String errorOutput) {
         super(message);
         this.standardOutput = standardOutput;
         this.errorOutput = errorOutput;
