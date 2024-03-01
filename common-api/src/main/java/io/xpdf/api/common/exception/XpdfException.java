@@ -27,4 +27,8 @@ public class XpdfException extends Exception {
 		super(message);
 	}
 
+	public XpdfException(Throwable cause) {
+		super(cause);
+	}
+
 }

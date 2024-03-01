@@ -23,8 +23,8 @@ package io.xpdf.api.common.exception;
  */
 public class XpdfProcessingException extends XpdfException {
 
-	public XpdfProcessingException(String message) {
-		super(message);
+	public XpdfProcessingException(Throwable cause) {
+		super(cause);
 	}
 
 }
