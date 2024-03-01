@@ -30,6 +30,9 @@ import java.nio.file.Paths;
  */
 public class XpdfUtils {
 
+    private XpdfUtils() {
+    }
+
     /**
      * Gets the temporary directory utilized by native <em>Xpdf</em> executables.
      *

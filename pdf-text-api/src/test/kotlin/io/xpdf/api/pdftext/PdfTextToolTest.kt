@@ -23,6 +23,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldMatch
 import io.mockk.*
 import io.xpdf.api.common.exception.*
 import io.xpdf.api.pdftext.util.PdfTextUtils
@@ -641,6 +642,17 @@ class PdfTextToolTest {
 
         // when then
         pdfTextTool.getCommandOptions(options) shouldContainExactly listOf("-option1", "value1", "-option2", "-option3", "-option4")
+    }
+
+    @Test
+    fun `should convert to string`() {
+        // given
+        val pdfTextTool = PdfTextTool.builder()
+            .timeoutSeconds(100)
+            .build()
+
+        // when then
+        pdfTextTool.toString() shouldMatch Regex("PdfTextTool\\(executableFile=.+pdftotext(\\.exe)?, timeoutSeconds=100\\)")
     }
 
 }
