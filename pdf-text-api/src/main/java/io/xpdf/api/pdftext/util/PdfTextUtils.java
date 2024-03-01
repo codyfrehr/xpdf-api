@@ -28,6 +28,9 @@ import java.nio.file.Path;
  */
 public class PdfTextUtils {
 
+    private PdfTextUtils() {
+    }
+
     /**
      * Gets the resource name of the <em>pdftotext</em> executable native to this system.
      *

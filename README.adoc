@@ -4,7 +4,6 @@ image:https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml/badge.svg?e
 image:https://codecov.io/gh/codyfrehr/xpdf-api/graph/badge.svg?branch=main[]
 image:https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml/badge.svg?event=schedule&branch=main[]
 image:https://snyk.io/test/github/codyfrehr/xpdf-api/main/badge.svg[]
-
 {empty}
 
 Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], the open source library for operating on PDF files.
@@ -56,6 +55,7 @@ We strongly recommend downloading sources in your IDE so that you have full acce
 We made an extra effort to provide you with all the help you need, directly from your editor.
 
 image::_doc/readme/javadoc_pdftextoptions.jpg[]
+{empty}
 
 We also strongly encourage you to read the Xpdf source documentation for a complete overview of each function and the options available to customize its execution.
 Documentation can be found alongside the executable files in the package resources, or can be downloaded from https://www.xpdfreader.com/download.html[Xpdf] directly.
@@ -237,7 +237,7 @@ It will include the text file created from a PDF, as well as any standard output
 
 We have added an SLF4J logger to our `PdfTextTool`, leaving its implementation up to you.
 
-We provide meaningful debug logs for those needing such details. If you want the trace from _pdftotext_ itself, then inject the "-verbose" command option into `PdfTextOptions` and inspect the standard output on your `PdfTextResponse`.
+We provide meaningful debug logs for anyone needing more detail. If you want the trace from _pdftotext_ itself, then inject the "-verbose" command option into `PdfTextOptions` and inspect the standard output on your `PdfTextResponse`.
 
 //TODO== Getting Help
 //TODO
