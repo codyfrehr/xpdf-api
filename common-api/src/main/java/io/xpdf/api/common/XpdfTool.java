@@ -23,7 +23,7 @@ import io.xpdf.api.common.exception.XpdfException;
  *
  * @since 1.0.0
  */
-public interface XpdfTool<Request extends XpdfRequest, Response extends XpdfResponse> {
+public interface XpdfTool<RequestT extends XpdfRequest, ResponseT extends XpdfResponse> {
 
     /**
      * Invokes an <em>Xpdf</em> executable against a PDF file.
@@ -33,6 +33,6 @@ public interface XpdfTool<Request extends XpdfRequest, Response extends XpdfResp
      * @throws XpdfException if exception
      * @since 1.0.0
      */
-    Response process(Request request) throws XpdfException;
+    ResponseT process(RequestT request) throws XpdfException;
 
 }
