@@ -16,14 +16,15 @@
  */
 package io.xpdf.api.common.exception;
 
-import lombok.experimental.StandardException;
-
 /**
  * An {@link XpdfException} thrown during the processing of an <em>Xpdf</em> request.
  *
  * @since 1.0.0
  */
-@StandardException
 public class XpdfProcessingException extends XpdfException {
+
+	public XpdfProcessingException(String message) {
+		super(message);
+	}
 
 }

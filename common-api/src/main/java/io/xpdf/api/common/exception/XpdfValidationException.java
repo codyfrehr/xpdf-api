@@ -16,14 +16,15 @@
  */
 package io.xpdf.api.common.exception;
 
-import lombok.experimental.StandardException;
-
 /**
  * An {@link XpdfException} thrown when attempting to invoke an <em>Xpdf</em> executable with invalid command options.
  *
  * @since 1.0.0
  */
-@StandardException
 public class XpdfValidationException extends XpdfException {
+
+	public XpdfValidationException(String message) {
+		super(message);
+	}
 
 }

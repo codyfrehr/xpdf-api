@@ -16,14 +16,15 @@
  */
 package io.xpdf.api.common.exception;
 
-import lombok.experimental.StandardException;
-
 /**
  * An <em>Xpdf</em> {@code Exception}.
  *
  * @since 1.0.0
  */
-@StandardException
 public class XpdfException extends Exception {
+
+	public XpdfException(String message) {
+		super(message);
+	}
 
 }

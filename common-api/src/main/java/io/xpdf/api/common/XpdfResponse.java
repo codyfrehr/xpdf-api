@@ -22,8 +22,4 @@ package io.xpdf.api.common;
  * @since 1.0.0
  */
 public abstract class XpdfResponse {
-
-	private XpdfResponse() {
-	}
-
 }

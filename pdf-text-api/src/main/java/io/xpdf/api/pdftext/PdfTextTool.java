@@ -205,7 +205,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
                             message = "Unknown Xpdf error";
                             break;
                     }
-                    throw new XpdfExecutionException(standardOutput, errorOutput, message);
+                    throw new XpdfExecutionException(message, standardOutput, errorOutput);
                 }
             } else {
                 // handle process timeout
