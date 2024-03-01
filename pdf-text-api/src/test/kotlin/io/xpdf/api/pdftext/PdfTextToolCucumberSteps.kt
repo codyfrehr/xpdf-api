@@ -25,7 +25,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldMatch
 import io.xpdf.api.common.exception.XpdfException
-import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdftext.options.PdfTextEncoding
 import io.xpdf.api.pdftext.options.PdfTextEndOfLine
 import io.xpdf.api.pdftext.options.PdfTextFormat

@@ -26,10 +26,10 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldMatch
 import io.mockk.*
 import io.xpdf.api.common.exception.*
-import io.xpdf.api.pdftext.util.PdfTextUtils
 import io.xpdf.api.pdftext.options.PdfTextEncoding
 import io.xpdf.api.pdftext.options.PdfTextEndOfLine
 import io.xpdf.api.pdftext.options.PdfTextFormat
+import io.xpdf.api.pdftext.util.PdfTextUtils
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Test
