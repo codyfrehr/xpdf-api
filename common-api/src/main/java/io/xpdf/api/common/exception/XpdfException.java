@@ -21,7 +21,7 @@ package io.xpdf.api.common.exception;
  *
  * @since 1.0.0
  */
-public class XpdfException extends Exception {
+public abstract class XpdfException extends Exception {
 
 	public XpdfException(String message) {
 		super(message);
