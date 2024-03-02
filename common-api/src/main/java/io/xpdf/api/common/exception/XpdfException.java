@@ -23,11 +23,11 @@ package io.xpdf.api.common.exception;
  */
 public abstract class XpdfException extends Exception {
 
-	public XpdfException(String message) {
+	protected XpdfException(String message) {
 		super(message);
 	}
 
-	public XpdfException(Throwable cause) {
+	protected XpdfException(Throwable cause) {
 		super(cause);
 	}
 
