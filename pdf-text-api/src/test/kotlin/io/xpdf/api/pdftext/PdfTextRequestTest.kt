@@ -24,6 +24,11 @@ import java.io.File
 class PdfTextRequestTest {
 
     @Test
+    fun shouldinit() {
+        PdfTextRequest.builder().build()
+    }
+
+    @Test
     fun `should throw exception when initializing if pdf file is null`() {
         // when then
         shouldThrow<NullPointerException> {
