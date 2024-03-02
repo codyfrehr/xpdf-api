@@ -136,7 +136,7 @@ If you are using our Spring Boot starter, then use the following properties to c
 
 [source,yaml,indent=0]
 ----
-io.xpdf.api.pdftext:
+io.xpdf.api.pdf-text:
       executable-path: "~/libs/pdftotext"
       timeout-seconds: 60
 ----

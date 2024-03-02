@@ -1,8 +1,3 @@
-- test all code examples from readme and javadocs to ensure they are working!
-- figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
-- set codecov failure threshold. any other configs to be aware of?
-- set up github issue management and security management
-- explore and update other general settings for the repo
 - figure out process to deploy to maven central repo
   - take into consideration repos which provide download statistics: https://blog.sonatype.com/2010/12/now-available-central-download-statistics-for-oss-projects/
   - guide: https://maven.apache.org/repository/guide-central-repository-upload.html
@@ -17,6 +12,11 @@
 - add dependabot to repo for automatic security updates? not sure how i feel about auto updates...
   at very least, make sure notifications set up for failing pipeline security tests.
   and make sure repo security well configured, and snyk configured as well as possible (login to snyk website for additional configs)
+- set up github issue management and security management
+- explore and update other general settings for the repo
+  - figure out how to get github pipeline to run 32-bit architecture (might need to use docker containers...)
+- set codecov failure threshold. any other configs to be aware of?
+- setup slack or discord group for questions and add badge to readme
 - fix broken github links on resume and website
 - reorganize SCRIBBLES into official supporting documents
   - write CONTRIBUTING (is this standard name for developer instructions to contribute? DEVELOPERS seems like a better name for file maybe?)

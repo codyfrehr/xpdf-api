@@ -57,8 +57,8 @@ class PdfTextToolAutoConfigurationTest {
         }
 
         TestPropertyValues.of(
-                "io.xpdf.api.pdftext.executable-path=${executableFile.canonicalPath}",
-                "io.xpdf.api.pdftext.timeout-seconds=99"
+                "io.xpdf.api.pdf-text.executable-path=${executableFile.canonicalPath}",
+                "io.xpdf.api.pdf-text.timeout-seconds=99"
         ).applyTo(context)
 
         context.register(PdfTextToolAutoConfiguration::class.java)

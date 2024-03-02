@@ -1,5 +1,5 @@
 /*
- * PdfText API Starter - A Spring Boot starter for PdfText API.
+ * Common - The components shared between Xpdf APIs.
  * Copyright © 2024 xpdf.io (info@xpdf.io)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,24 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.xpdf.api.pdftext.autoconfigure;
+package io.xpdf.api.common.exception
 
-import io.xpdf.api.pdftext.PdfTextTool;
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import io.kotest.matchers.shouldBe
+import io.mockk.mockk
+import org.junit.jupiter.api.Test
 
-import java.nio.file.Path;
+class XpdfProcessingExceptionTest {
 
-/**
- * The configurable properties of a {@link PdfTextTool} that is autoconfigured in {@link PdfTextToolAutoConfiguration}.
- *
- * @since 1.0.0
- */
-@Data
-@ConfigurationProperties(prefix = "io.xpdf.api.pdf-text")
-public class PdfTextToolProperties {
+    @Test
+    fun `should initialize`() {
+        // given
+        val cause = mockk<Exception>()
+        val exception = XpdfProcessingException(cause)
 
-    private Path executablePath;
-    private Integer timeoutSeconds;
+        // when then
+        exception.cause shouldBe cause
+    }
 
 }
