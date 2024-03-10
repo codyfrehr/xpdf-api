@@ -24,11 +24,24 @@ jobs:
           distribution: 'liberica'
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Compile
-        run: ./mvnw clean compile
+      - name: Build
+        run: ./mvnw --batch-mode clean compile
       - name: Test
-        run: ./mvnw test
-      - name: Integration Test
-        run: ./mvnw verify -DskipUTs=true
-      - name: Install
-        run: ./mvnw install -DskipTests
+        run: ./mvnw --batch-mode verify
+  install:
+    name: Install
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install GPG Secret Key
+        run: cat <(echo -e "${{ secrets.GPG_SECRET_KEY }}") | gpg --batch --import
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install to Local Repository
+        env:
+          CENTRAL_USERNAME_TOKEN: ${{ secrets.CENTRAL_USERNAME_TOKEN }}
+          CENTRAL_PASSWORD_TOKEN: ${{ secrets.CENTRAL_PASSWORD_TOKEN }}
+        run: |
+          maven_args="--batch-mode"
+          maven_opts="-Dmaven.source.skip=false -Dmaven.javadoc.skip=false -Dgpg.skip=false -Dgpg.passphrase=${{ secrets.GPG_SECRET_KEY_PASSPHRASE }} -DskipTests"
+          ./mvnw $maven_args clean install $maven_opts

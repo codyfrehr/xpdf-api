@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Common - The components shared between Xpdf APIs.
+    Common - The components shared between Xpdf APIs (https://xpdf.io)
     Copyright © 2024 xpdf.io (info@xpdf.io)
 
     This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@
     <artifactId>common-api</artifactId>
 
     <name>Common</name>
-    <description>The components shared between Xpdf APIs.</description>
+    <description>The components shared between Xpdf APIs (https://xpdf.io)</description>
     <url>https://xpdf.io</url>
     <licenses>
         <license>

@@ -1,5 +1,5 @@
 /*
- * PdfText API - An API for accessing a native pdftotext library.
+ * PdfText API - An API for accessing a native pdftotext library (https://xpdf.io)
  * Copyright © 2024 xpdf.io (info@xpdf.io)
  *
  * This program is free software: you can redistribute it and/or modify

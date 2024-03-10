@@ -1,0 +1,25 @@
+name: Release
+on:
+  release:
+    types: [ published ]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install GPG Secret Key
+        run: cat <(echo -e "${{ secrets.GPG_SECRET_KEY }}") | gpg --batch --import
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Publish to Central Repository
+        env:
+          CENTRAL_USERNAME_TOKEN: ${{ secrets.CENTRAL_USERNAME_TOKEN }}
+          CENTRAL_PASSWORD_TOKEN: ${{ secrets.CENTRAL_PASSWORD_TOKEN }}
+        run: |
+          maven_args="-s .m2/settings.xml --batch-mode"
+          maven_opts="-Dmaven.source.skip=false -Dmaven.javadoc.skip=false -Dgpg.skip=false -Dgpg.passphrase=${{ secrets.GPG_SECRET_KEY_PASSPHRASE }} -DskipTests"
+          ./mvnw $maven_args clean deploy $maven_opts
