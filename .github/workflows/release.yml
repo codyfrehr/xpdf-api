@@ -1,0 +1,21 @@
+name: Release
+on:
+ release
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install GPG Secret Key
+        run: cat <(echo -e "${{ secrets.GPG_SECRET_KEY }}") | gpg --batch --import
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Publish to Central Repository
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+        run: ./mvnw clean source:jar javadoc:jar package gpg:sign deploy -Pgpg -Dgpg.passphrase=${{ secrets.GPG_SECRET_KEY_PASSPHRASE }} -DskipTests

@@ -51,11 +51,8 @@ APIs are available for the following Xpdf functions (with more to come):
 
 === Documentation
 
-We strongly recommend downloading sources in your IDE so that you have full access to our JavaDocs.
+We strongly recommend downloading sources in your IDE so that you have tooltip access to our JavaDocs.
 We made an extra effort to provide you with all the help you need, directly from your editor.
-
-image::_doc/readme/javadoc_pdftextoptions.jpg[]
-{empty}
 
 We also strongly encourage you to read the Xpdf source documentation for a complete overview of each function and the options available to customize its execution.
 Documentation can be found alongside the executable files in the package resources, or can be downloaded from https://www.xpdfreader.com/download.html[Xpdf] directly.
@@ -64,8 +61,8 @@ Documentation can be found alongside the executable files in the package resourc
 
 PdfText API is an API for _pdftotext_, a function that converts a PDF file into a text file.
 
-* Will extract text from a PDF file with text embedded in the document.
-* Will NOT perform OCR to extract text from a scanned image of a document.
+* It WILL extract text from a PDF file that has embedded text.
+* It WILL NOT extract text from a PDF file that is a scanned image of a document.
 
 === Examples
 

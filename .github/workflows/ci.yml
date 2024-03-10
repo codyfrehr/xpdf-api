@@ -24,11 +24,9 @@ jobs:
           distribution: 'liberica'
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Compile
+      - name: Build
         run: ./mvnw clean compile
       - name: Test
-        run: ./mvnw test
-      - name: Integration Test
-        run: ./mvnw verify -DskipUTs=true
-      - name: Install
-        run: ./mvnw install -DskipTests
+        run: ./mvnw verify
+      - name: Package & Install
+        run: ./mvnw source:jar javadoc:jar install -DskipTests
