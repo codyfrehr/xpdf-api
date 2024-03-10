@@ -1,5 +1,5 @@
 /*
- * PdfText API Starter - A Spring Boot starter for PdfText API.
+ * PdfText API Starter - A Spring Boot starter for PdfText API (https://xpdf.io)
  * Copyright © 2024 xpdf.io (info@xpdf.io)
  *
  * This program is free software: you can redistribute it and/or modify

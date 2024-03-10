@@ -25,8 +25,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
-        run: ./mvnw clean compile
+        run: ./mvnw --batch-mode clean compile
       - name: Test
-        run: ./mvnw verify
-      - name: Package & Install
-        run: ./mvnw source:jar javadoc:jar install -DskipTests
+        run: ./mvnw --batch-mode verify
+      - name: Install
+        run: ./mvnw --batch-mode install -Dmaven.source.skip=false -Dmaven.javadoc.skip=false -DskipTests

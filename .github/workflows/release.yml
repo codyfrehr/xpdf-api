@@ -1,13 +1,14 @@
 name: Release
 on:
- release
+  release:
+    types: [ published ]
 
 permissions:
   contents: read
 
 jobs:
-  release:
-    name: Release
+  publish:
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - name: Install GPG Secret Key
@@ -16,6 +17,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Publish to Central Repository
         env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-        run: ./mvnw clean source:jar javadoc:jar package gpg:sign deploy -Pgpg -Dgpg.passphrase=${{ secrets.GPG_SECRET_KEY_PASSPHRASE }} -DskipTests
+          CENTRAL_USERNAME_TOKEN: ${{ secrets.CENTRAL_USERNAME_TOKEN }}
+          CENTRAL_PASSWORD_TOKEN: ${{ secrets.CENTRAL_PASSWORD_TOKEN }}
+        run: |
+          maven_args="-s .m2/settings.xml --batch-mode"
+          maven_opts="-Dmaven.source.skip=false -Dmaven.javadoc.skip=false -Dgpg.skip=false -Dgpg.passphrase=${{ secrets.GPG_SECRET_KEY_PASSPHRASE }} -DskipTests"
+          ./mvnw $maven_args clean deploy $maven_opts

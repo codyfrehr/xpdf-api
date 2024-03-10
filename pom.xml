@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Xpdf API Parent - The Xpdf API parent project.
+    Xpdf API Parent - The Xpdf API parent project (https://xpdf.io)
     Copyright © 2024 xpdf.io (info@xpdf.io)
 
     This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.xpdf</groupId>
     <artifactId>xpdf-api-parent</artifactId>
-    <version>1.2.3</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -33,7 +33,7 @@
     </modules>
 
     <name>Xpdf API Parent</name>
-    <description>The Xpdf API parent project. For more info, visit https://xpdf.io</description>
+    <description>The Xpdf API parent project (https://xpdf.io)</description>
     <url>https://xpdf.io</url>
     <licenses>
         <license>
@@ -60,6 +60,7 @@
     <properties>
         <cucumber.version>7.15.0</cucumber.version>
         <cucumber-junit-platform.version>7.15.0</cucumber-junit-platform.version>
+        <gpg.skip>true</gpg.skip>
         <junit-jupiter.version>5.10.2</junit-jupiter.version>
         <junit-platform-suite.version>1.10.2</junit-platform-suite.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
@@ -68,6 +69,8 @@
         <lombok.version>1.18.28</lombok.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.source.skip>true</maven.source.skip>
         <mockito.version>4.11.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>2.7.18</spring-boot.version>
@@ -309,6 +312,15 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -324,6 +336,14 @@
                             </tag>
                         </tags>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -372,6 +392,15 @@
                             <arg>loopback</arg>
                         </gpgArguments>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.central</groupId>
