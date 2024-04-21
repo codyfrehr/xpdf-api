@@ -17,12 +17,12 @@
 package io.xpdf.api.pdftext.autoconfigure
 
 import io.kotest.matchers.shouldBe
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
+import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdftext.PdfTextTool
 import io.xpdf.api.pdftext.util.PdfTextUtils
+import org.apache.commons.io.FileUtils
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -31,12 +31,21 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.io.File
-import java.nio.file.Path
-import java.nio.file.Paths
+import kotlin.io.path.pathString
 
 class PdfTextToolAutoConfigurationTest {
 
     private var context: AnnotationConfigApplicationContext = AnnotationConfigApplicationContext()
+
+    companion object {
+        private val pdfTextToolBean = mockk<PdfTextTool>()
+
+        @JvmStatic
+        @AfterAll
+        fun afterAll() {
+            FileUtils.deleteQuietly(XpdfUtils.getXpdfTempPath().toFile())
+        }
+    }
 
     @BeforeEach
     fun beforeEach() {
@@ -49,9 +58,9 @@ class PdfTextToolAutoConfigurationTest {
     }
 
     @Test
-    fun `should autoconfigure pdf text tool from properties`() {
+    fun `should autoconfigure pdf text tool with properties`() {
         // given
-        val executableFile: File = Paths.get(System.getProperty("java.io.tmpdir"), "executableName").toFile().apply {
+        val executableFile: File = XpdfUtils.getXpdfTempPath().resolve("executableName").toFile().apply {
             createNewFile()
             deleteOnExit()
         }
@@ -73,20 +82,8 @@ class PdfTextToolAutoConfigurationTest {
     }
 
     @Test
-    fun `should autoconfigure pdf text tool from xpdf utils`() {
+    fun `should autoconfigure pdf text tool without properties`() {
         // given
-        val executableFile = mockk<File> {
-            every { exists() } returns true
-            every { setExecutable(any()) } returns true
-        }
-        val executablePath = mockk<Path> {
-            every { toFile() } returns executableFile
-        }
-
-        mockkStatic(PdfTextUtils::class)
-        every { PdfTextUtils.getPdfTextExecutablePath() } returns executablePath
-        every { PdfTextUtils.getPdfTextTimeoutSeconds() } returns 99
-
         context.register(PdfTextToolAutoConfiguration::class.java)
         context.refresh()
 
@@ -94,10 +91,8 @@ class PdfTextToolAutoConfigurationTest {
         val pdfTextTool = context.getBean(PdfTextTool::class.java)
 
         // then
-        pdfTextTool.executableFile shouldBe executableFile
-        pdfTextTool.timeoutSeconds shouldBe 99
-
-        unmockkStatic(PdfTextUtils::class)
+        pdfTextTool.executableFile.canonicalPath shouldBe PdfTextUtils.getPdfTextExecutablePath().pathString
+        pdfTextTool.timeoutSeconds shouldBe PdfTextUtils.getPdfTextTimeoutSeconds()
     }
 
     @Test
@@ -108,10 +103,6 @@ class PdfTextToolAutoConfigurationTest {
 
         // when then
         context.getBean(PdfTextTool::class.java) shouldBe pdfTextToolBean
-    }
-
-    companion object {
-        private val pdfTextToolBean = mockk<PdfTextTool>()
     }
 
     @Configuration

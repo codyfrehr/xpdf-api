@@ -19,7 +19,7 @@ package io.xpdf.api.pdftext.util
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
+import io.mockk.unmockkAll
 import io.xpdf.api.common.util.XpdfUtils
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -38,8 +38,7 @@ class PdfTextUtilsTest {
 
     @AfterEach
     fun afterEach() {
-        unmockkStatic(XpdfUtils::class)
-        unmockkStatic(PdfTextUtils::class)
+        unmockkAll()
     }
 
     @Test

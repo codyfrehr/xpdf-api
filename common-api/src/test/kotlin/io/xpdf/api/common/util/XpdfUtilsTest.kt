@@ -19,7 +19,7 @@ package io.xpdf.api.common.util
 import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.matchers.shouldBe
 import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
+import io.mockk.unmockkAll
 import io.xpdf.api.common.exception.XpdfRuntimeException
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -41,7 +41,7 @@ class XpdfUtilsTest {
 
     @AfterEach
     fun afterEach() {
-        unmockkStatic(XpdfUtils::class)
+        unmockkAll()
 
         // reset system properties that test may have altered
         System.setProperty("java.io.tmpdir", javaTmpDir)

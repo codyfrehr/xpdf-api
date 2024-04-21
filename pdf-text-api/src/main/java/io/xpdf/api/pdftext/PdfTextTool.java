@@ -286,7 +286,7 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
         }
 
         // create output directory if not exists
-        textFile.getParentFile().mkdir();
+        textFile.getParentFile().mkdirs();
 
         return textFile;
     }

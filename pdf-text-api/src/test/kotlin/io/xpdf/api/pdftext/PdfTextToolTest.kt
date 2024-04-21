@@ -26,12 +26,15 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldMatch
 import io.mockk.*
 import io.xpdf.api.common.exception.*
+import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdftext.options.PdfTextEncoding
 import io.xpdf.api.pdftext.options.PdfTextEndOfLine
 import io.xpdf.api.pdftext.options.PdfTextFormat
 import io.xpdf.api.pdftext.util.PdfTextUtils
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -51,6 +54,19 @@ class PdfTextToolTest {
 
     private val pdfTextTool = PdfTextTool.builder().build()
 
+    companion object {
+        @JvmStatic
+        @AfterAll
+        fun afterAll() {
+            FileUtils.deleteQuietly(XpdfUtils.getXpdfTempPath().toFile())
+        }
+    }
+
+    @AfterEach
+    fun afterEach() {
+        unmockkAll()
+    }
+
     @Test
     fun `should initialize and copy executable to local system`() {
         // given
@@ -68,9 +84,6 @@ class PdfTextToolTest {
 
         // then
         verify { FileUtils.copyInputStreamToFile(any(), any()) }
-
-        unmockkStatic(PdfTextUtils::class)
-        unmockkStatic(FileUtils::class)
     }
 
     @Test
@@ -89,9 +102,6 @@ class PdfTextToolTest {
 
         // then
         verify(exactly = 0) { FileUtils.copyInputStreamToFile(any(), any()) }
-
-        unmockkStatic(PdfTextUtils::class)
-        unmockkStatic(FileUtils::class)
     }
 
     @Test
@@ -123,8 +133,6 @@ class PdfTextToolTest {
         shouldThrowWithMessage<XpdfRuntimeException>("Unable to locate executable in project resources") {
             PdfTextTool.builder().build()
         }
-
-        unmockkStatic(PdfTextUtils::class)
     }
 
     @Test
@@ -143,9 +151,6 @@ class PdfTextToolTest {
         shouldThrowWithMessage<XpdfRuntimeException>("Unable to copy executable from resources to local system") {
             PdfTextTool.builder().build()
         }
-
-        unmockkStatic(PdfTextUtils::class)
-        unmockkStatic(FileUtils::class)
     }
 
     @Test
@@ -161,8 +166,6 @@ class PdfTextToolTest {
         shouldThrowWithMessage<XpdfRuntimeException>("Unable to set execute permissions on executable") {
             PdfTextTool.builder().build()
         }
-
-        unmockkStatic(PdfTextUtils::class)
     }
 
     @Test
@@ -203,8 +206,6 @@ class PdfTextToolTest {
 
         // then
         result.timeoutSeconds shouldBe 99
-
-        unmockkStatic(PdfTextUtils::class)
     }
 
     @Test
@@ -257,9 +258,6 @@ class PdfTextToolTest {
         capturedOutput.all shouldContain "Invocation completed; exit code: 0, standard output: standardOutput"
         capturedOutput.all shouldContain "Invocation succeeded"
         capturedOutput.all shouldContain "Process finished"
-
-        unmockkConstructor(ProcessBuilder::class)
-        unmockkStatic(IOUtils::class)
     }
 
     @ParameterizedTest
@@ -313,9 +311,6 @@ class PdfTextToolTest {
         capturedOutput.all shouldContain "Invocation failed; error output: errorOutput"
         capturedOutput.all shouldContain "Process failed; exception message: $message"
         capturedOutput.all shouldContain "Process finished"
-
-        unmockkConstructor(ProcessBuilder::class)
-        unmockkStatic(IOUtils::class)
     }
 
     @Test
@@ -356,9 +351,6 @@ class PdfTextToolTest {
         capturedOutput.all shouldContain "Invocation timed out"
         capturedOutput.all shouldContain "Process failed; exception message: Timeout reached before process could finish"
         capturedOutput.all shouldContain "Process finished"
-
-        unmockkConstructor(ProcessBuilder::class)
-        unmockkStatic(IOUtils::class)
     }
 
     @Test
@@ -509,10 +501,6 @@ class PdfTextToolTest {
         pdfTextTool.initializeTextFile(request) shouldBe textFile
 
         verify { Paths.get("outPath", textFileName) }
-
-        unmockkStatic(PdfTextUtils::class)
-        unmockkStatic(UUID::class)
-        unmockkStatic(Paths::class)
     }
 
     @Test
