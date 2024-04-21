@@ -62,6 +62,7 @@ class PdfTextToolAutoConfigurationTest {
     fun `should autoconfigure pdf text tool with properties`() {
         // given
         val executableFile: File = XpdfUtils.getXpdfTempPath().resolve("executableName").toFile().apply {
+            mkdirs()
             createNewFile()
             deleteOnExit()
         }
