@@ -6,6 +6,8 @@ image:https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml/badge.s
 image:https://snyk.io/test/github/codyfrehr/xpdf-api/main/badge.svg[]
 {empty}
 
+image:https://img.shields.io/discord/1231726002137464953?label=Discord&logo=discord[]
+
 Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], the open source library for operating on PDF files.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
 
