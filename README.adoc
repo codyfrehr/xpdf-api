@@ -1,9 +1,10 @@
-= Xpdf API image:https://img.shields.io/discord/1231726002137464953?label=Discord&logo=discord[link=https://discord.gg/cFca5yKg]
+= Xpdf API
 
-image:https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main[link=https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml]
-image:https://codecov.io/gh/codyfrehr/xpdf-api/graph/badge.svg?branch=main[link=https://app.codecov.io/gh/codyfrehr/xpdf-api]
-image:https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml/badge.svg?event=schedule&branch=main[link=https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml]
-image:https://snyk.io/test/github/codyfrehr/xpdf-api/main/badge.svg[link=https://github.com/codyfrehr/xpdf-api/actions/workflows/snyk.yml]
+image:https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main[link=https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml?query=branch%3Amain]
+image:https://codecov.io/gh/codyfrehr/xpdf-api/graph/badge.svg?branch=main[link=https://app.codecov.io/gh/codyfrehr/xpdf-api/tree/main]
+image:https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml/badge.svg?event=schedule&branch=main[link=https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml?query=branch%3Amain]
+image:https://snyk.io/test/github/codyfrehr/xpdf-api/main/badge.svg[link=https://github.com/codyfrehr/xpdf-api/actions/workflows/snyk.yml?query=branch%3Amain]
+image:https://img.shields.io/discord/1231726002137464953?label=Discord&logo=discord[link=https://discord.gg/cFca5yKg,float=right]
 
 Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], the open source library for operating on PDF files.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
