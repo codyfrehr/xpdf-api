@@ -25,21 +25,32 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldMatch
 import io.xpdf.api.common.exception.XpdfException
+import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdftext.options.PdfTextEncoding
 import io.xpdf.api.pdftext.options.PdfTextEndOfLine
 import io.xpdf.api.pdftext.options.PdfTextFormat
 import io.xpdf.api.pdftext.util.PdfTextUtils
 import org.apache.commons.io.FileUtils
+import org.springframework.test.context.event.annotation.AfterTestClass
 import java.io.File
 import java.nio.file.Paths
 
 class PdfTextToolCucumberSteps {
+
     private var toolDto: PdfTextToolDto? = null
     private var requestDto: PdfTextRequestDto? = null
     private var optionsDto: PdfTextOptionsDto? = null
     private var nativeOptionsDto: NativeOptionsDto? = null
     private var response: PdfTextResponse? = null
     private var exception: XpdfException? = null
+
+    companion object {
+        @JvmStatic
+        @AfterTestClass
+        fun afterAll() {
+            FileUtils.deleteQuietly(XpdfUtils.getXpdfTempPath().toFile())
+        }
+    }
 
     @Given("a PdfTextTool")
     fun `a PdfTextTool`() {
@@ -59,7 +70,7 @@ class PdfTextToolCucumberSteps {
     @Given("a PdfTextTool with {int} second timeout and dynamic executable file")
     fun `a PdfTextTool with TIMEOUT_SECONDS second timeout and dynamic executable file`(timeoutSeconds: Int) {
         val executableResourceStream = this::class.java.classLoader.getResourceAsStream(PdfTextUtils.getPdfTextExecutableResourceName())!!
-        val executableFile = Paths.get(System.getProperty("java.io.tmpdir")).resolve("some.exe").toFile()
+        val executableFile = XpdfUtils.getXpdfTempPath().resolve("some.exe").toFile()
         FileUtils.copyInputStreamToFile(executableResourceStream, executableFile)
         executableFile.setExecutable(true)
 
@@ -79,7 +90,7 @@ class PdfTextToolCucumberSteps {
     @Given("a PdfTextRequest with pdf file {word} and dynamic text file")
     fun `a PdfTextRequest with pdf file PDF_FILE_NAME and dynamic text file`(pdfFileName: String) {
         val pdfFile = File(this.javaClass.classLoader.getResource("pdfs/${pdfFileName}")!!.toURI())
-        val txtFile = Paths.get(System.getProperty("java.io.tmpdir")).resolve("some.txt").toFile()
+        val txtFile = XpdfUtils.getXpdfTempPath().resolve("some.txt").toFile()
 
         this.requestDto = PdfTextRequestDto(pdfFile, txtFile)
     }
@@ -146,7 +157,7 @@ class PdfTextToolCucumberSteps {
     @DataTableType
     fun pdfTextRequestDtoTransformer(row: Map<String, String?>) = PdfTextRequestDto(
         File(this.javaClass.classLoader.getResource("pdfs/${row["pdfFile"]!!}")!!.toURI()),
-        row["textFile"]?.let { Paths.get(System.getProperty("java.io.tmpdir")).resolve(it).toFile() },
+        row["textFile"]?.let { XpdfUtils.getXpdfTempPath().resolve(it).toFile() },
     )
 
     @DataTableType
