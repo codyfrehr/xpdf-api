@@ -249,7 +249,7 @@ But if you wish to build anyway, all you need is JDK 8 and our provided Maven wr
 
 == Getting Help
 
-Join our https://discord.gg/cFca5yKg[Discord] and post a message in the _#help_ channel for quick feedback with any issues you may be having.
+Join our https://discord.gg/cFca5yKg[Discord] and post a message in the _#help_ channel for quick feedback with any issues you may have.
 
 == Reporting Bugs
 
