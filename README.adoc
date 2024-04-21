@@ -1,10 +1,10 @@
 = Xpdf API
 
-image:https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main[]
-image:https://codecov.io/gh/codyfrehr/xpdf-api/graph/badge.svg?branch=main[]
-image:https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml/badge.svg?event=schedule&branch=main[]
-image:https://snyk.io/test/github/codyfrehr/xpdf-api/main/badge.svg[]
-{empty}
+image:https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main[link=https://github.com/codyfrehr/xpdf-api/actions/workflows/ci.yml?query=branch%3Amain]
+image:https://codecov.io/gh/codyfrehr/xpdf-api/graph/badge.svg?branch=main[link=https://app.codecov.io/gh/codyfrehr/xpdf-api/tree/main]
+image:https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml/badge.svg?event=schedule&branch=main[link=https://github.com/codyfrehr/xpdf-api/actions/workflows/codeql.yml?query=branch%3Amain]
+image:https://snyk.io/test/github/codyfrehr/xpdf-api/main/badge.svg[link=https://github.com/codyfrehr/xpdf-api/actions/workflows/snyk.yml?query=branch%3Amain] +
+image:https://img.shields.io/discord/1231726002137464953?label=Discord&logo=discord[link=https://discord.gg/cFca5yKg]
 
 Xpdf API is a collection of Java APIs for https://www.xpdfreader.com/about.html[Xpdf], the open source library for operating on PDF files.
 Xpdf is an invaluable PDF toolkit, and this project aims to make it more accessible to the Java community.
@@ -236,12 +236,6 @@ We have added an SLF4J logger to our `PdfTextTool`, leaving its implementation u
 
 We provide meaningful debug logs for anyone needing more detail. If you want the trace from _pdftotext_ itself, then inject the "-verbose" command option into `PdfTextOptions` and inspect the standard output on your `PdfTextResponse`.
 
-//TODO== Getting Help
-//TODO
-
-//TODO== Reporting Issues
-//TODO
-
 == Building from Source
 
 You do not need to build this project locally to use Xpdf API (packages are available in the Maven Central Repository).
@@ -252,6 +246,16 @@ But if you wish to build anyway, all you need is JDK 8 and our provided Maven wr
 ----
   $ ./mvnw install -DskipTests
 ----
+
+== Getting Help
+
+Join our https://discord.gg/cFca5yKg[Discord] and post a message in the _#help_ channel for quick feedback with any issues you may have.
+
+== Reporting Bugs
+
+If you find a bug, please visit our https://github.com/codyfrehr/xpdf-api/issues[GitHub Issues] and open a new issue.
+
+If you find a security vulnerability, please navigate to our Security Policy for instructions on how to privately report it.
 
 == License
 
