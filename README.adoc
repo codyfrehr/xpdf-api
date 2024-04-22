@@ -253,9 +253,9 @@ Join our https://discord.gg/cFca5yKg[Discord] and post a message in the _#help_ 
 
 == Reporting Bugs
 
-If you find a bug, please visit our https://github.com/codyfrehr/xpdf-api/issues[GitHub Issues] and open a new issue.
+If you find a bug, please visit our https://github.com/codyfrehr/xpdf-api/issues[GitHub Issues] page and open a new issue.
 
-If you find a security vulnerability, please navigate to our Security Policy for instructions on how to privately report it.
+If you find a security vulnerability, please navigate to our https://github.com/codyfrehr/xpdf-api/security[Security Policy] for instructions on how to privately report it.
 
 == License
 
