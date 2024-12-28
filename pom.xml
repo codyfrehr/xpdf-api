@@ -113,6 +113,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
                 <version>${spring-boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!--test-->
             <dependency>
@@ -200,18 +206,6 @@
                 <scope>test</scope>
             </dependency>
             <!--CVE overrides-->
-            <dependency>
-                <!--spring boot starter-->
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>1.2.13</version>
-            </dependency>
-            <dependency>
-                <!--spring boot starter-->
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.2.13</version>
-            </dependency>
             <dependency>
                 <!--spring boot starter-->
                 <groupId>org.yaml</groupId>
@@ -342,6 +336,63 @@
                             <goals>
                                 <goal>jar</goal>
                             </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>de.skuzzle.enforcer</groupId>
+                            <artifactId>restrict-imports-enforcer-rule</artifactId>
+                            <version>2.6.0</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>enforce-banned-logging-dependencies</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <phase>test-compile</phase>
+                            <configuration>
+                                <rules>
+                                    <!--this rule prevents developers from including logging dependencies
+                                        this project uses SLF4J interface and should leave logging implementation up to the end user-->
+                                    <bannedDependencies>
+                                        <message>Please remove logging dependencies (this project should use SLF4J logging interface only)</message>
+                                        <excludes>
+                                            <exclude>org.apache.logging.log4j</exclude>
+                                            <exclude>log4j</exclude>
+                                            <exclude>commons-logging</exclude>
+                                            <exclude>ch.qos.logback</exclude>
+                                        </excludes>
+                                        <searchTransitive>true</searchTransitive>
+                                    </bannedDependencies>
+                                </rules>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>enforce-banned-logging-imports</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <phase>test-compile</phase>
+                            <configuration>
+                                <rules>
+                                    <!--this rule prevents developers from importing JUL loggers
+                                        JUL logging is built in to java and cannot be prevented via dependency check
+                                        this project uses SLF4J interface and should leave logging implementation up to the end user-->
+                                    <RestrictImports>
+                                        <reason>Please remove java.util.logging imports (this project should use SLF4J logging interface only)</reason>
+                                        <bannedImports>
+                                            <bannedImport>java.util.logging.**</bannedImport>
+                                        </bannedImports>
+                                    </RestrictImports>
+                                </rules>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -487,6 +538,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
