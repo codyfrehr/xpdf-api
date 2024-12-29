@@ -42,6 +42,15 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.xpdf</groupId>
+            <artifactId>common-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <!--test-->
+        <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
         </dependency>
@@ -50,18 +59,9 @@
             <artifactId>cucumber-junit-platform-engine</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.xpdf</groupId>
-            <artifactId>common-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-suite-engine</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <!--test-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>

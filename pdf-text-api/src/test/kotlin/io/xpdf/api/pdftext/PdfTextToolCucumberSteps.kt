@@ -23,7 +23,7 @@ import io.cucumber.java.en.When
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldMatch
+import io.kotest.matchers.string.shouldContain
 import io.xpdf.api.common.exception.XpdfException
 import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdftext.options.PdfTextEncoding
@@ -129,7 +129,7 @@ class PdfTextToolCucumberSteps {
 
     @Then("the output text should match {string}")
     fun `the output text should match PATTERN`(pattern: String) {
-        FileUtils.readFileToString(response!!.textFile, Charsets.UTF_8) shouldMatch Regex(pattern)
+        FileUtils.readFileToString(response!!.textFile, Charsets.UTF_8) shouldContain Regex(pattern)
     }
 
     @Then("the output text file should exist")
