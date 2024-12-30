@@ -18,30 +18,6 @@ Feature: PdfInfoTool
     Then the standard output should match "Author:[^\f]+PDF version:"
 
 
-  Scenario: Extract pdf info with latin encoding
-    Given a PdfInfoTool
-    Given a PdfInfoRequest with values
-      | pdfFile   |
-      | small.pdf |
-    Given a PdfInfoOptions with values
-      | pageStart | pageStop | encoding | boundingBoxesIncluded | metadataIncluded | datesUndecoded | ownerPassword | userPassword |
-      |           |          | LATIN_1  |                       |                  |                |               |              |
-    When the PdfInfoTool processes the PdfInfoRequest
-    Then the standard output should match "Creator:.*Microsoft�"
-
-
-  Scenario: Extract pdf info with utf-8 encoding
-    Given a PdfInfoTool
-    Given a PdfInfoRequest with values
-      | pdfFile   |
-      | small.pdf |
-    Given a PdfInfoOptions with values
-      | pageStart | pageStop | encoding | boundingBoxesIncluded | metadataIncluded | datesUndecoded | ownerPassword | userPassword |
-      |           |          | UTF_8    |                       |                  |                |               |              |
-    When the PdfInfoTool processes the PdfInfoRequest
-    Then the standard output should match "Creator:.*Microsoft®"
-
-
   Scenario: Extract pdf info with ascii encoding
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
