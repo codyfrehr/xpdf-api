@@ -1,5 +1,5 @@
 /*
- * PdfInfo API - An API for accessing a native pdfinfo library (https://xpdf.io)
+ * PdfInfo API Starter - A Spring Boot starter for PdfInfo API (https://xpdf.io)
  * Copyright © 2025 xpdf.io (info@xpdf.io)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,28 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.xpdf.api.pdfinfo;
+package io.xpdf.api.pdfinfo.autoconfigure;
 
-import io.xpdf.api.common.XpdfResponse;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import io.xpdf.api.pdfinfo.PdfInfoTool;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.nio.file.Path;
 
 /**
- * Represents the result of invoking the <em>pdfinfo</em> executable.
+ * The configurable properties of a {@link PdfInfoTool} that is autoconfigured in {@link PdfInfoToolAutoConfiguration}.
  *
  * @since 1.1.0
  */
-@Builder
-@Getter
-@ToString
-public class PdfInfoResponse extends XpdfResponse {
+@Data
+@ConfigurationProperties(prefix = "io.xpdf.api.pdf-info")
+public class PdfInfoToolProperties {
 
-    /**
-     * Standard output from the shell process that invoked the executable.
-     *
-     * @since 1.1.0
-     */
-    private final String standardOutput;
+    private Path executablePath;
+    private Integer timeoutSeconds;
 
 }
