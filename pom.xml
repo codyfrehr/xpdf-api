@@ -29,7 +29,7 @@
     <modules>
         <module>common-api</module>
         <module>pdf-info-api</module>
-        <module>pdf-into-api-spring-boot-starter</module>
+        <module>pdf-info-api-spring-boot-starter</module>
         <module>pdf-text-api</module>
         <module>pdf-text-api-spring-boot-starter</module>
     </modules>
