@@ -1,6 +1,6 @@
 /*
  * PdfInfo API - An API for accessing a native pdfinfo library (https://xpdf.io)
- * Copyright © 2024 xpdf.io (info@xpdf.io)
+ * Copyright © 2025 xpdf.io (info@xpdf.io)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

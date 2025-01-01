@@ -1,0 +1,10 @@
+{
+  "properties": [
+    {
+      "name": "io.xpdf.api.pdf-info.executable-path"
+    },
+    {
+      "name": "io.xpdf.api.pdf-info.timeout-seconds"
+    }
+  ]
+}
