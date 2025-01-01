@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    PdfText API - An API for accessing a native pdftotext library (https://xpdf.io)
+    PdfInfo API - An API for accessing a native pdfinfo library (https://xpdf.io)
     Copyright © 2024 xpdf.io (info@xpdf.io)
 
     This program is free software: you can redistribute it and/or modify
@@ -27,10 +27,10 @@
         <version>1.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>pdf-text-api</artifactId>
+    <artifactId>pdf-info-api</artifactId>
 
-    <name>PdfText API</name>
-    <description>An API for accessing a native pdftotext library (https://xpdf.io)</description>
+    <name>PdfInfo API</name>
+    <description>An API for accessing a native pdfinfo library (https://xpdf.io)</description>
     <url>https://xpdf.io</url>
     <licenses>
         <license>
