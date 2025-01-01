@@ -35,7 +35,7 @@ public class PdfInfoToolAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public PdfInfoTool pdfTextTool(PdfInfoToolProperties pdfInfoToolProperties) {
+    public PdfInfoTool pdfInfoTool(PdfInfoToolProperties pdfInfoToolProperties) {
         return PdfInfoTool.builder()
                 .executableFile(pdfInfoToolProperties.getExecutablePath() != null ? pdfInfoToolProperties.getExecutablePath().toFile() : null)
                 .timeoutSeconds(pdfInfoToolProperties.getTimeoutSeconds())
