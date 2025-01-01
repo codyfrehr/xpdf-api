@@ -2,7 +2,7 @@
 <!--
 
     PdfInfo API - An API for accessing a native pdfinfo library (https://xpdf.io)
-    Copyright © 2024 xpdf.io (info@xpdf.io)
+    Copyright © 2025 xpdf.io (info@xpdf.io)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
             <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
         </license>
     </licenses>
-    <inceptionYear>2024</inceptionYear>
+    <inceptionYear>2025</inceptionYear>
 
     <dependencies>
         <dependency>
