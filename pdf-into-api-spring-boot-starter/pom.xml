@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.xpdf</groupId>
+        <artifactId>xpdf-api-parent</artifactId>
+        <version>1.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>pdf-into-api-spring-boot-starter</artifactId>
+
+    <name>PdfInfo API Starter</name>
+    <description>A Spring Boot starter for PdfInfo API (https://xpdf.io)</description>
+    <url>https://xpdf.io</url>
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 3 (GPLv3)</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+        </license>
+    </licenses>
+    <inceptionYear>2024</inceptionYear>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.xpdf</groupId>
+            <artifactId>pdf-info-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <!--test-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <!--CVE overrides-->
+        <dependency>
+            <!--spring boot starter-->
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
