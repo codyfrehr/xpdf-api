@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * An autoconfiguration for {@link PdfInfoTool} with configuration properties defined in {@link PdfInfoToolProperties}.
  *
- * @since 1.0.0
+ * @since 1.1.0
  */
 @AutoConfiguration
 @ConditionalOnClass(PdfInfoTool.class)

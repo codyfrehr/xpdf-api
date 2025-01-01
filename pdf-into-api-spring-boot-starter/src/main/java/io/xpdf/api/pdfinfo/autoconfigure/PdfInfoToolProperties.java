@@ -25,7 +25,7 @@ import java.nio.file.Path;
 /**
  * The configurable properties of a {@link PdfInfoTool} that is autoconfigured in {@link PdfInfoToolAutoConfiguration}.
  *
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Data
 @ConfigurationProperties(prefix = "io.xpdf.api.pdf-info")
