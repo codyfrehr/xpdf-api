@@ -58,7 +58,7 @@ public class PdfInfoUtils {
      * @since 1.0.0
      */
     public static Integer getPdfInfoTimeoutSeconds() {
-        return 30;
+        return 5;
     }
 
     /**

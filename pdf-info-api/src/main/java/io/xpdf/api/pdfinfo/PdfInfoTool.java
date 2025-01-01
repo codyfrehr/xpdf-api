@@ -75,7 +75,7 @@ public class PdfInfoTool implements XpdfTool<PdfInfoRequest, PdfInfoResponse> {
     /**
      * Maximum amount of time in seconds allotted to a process before timing out.
      *
-     * @implNote If unassigned, this will default to 30 seconds.
+     * @implNote If unassigned, this will default to 5 seconds.
      * @since 1.0.0
      */
     private final Integer timeoutSeconds;
