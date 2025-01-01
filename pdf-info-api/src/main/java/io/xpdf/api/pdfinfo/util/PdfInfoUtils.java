@@ -24,7 +24,7 @@ import java.nio.file.Path;
 /**
  * Helpers for a {@link PdfInfoTool}.
  *
- * @since 1.0.0
+ * @since 1.1.0
  */
 public class PdfInfoUtils {
 
@@ -35,7 +35,7 @@ public class PdfInfoUtils {
      * Gets the resource name of the <em>pdfinfo</em> executable native to this system.
      *
      * @return executable resource name
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public static String getPdfInfoExecutableResourceName() {
         return String.format("xpdf/%s/%s", XpdfUtils.getTargetSystem(), getPdfInfoExecutableName());
@@ -45,7 +45,7 @@ public class PdfInfoUtils {
      * Gets the path where the native <em>pdfinfo</em> executable should be copied so that it can be accessed by OS.
      *
      * @return executable path
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public static Path getPdfInfoExecutablePath() {
         return XpdfUtils.getXpdfTempPath().resolve("pdf-info").resolve("bin").resolve(getPdfInfoExecutableName());
@@ -55,7 +55,7 @@ public class PdfInfoUtils {
      * Gets the maximum amount of time in seconds allotted to the <em>pdfinfo</em> process before timing out.
      *
      * @return timeout length in seconds for process
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public static Integer getPdfInfoTimeoutSeconds() {
         return 5;

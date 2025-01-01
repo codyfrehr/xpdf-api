@@ -36,7 +36,7 @@ import java.io.File;
  * </pre></blockquote>
  *
  * @implNote A {@code NullPointerException} will be thrown if the required arguments are not provided to the builder.
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Builder
 @Getter
@@ -47,7 +47,7 @@ public class PdfInfoRequest extends XpdfRequest {
      * Input PDF file.
      *
      * @implNote Required.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     @NonNull
     private final File pdfFile;
@@ -55,7 +55,7 @@ public class PdfInfoRequest extends XpdfRequest {
     /**
      * Command options to customize execution.
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final PdfInfoOptions options;
 

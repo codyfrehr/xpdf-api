@@ -24,7 +24,7 @@ import lombok.ToString;
 /**
  * Represents the result of invoking the <em>pdfinfo</em> executable.
  *
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Builder
 @Getter
@@ -34,7 +34,7 @@ public class PdfInfoResponse extends XpdfResponse {
     /**
      * Standard output from the shell process that invoked the executable.
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final String standardOutput;
 

@@ -56,7 +56,7 @@ import static java.util.Collections.emptyList;
  *
  * @implNote See <em>pdfinfo</em> documentation for more detailed information about this function.
  * You can find source documentation alongside the executable file in the package resources.
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Builder
 @Getter
@@ -68,7 +68,7 @@ public class PdfInfoTool implements XpdfTool<PdfInfoRequest, PdfInfoResponse> {
      * Executable file that should be invoked.
      *
      * @implNote If unassigned, this will default to the executable included with this project.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final File executableFile;
 
@@ -76,7 +76,7 @@ public class PdfInfoTool implements XpdfTool<PdfInfoRequest, PdfInfoResponse> {
      * Maximum amount of time in seconds allotted to a process before timing out.
      *
      * @implNote If unassigned, this will default to 5 seconds.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final Integer timeoutSeconds;
 
@@ -144,7 +144,7 @@ public class PdfInfoTool implements XpdfTool<PdfInfoRequest, PdfInfoResponse> {
      * @throws XpdfTimeoutException if process duration exceeds timeout length
      * @throws XpdfProcessingException if any other exception occurs during processing
      * @implNote This method executes a shell command and may become blocking.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     @Override
     public PdfInfoResponse process(PdfInfoRequest request) throws XpdfException {

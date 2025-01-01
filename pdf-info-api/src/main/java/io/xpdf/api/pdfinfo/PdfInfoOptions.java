@@ -41,7 +41,7 @@ import java.util.Map;
  *
  * @implNote See <em>pdfinfo</em> documentation for detailed information about each of the options.
  * You can find source documentation alongside the executable file in the package resources.
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Builder
 @Getter
@@ -58,7 +58,7 @@ public class PdfInfoOptions {
      *
      * @implNote Must be positive.
      * If unassigned, <em>pdfinfo</em> starts from first page.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final Integer pageStart;
 
@@ -72,7 +72,7 @@ public class PdfInfoOptions {
      *
      * @implNote Must be positive and greater than or equal to {@link #pageStart}.
      * If unassigned, <em>pdfinfo</em> stops on last page.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final Integer pageStop;
 
@@ -85,7 +85,7 @@ public class PdfInfoOptions {
      * </pre></blockquote>
      *
      * @implNote If unassigned, <em>pdfinfo</em> defaults to {@link PdfInfoEncoding#LATIN_1}.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final PdfInfoEncoding encoding;
 
@@ -98,7 +98,7 @@ public class PdfInfoOptions {
      * </pre></blockquote>
      *
      * @implNote If unassigned, <em>pdfinfo</em> does not print bounding box info.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final Boolean boundingBoxesIncluded;
 
@@ -111,7 +111,7 @@ public class PdfInfoOptions {
      * </pre></blockquote>
      *
      * @implNote If unassigned, <em>pdfinfo</em> does not print metadata.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final Boolean metadataIncluded;
 
@@ -124,7 +124,7 @@ public class PdfInfoOptions {
      * </pre></blockquote>
      *
      * @implNote If unassigned, <em>pdfinfo</em> decodes date strings.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final Boolean datesUndecoded;
 
@@ -136,7 +136,7 @@ public class PdfInfoOptions {
      *  {@literal -opw <string>}
      * </pre></blockquote>
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final String ownerPassword;
 
@@ -148,7 +148,7 @@ public class PdfInfoOptions {
      *  {@literal -upw <string>}
      * </pre></blockquote>
      *
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final String userPassword;
 
@@ -194,7 +194,7 @@ public class PdfInfoOptions {
      * @implNote No validation is performed against this input.
      * See <em>pdfinfo</em> documentation for detailed information about each of the options.
      * You can find source documentation alongside the executable file in the package resources.
-     * @since 1.0.0
+     * @since 1.1.0
      */
     private final Map<String, String> nativeOptions;
 
