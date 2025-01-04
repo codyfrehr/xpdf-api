@@ -16,7 +16,8 @@ Our primary goals are:
 
 APIs are available for the following Xpdf functions (with more to come):
 
-* _pdftotext_ - convert PDF files to text
+* _pdfinfo_ - extract PDF meta info
+* _pdftotext_ - convert PDF to text
 
 == Getting Started
 
@@ -34,7 +35,7 @@ APIs are available for the following Xpdf functions (with more to come):
  <dependency>
      <groupId>io.xpdf</groupId>
      <artifactId>pdf-text-api</artifactId>
-     <version>1.0.2</version>
+     <version>1.1.0</version>
  </dependency>
 ----
 
@@ -45,7 +46,7 @@ APIs are available for the following Xpdf functions (with more to come):
  <dependency>
      <groupId>io.xpdf</groupId>
      <artifactId>pdf-text-api-spring-boot-starter</artifactId>
-     <version>1.0.2</version>
+     <version>1.1.0</version>
  </dependency>
 ----
 
