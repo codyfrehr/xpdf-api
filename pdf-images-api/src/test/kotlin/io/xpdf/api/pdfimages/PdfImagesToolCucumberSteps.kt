@@ -1,0 +1,210 @@
+package io.xpdf.api.pdfimages
+
+import io.cucumber.java.DataTableType
+import io.cucumber.java.en.Given
+import io.cucumber.java.en.Then
+import io.cucumber.java.en.When
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
+import io.xpdf.api.common.exception.XpdfException
+import io.xpdf.api.common.util.XpdfUtils
+import io.xpdf.api.pdfimages.options.PdfImagesFileFormat
+import io.xpdf.api.pdfimages.util.PdfImagesUtils
+import org.apache.commons.io.FileUtils
+import org.springframework.test.context.event.annotation.AfterTestClass
+import java.io.File
+import java.nio.file.Paths
+
+class PdfImagesToolCucumberSteps {
+//
+//    private var toolDto: PdfTextToolDto? = null
+//    private var requestDto: PdfTextRequestDto? = null
+//    private var optionsDto: PdfTextOptionsDto? = null
+//    private var nativeOptionsDto: NativeOptionsDto? = null
+//    private var response: PdfImagesResponse? = null
+//    private var exception: XpdfException? = null
+//
+//    companion object {
+//        @JvmStatic
+//        @AfterTestClass
+//        fun afterAll() {
+//            FileUtils.deleteQuietly(XpdfUtils.getXpdfTempPath().toFile())
+//        }
+//    }
+//
+//    @Given("a PdfTextTool")
+//    fun `a PdfTextTool`() {
+//        toolDto = PdfTextToolDto(null, null)
+//    }
+//
+//    @Given("a PdfTextTool with values")
+//    fun `a PdfTextTool with values`(toolDto: PdfTextToolDto) {
+//        this.toolDto = toolDto
+//    }
+//
+//    /**
+//     * Cannot specify executable file path in values in feature file because path structure is OS-specific.
+//     * We don't know which OS this test will be running against.
+//     * This allows us to define an executable file, but in an OS-independent fashion.
+//     */
+//    @Given("a PdfTextTool with {int} second timeout and dynamic executable file")
+//    fun `a PdfTextTool with TIMEOUT_SECONDS second timeout and dynamic executable file`(timeoutSeconds: Int) {
+//        val executableResourceStream = this::class.java.classLoader.getResourceAsStream(PdfImagesUtils.getPdfImagesExecutableResourceName())!!
+//        val executableFile = XpdfUtils.getXpdfTempPath().resolve("some.exe").toFile()
+//        FileUtils.copyInputStreamToFile(executableResourceStream, executableFile)
+//        executableFile.setExecutable(true)
+//
+//        toolDto = PdfTextToolDto(executableFile, timeoutSeconds)
+//    }
+//
+//    @Given("a PdfTextRequest with values")
+//    fun `a PdfTextRequest with values`(requestDto: PdfTextRequestDto) {
+//        this.requestDto = requestDto
+//    }
+//
+//    /**
+//     * Cannot specify text file path in values in feature file because path structure is OS-specific.
+//     * We don't know which OS this test will be running against.
+//     * This allows us to define an output text file, but in an OS-independent fashion.
+//     */
+//    @Given("a PdfTextRequest with pdf file {word} and dynamic text file")
+//    fun `a PdfTextRequest with pdf file PDF_FILE_NAME and dynamic text file`(pdfFileName: String) {
+//        val pdfFile = File(this.javaClass.classLoader.getResource("pdfs/${pdfFileName}")!!.toURI())
+//        val txtFile = XpdfUtils.getXpdfTempPath().resolve("some.txt").toFile()
+//
+//        this.requestDto = PdfTextRequestDto(pdfFile, txtFile)
+//    }
+//
+//    @Given("a PdfTextOptions with values")
+//    fun `a PdfTextOptions with values`(optionsDto: PdfTextOptionsDto) {
+//        this.optionsDto = optionsDto
+//    }
+//
+//    @Given("native PdfTextOptions with values")
+//    fun `native PdfTextOptions with values`(nativeOptionsDto: NativeOptionsDto) {
+//        this.nativeOptionsDto = nativeOptionsDto
+//    }
+//
+//    @When("the PdfTextTool processes the PdfTextRequest")
+//    fun `the PdfTextTool processes the PdfTextRequest`() {
+//        val nativeOptions = nativeOptionsDto?.toNativeOptions()
+//        val options = if (optionsDto != null) optionsDto?.toPdfTextOptions(nativeOptions) else PdfImagesOptions.builder().nativeOptions(nativeOptions).build()
+//        val request = requestDto!!.toPdfTextRequest(options)
+//        val tool = toolDto!!.toPdfTextTool()
+//
+//        response = tool.process(request)
+//    }
+//
+//    @When("the PdfTextTool processes the PdfTextRequest expecting an XpdfException")
+//    fun `the PdfTextTool processes the PdfTextRequest expecting an XpdfException`() {
+//        val nativeOptions = nativeOptionsDto?.toNativeOptions()
+//        val options = if (optionsDto != null) optionsDto?.toPdfTextOptions(nativeOptions) else PdfImagesOptions.builder().nativeOptions(nativeOptions).build()
+//        val request = requestDto!!.toPdfTextRequest(options)
+//        val tool = toolDto!!.toPdfTextTool()
+//
+//        exception = shouldThrow<XpdfException> {
+//            tool.process(request)
+//        }
+//    }
+//
+//    @Then("the output text should match {string}")
+//    fun `the output text should match PATTERN`(pattern: String) {
+//        FileUtils.readFileToString(response!!.textFile, Charsets.UTF_8) shouldContain Regex(pattern)
+//    }
+//
+//    @Then("the output text file should exist")
+//    fun `the output text file should exist`() {
+//        response!!.textFile.exists() shouldBe true
+//    }
+//
+//    @Then("the standard output should not be null")
+//    fun `the standard output should not be empty`() {
+//        response!!.standardOutput shouldNotBe null
+//        response!!.standardOutput shouldNotBe ""
+//    }
+//
+//    @Then("the XpdfException should be an {word}")
+//    fun `the XpdfException should be an XPDF_EXCEPTION_NAME`(xpdfExceptionName: String) {
+//        exception!!::class.java shouldBe Class.forName("io.xpdf.api.common.exception.${xpdfExceptionName}")
+//    }
+//
+//    @DataTableType
+//    fun pdfTextToolDtoTransformer(row: Map<String, String?>) = PdfTextToolDto(
+//        row["executableFile"]?.let { Paths.get(it).toFile() },
+//        row["timeoutSeconds"]?.toInt(),
+//    )
+//
+//    @DataTableType
+//    fun pdfTextRequestDtoTransformer(row: Map<String, String?>) = PdfTextRequestDto(
+//        File(this.javaClass.classLoader.getResource("pdfs/${row["pdfFile"]!!}")!!.toURI()),
+//        row["textFile"]?.let { XpdfUtils.getXpdfTempPath().resolve(it).toFile() },
+//    )
+//
+//    @DataTableType
+//    fun pdfTextOptionsDtoTransformer(row: Map<String, String?>) = PdfTextOptionsDto(
+//        row["pageStart"]?.toIntOrNull(),
+//        row["pageStop"]?.toIntOrNull(),
+//        row["format"]?.let { PdfImagesFileFormat.valueOf(it) },
+//        row["encoding"]?.let { PdfImagesEncoding.valueOf(it) },
+//        row["endOfLine"]?.let { PdfImagesEndOfLine.valueOf(it) },
+//        row["pageBreakExcluded"]?.toBooleanStrictOrNull(),
+//        row["ownerPassword"],
+//        row["userPassword"],
+//    )
+//
+//    @DataTableType
+//    fun nativeOptionsDtoTransformer(row: Map<String, String?>) = NativeOptionsDto(row)
+//
+//    class PdfTextToolDto (
+//        private val executableFile: File?,
+//        private val timeoutSeconds: Int?,
+//    ) {
+//        fun toPdfTextTool(): PdfImagesTool = PdfImagesTool.builder()
+//            .executableFile(executableFile)
+//            .timeoutSeconds(timeoutSeconds)
+//            .build()
+//    }
+//
+//    class PdfTextRequestDto (
+//        private val pdfFile: File,
+//        private val textFile: File?,
+//    ) {
+//        fun toPdfTextRequest(options: PdfImagesOptions?): PdfImagesRequest = PdfImagesRequest.builder()
+//            .pdfFile(pdfFile)
+//            .textFile(textFile)
+//            .options(options)
+//            .build()
+//    }
+//
+//    class PdfTextOptionsDto(
+//        private val pageStart: Int?,
+//        private val pageStop: Int?,
+//        private val format: PdfImagesFileFormat?,
+//        private val encoding: PdfImagesEncoding?,
+//        private val endOfLine: PdfImagesEndOfLine?,
+//        private val pageBreakExcluded: Boolean?,
+//        private val ownerPassword: String?,
+//        private val userPassword: String?,
+//    ) {
+//        fun toPdfTextOptions(nativeOptions: Map<String, String?>?): PdfImagesOptions = PdfImagesOptions.builder()
+//            .pageStart(pageStart)
+//            .pageStop(pageStop)
+//            .fileFormat(format)
+//            .encoding(encoding)
+//            .endOfLine(endOfLine)
+//            .pageBreakExcluded(pageBreakExcluded)
+//            .ownerPassword(ownerPassword)
+//            .userPassword(userPassword)
+//            .nativeOptions(nativeOptions)
+//            .build()
+//    }
+//
+//    class NativeOptionsDto(
+//        private val nativeOptions: Map<String, String?>,
+//    ) {
+//        fun toNativeOptions(): Map<String, String?> = nativeOptions
+//    }
+
+}

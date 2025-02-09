@@ -90,7 +90,7 @@ public class PdfInfoOptions {
     private final PdfInfoEncoding encoding;
 
     /**
-     * Flag to print bounding boxes in text output.
+     * Flag to print bounding boxes in standard output.
      *
      * <br><br> Native options:
      * <blockquote><pre>
@@ -103,7 +103,7 @@ public class PdfInfoOptions {
     private final Boolean boundingBoxesIncluded;
 
     /**
-     * Flag to print document-level XML metadata in text output.
+     * Flag to print document-level XML metadata in standard output.
      *
      * <br><br> Native options:
      * <blockquote><pre>
@@ -116,7 +116,7 @@ public class PdfInfoOptions {
     private final Boolean metadataIncluded;
 
     /**
-     * Flag to print undecoded date strings in text output.
+     * Flag to print undecoded date strings in standard output.
      *
      * <br><br> Native options:
      * <blockquote><pre>
@@ -175,20 +175,20 @@ public class PdfInfoOptions {
      *
      * Native options:
      * <blockquote><pre>
-     *  {@literal -f <int>               : first page to convert}
-     *  {@literal -l <int>               : last page to convert}
-     *  {@literal -box                   : print the page bounding boxes}
-     *  {@literal -meta                  : print the document metadata (XML)}
-     *  {@literal -rawdates              : print the undecoded date strings directly from the PDF file}
-     *  {@literal -enc <string>          : output text encoding name}
-     *  {@literal -opw <string>          : owner password (for encrypted files)}
-     *  {@literal -upw <string>          : user password (for encrypted files)}
-     *  {@literal -cfg <string>          : configuration file to use in place of .xpdfrc}
-     *  {@literal -v                     : print copyright and version info}
-     *  {@literal -h                     : print usage information}
-     *  {@literal -help                  : print usage information}
-     *  {@literal --help                 : print usage information}
-     *  {@literal -?                     : print usage information}
+     *  {@literal -f <int>          : first page to convert}
+     *  {@literal -l <int>          : last page to convert}
+     *  {@literal -box              : print the page bounding boxes}
+     *  {@literal -meta             : print the document metadata (XML)}
+     *  {@literal -rawdates         : print the undecoded date strings directly from the PDF file}
+     *  {@literal -enc <string>     : output text encoding name}
+     *  {@literal -opw <string>     : owner password (for encrypted files)}
+     *  {@literal -upw <string>     : user password (for encrypted files)}
+     *  {@literal -cfg <string>     : configuration file to use in place of .xpdfrc}
+     *  {@literal -v                : print copyright and version info}
+     *  {@literal -h                : print usage information}
+     *  {@literal -help             : print usage information}
+     *  {@literal --help            : print usage information}
+     *  {@literal -?                : print usage information}
      * </pre></blockquote>
      *
      * @implNote No validation is performed against this input.

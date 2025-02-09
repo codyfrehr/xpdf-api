@@ -36,11 +36,11 @@ class PdfTextRequestTest {
         // given
         val request = PdfTextRequest.builder()
             .pdfFile(File("some.pdf"))
-            .textFile(File("some.text"))
+            .textFile(File("some.txt"))
             .build()
 
         // when then
-        request.toString() shouldBe "PdfTextRequest(pdfFile=some.pdf, textFile=some.text, options=null)"
+        request.toString() shouldBe "PdfTextRequest(pdfFile=some.pdf, textFile=some.txt, options=null)"
     }
 
 }
