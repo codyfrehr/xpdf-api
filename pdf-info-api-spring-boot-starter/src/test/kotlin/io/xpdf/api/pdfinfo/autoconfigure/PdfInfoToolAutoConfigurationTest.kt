@@ -17,7 +17,10 @@
 package io.xpdf.api.pdfinfo.autoconfigure
 
 import io.kotest.matchers.shouldBe
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdfinfo.PdfInfoTool
 import io.xpdf.api.pdfinfo.util.PdfInfoUtils
@@ -76,11 +79,11 @@ class PdfInfoToolAutoConfigurationTest {
         context.refresh()
 
         // when
-        val pdfTextTool = context.getBean(PdfInfoTool::class.java)
+        val pdfInfoTool = context.getBean(PdfInfoTool::class.java)
 
         // then
-        pdfTextTool.executableFile.canonicalPath shouldBe executableFile.canonicalPath
-        pdfTextTool.timeoutSeconds shouldBe 99
+        pdfInfoTool.executableFile.canonicalPath shouldBe executableFile.canonicalPath
+        pdfInfoTool.timeoutSeconds shouldBe 99
     }
 
     @Test
@@ -102,13 +105,11 @@ class PdfInfoToolAutoConfigurationTest {
         context.refresh()
 
         // when
-        val pdfTextTool = context.getBean(PdfInfoTool::class.java)
+        val pdfInfoTool = context.getBean(PdfInfoTool::class.java)
 
         // then
-        pdfTextTool.executableFile shouldBe executableFile
-        pdfTextTool.timeoutSeconds shouldBe 99
-
-        unmockkStatic(PdfInfoUtils::class)
+        pdfInfoTool.executableFile shouldBe executableFile
+        pdfInfoTool.timeoutSeconds shouldBe 99
     }
 
     @Test

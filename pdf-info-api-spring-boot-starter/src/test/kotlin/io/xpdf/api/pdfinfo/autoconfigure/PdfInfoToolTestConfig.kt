@@ -26,6 +26,6 @@ import org.springframework.context.annotation.ComponentScan
 open class PdfInfoToolTestConfig {
 
     @Bean
-    open fun pdfTextTool(): PdfInfoTool = PdfInfoTool.builder().build()
+    open fun pdfInfoTool(): PdfInfoTool = PdfInfoTool.builder().build()
 
 }

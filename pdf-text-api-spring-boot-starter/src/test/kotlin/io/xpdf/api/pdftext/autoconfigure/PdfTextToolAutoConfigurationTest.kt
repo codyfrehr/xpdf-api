@@ -17,7 +17,10 @@
 package io.xpdf.api.pdftext.autoconfigure
 
 import io.kotest.matchers.shouldBe
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import io.xpdf.api.common.util.XpdfUtils
 import io.xpdf.api.pdftext.PdfTextTool
 import io.xpdf.api.pdftext.util.PdfTextUtils
@@ -107,8 +110,6 @@ class PdfTextToolAutoConfigurationTest {
         // then
         pdfTextTool.executableFile shouldBe executableFile
         pdfTextTool.timeoutSeconds shouldBe 99
-
-        unmockkStatic(PdfTextUtils::class)
     }
 
     @Test
