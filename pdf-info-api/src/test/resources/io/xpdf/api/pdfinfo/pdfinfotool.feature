@@ -1,6 +1,6 @@
 Feature: PdfInfoTool
 
-  Scenario: Extract pdf info
+  Scenario: Extract info from pdf
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
       | pdfFile   |
@@ -9,7 +9,7 @@ Feature: PdfInfoTool
     Then the standard output should match "Author:[^\f]+PDF version:"
 
 
-  Scenario: Extract pdf info with explicit executable file path
+  Scenario: Extract info from pdf with explicit executable file path
     Given a PdfInfoTool with 30 second timeout and dynamic executable file
     Given a PdfInfoRequest with values
       | pdfFile   |
@@ -18,7 +18,7 @@ Feature: PdfInfoTool
     Then the standard output should match "Author:[^\f]+PDF version:"
 
 
-  Scenario: Extract pdf info with ascii encoding
+  Scenario: Extract info from pdf with ascii encoding
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
       | pdfFile   |
@@ -30,11 +30,11 @@ Feature: PdfInfoTool
     Then the standard output should match "Creator:.*Microsoft\(R\)"
 
 
-  Scenario: Extract pdf info for first page with bounding boxes included
+  Scenario: Extract info from first page of pdf with bounding boxes included
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
-      | pdfFile       |
-      | multisized.pdf |
+      | pdfFile               |
+      | multi-sized-pages.pdf |
     Given a PdfInfoOptions with values
       | pageStart | pageStop | encoding | boundingBoxesIncluded | metadataIncluded | datesUndecoded | ownerPassword | userPassword |
       | 1         | 1        |          | true                  |                  |                |               |              |
@@ -42,11 +42,11 @@ Feature: PdfInfoTool
     Then the standard output should match "MediaBox:.*612.*792"
 
 
-  Scenario: Extract pdf info for second page with bounding boxes included
+  Scenario: Extract info from first page of pdf with bounding boxes included
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
-      | pdfFile       |
-      | multisized.pdf |
+      | pdfFile               |
+      | multi-sized-pages.pdf |
     Given a PdfInfoOptions with values
       | pageStart | pageStop | encoding | boundingBoxesIncluded | metadataIncluded | datesUndecoded | ownerPassword | userPassword |
       | 2         | 2        |          | true                  |                  |                |               |              |
@@ -54,7 +54,7 @@ Feature: PdfInfoTool
     Then the standard output should match "MediaBox:.*792.*612"
 
 
-  Scenario: Extract pdf info with metadata included
+  Scenario: Extract info from pdf with metadata included
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
       | pdfFile   |
@@ -66,7 +66,7 @@ Feature: PdfInfoTool
     Then the standard output should match "Metadata:"
 
 
-  Scenario: Extract pdf info with dates decoded
+  Scenario: Extract info from pdf with dates decoded
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
       | pdfFile   |
@@ -78,7 +78,7 @@ Feature: PdfInfoTool
     Then the standard output should match "CreationDate:.*Fri Feb 23 07:05:43 2024"
 
 
-  Scenario: Extract pdf info with dates undecoded
+  Scenario: Extract info from pdf with dates undecoded
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
       | pdfFile   |
@@ -90,11 +90,11 @@ Feature: PdfInfoTool
     Then the standard output should match "CreationDate:.*2024-02-23T07:05:43-08:00"
 
 
-  Scenario: Extract pdf info from password protected pdf
+  Scenario: Extract info from password protected pdf with owner password
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
-      | pdfFile       |
-      | protected.pdf |
+      | pdfFile                |
+      | password-protected.pdf |
     Given a PdfInfoOptions with values
       | pageStart | pageStop | encoding | boundingBoxesIncluded | metadataIncluded | datesUndecoded | ownerPassword | userPassword |
       |           |          |          |                       |                  |                | Secret123     |              |
@@ -102,7 +102,19 @@ Feature: PdfInfoTool
     Then the standard output should match "Author:[^\f]+PDF version:"
 
 
-  Scenario: Extract pdf info with native options
+  Scenario: Extract info from password protected pdf with user password
+    Given a PdfInfoTool
+    Given a PdfInfoRequest with values
+      | pdfFile                |
+      | password-protected.pdf |
+    Given a PdfInfoOptions with values
+      | pageStart | pageStop | encoding | boundingBoxesIncluded | metadataIncluded | datesUndecoded | ownerPassword | userPassword |
+      |           |          |          |                       |                  |                |               | Secret123    |
+    When the PdfInfoTool processes the PdfInfoRequest
+    Then the standard output should match "Author:[^\f]+PDF version:"
+
+
+  Scenario: Extract info from pdf with native options
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
       | pdfFile   |
@@ -114,10 +126,10 @@ Feature: PdfInfoTool
     Then the standard output should match "MediaBox:[^\f]+Metadata:"
 
 
-  Scenario: Extract pdf info from password protected pdf without providing password and get exception
+  Scenario: Extract info from password protected pdf without providing password and get exception
     Given a PdfInfoTool
     Given a PdfInfoRequest with values
-      | pdfFile       |
-      | protected.pdf |
+      | pdfFile                |
+      | password-protected.pdf |
     When the PdfInfoTool processes the PdfInfoRequest expecting an XpdfException
     Then the XpdfException should be an XpdfExecutionException

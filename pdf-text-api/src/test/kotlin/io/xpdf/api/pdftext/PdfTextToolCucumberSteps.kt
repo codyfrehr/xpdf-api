@@ -31,6 +31,7 @@ import io.xpdf.api.pdftext.options.PdfTextEndOfLine
 import io.xpdf.api.pdftext.options.PdfTextFormat
 import io.xpdf.api.pdftext.util.PdfTextUtils
 import org.apache.commons.io.FileUtils
+import org.junit.jupiter.api.AfterEach
 import org.springframework.test.context.event.annotation.AfterTestClass
 import java.io.File
 import java.nio.file.Paths
@@ -50,6 +51,11 @@ class PdfTextToolCucumberSteps {
         fun afterAll() {
             FileUtils.deleteQuietly(XpdfUtils.getXpdfTempPath().toFile())
         }
+    }
+
+    @AfterEach
+    fun afterEach() {
+        FileUtils.deleteQuietly(PdfTextUtils.getPdfTextTempOutputPath().toFile())
     }
 
     @Given("a PdfTextTool")
@@ -90,7 +96,7 @@ class PdfTextToolCucumberSteps {
     @Given("a PdfTextRequest with pdf file {word} and dynamic text file")
     fun `a PdfTextRequest with pdf file PDF_FILE_NAME and dynamic text file`(pdfFileName: String) {
         val pdfFile = File(this.javaClass.classLoader.getResource("pdfs/${pdfFileName}")!!.toURI())
-        val txtFile = XpdfUtils.getXpdfTempPath().resolve("some.txt").toFile()
+        val txtFile = PdfTextUtils.getPdfTextTempOutputPath().resolve("some.txt").toFile()
 
         this.requestDto = PdfTextRequestDto(pdfFile, txtFile)
     }
@@ -137,7 +143,7 @@ class PdfTextToolCucumberSteps {
         response!!.textFile.exists() shouldBe true
     }
 
-    @Then("the standard output should not be null")
+    @Then("the standard output should not be empty")
     fun `the standard output should not be empty`() {
         response!!.standardOutput shouldNotBe null
         response!!.standardOutput shouldNotBe ""
@@ -157,7 +163,7 @@ class PdfTextToolCucumberSteps {
     @DataTableType
     fun pdfTextRequestDtoTransformer(row: Map<String, String?>) = PdfTextRequestDto(
         File(this.javaClass.classLoader.getResource("pdfs/${row["pdfFile"]!!}")!!.toURI()),
-        row["textFile"]?.let { XpdfUtils.getXpdfTempPath().resolve(it).toFile() },
+        row["textFile"]?.let { PdfTextUtils.getPdfTextTempOutputPath().resolve(it).toFile() },
     )
 
     @DataTableType
