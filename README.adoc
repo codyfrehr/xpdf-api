@@ -16,6 +16,7 @@ Our primary goals are:
 
 APIs are available for the following Xpdf functions (with more to come):
 
+* _pdfimages_ - extract PDF images
 * _pdfinfo_ - extract PDF meta info
 * _pdftotext_ - convert PDF to text
 

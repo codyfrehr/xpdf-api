@@ -15,9 +15,9 @@ import java.util.Map;
  *
  * <br><br> Example usage:
  * <blockquote><pre>
- *  PdfTextOptions.builder()
+ *  PdfImagesOptions.builder()
  *      .fileFormat(PdfImagesFileFormat.JPEG)
- *      .summaryIncluded(true)
+ *      .metadataIncluded(true)
  *      .ownerPassword("Secret123")
  *      .nativeOptions(Map.ofEntries(Map.entry("-cfg", "~/config/xpdfrc")))
  *      .build();
