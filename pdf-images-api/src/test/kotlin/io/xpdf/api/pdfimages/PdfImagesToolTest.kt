@@ -463,14 +463,14 @@ class PdfImagesToolTest {
     @Test
     fun `should initialize image file path prefix when path not provided in request`() {
         // given
-        val randomUuid = randomUUID()
+        val randomUuid = randomUUID().toString()
         mockkStatic(UUID::class)
-        every { randomUUID() } returns randomUuid
+        every { randomUUID().toString() } returns randomUuid
 
         val imageFilePathPrefix = mockk<Path>(relaxed = true)
 
         mockkStatic(PdfImagesUtils::class)
-        every { PdfImagesUtils.getPdfImagesTempOutputPath().resolve("$randomUuid").resolve("image") } returns imageFilePathPrefix
+        every { PdfImagesUtils.getPdfImagesTempOutputPath().resolve(randomUuid).resolve("image") } returns imageFilePathPrefix
 
         val request = mockk<PdfImagesRequest> {
             every { getImageFilePathPrefix() } returns null
