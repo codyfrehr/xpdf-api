@@ -28,8 +28,8 @@ Feature: PdfTextTool
   Scenario: Convert first page of pdf to text
     Given a PdfTextTool
     Given a PdfTextRequest with values
-      | pdfFile       | textFile |
-      | multipage.pdf |          |
+      | pdfFile        | textFile |
+      | multi-page.pdf |          |
     Given a PdfTextOptions with values
       | pageStart | pageStop | format | encoding | endOfLine | pageBreakExcluded | ownerPassword | userPassword |
       | 1         | 1        | RAW    |          |           |                   |               |              |
@@ -77,8 +77,8 @@ Feature: PdfTextTool
   Scenario: Convert pdf to text with unix line breaks
     Given a PdfTextTool
     Given a PdfTextRequest with values
-      | pdfFile       | textFile |
-      | multiline.pdf |          |
+      | pdfFile        | textFile |
+      | multi-line.pdf |          |
     Given a PdfTextOptions with values
       | pageStart | pageStop | format | encoding | endOfLine | pageBreakExcluded | ownerPassword | userPassword |
       |           |          | RAW    |          | UNIX      |                   |               |              |
@@ -89,8 +89,8 @@ Feature: PdfTextTool
   Scenario: Convert pdf to text with no page breaks
     Given a PdfTextTool
     Given a PdfTextRequest with values
-      | pdfFile       | textFile |
-      | multipage.pdf |          |
+      | pdfFile        | textFile |
+      | multi-page.pdf |          |
     Given a PdfTextOptions with values
       | pageStart | pageStop | format | encoding | endOfLine | pageBreakExcluded | ownerPassword | userPassword |
       |           |          | RAW    |          |           | true              |               |              |
@@ -98,14 +98,26 @@ Feature: PdfTextTool
     Then the output text should match "Page 1\r?\n?Page 2\r?\n?Page 3\r?\n?"
 
 
-  Scenario: Convert password protected pdf to text
+  Scenario: Convert password protected pdf to text with owner password
     Given a PdfTextTool
     Given a PdfTextRequest with values
-      | pdfFile       | textFile |
-      | protected.pdf |          |
+      | pdfFile                | textFile |
+      | password-protected.pdf |          |
     Given a PdfTextOptions with values
       | pageStart | pageStop | format | encoding | endOfLine | pageBreakExcluded | ownerPassword | userPassword |
       |           |          | RAW    |          |           |                   | Secret123     |              |
+    When the PdfTextTool processes the PdfTextRequest
+    Then the output text should match "This is a password protected file\r?\n?\f"
+
+
+  Scenario: Convert password protected pdf to text with user password
+    Given a PdfTextTool
+    Given a PdfTextRequest with values
+      | pdfFile                | textFile |
+      | password-protected.pdf |          |
+    Given a PdfTextOptions with values
+      | pageStart | pageStop | format | encoding | endOfLine | pageBreakExcluded | ownerPassword | userPassword |
+      |           |          | RAW    |          |           |                   |               | Secret123    |
     When the PdfTextTool processes the PdfTextRequest
     Then the output text should match "This is a password protected file\r?\n?\f"
 
@@ -119,7 +131,7 @@ Feature: PdfTextTool
       | -verbose |
       |          |
     When the PdfTextTool processes the PdfTextRequest
-    Then the standard output should not be null
+    Then the standard output should not be empty
 
 
   Scenario: Convert large pdf to text with small timeout and get exception
@@ -136,7 +148,7 @@ Feature: PdfTextTool
   Scenario: Convert password protected pdf to text without providing password and get exception
     Given a PdfTextTool
     Given a PdfTextRequest with values
-      | pdfFile       | textFile |
-      | protected.pdf |          |
+      | pdfFile                | textFile |
+      | password-protected.pdf |          |
     When the PdfTextTool processes the PdfTextRequest expecting an XpdfException
     Then the XpdfException should be an XpdfExecutionException

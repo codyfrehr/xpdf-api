@@ -26,12 +26,12 @@ class PdfTextResponseTest {
     fun `should convert to string`() {
         // given
         val request = PdfTextResponse.builder()
-            .textFile(File("some.text"))
+            .textFile(File("some.txt"))
             .standardOutput("some standard output")
             .build()
 
         // when then
-        request.toString() shouldBe "PdfTextResponse(textFile=some.text, standardOutput=some standard output)"
+        request.toString() shouldBe "PdfTextResponse(textFile=some.txt, standardOutput=some standard output)"
     }
 
 }

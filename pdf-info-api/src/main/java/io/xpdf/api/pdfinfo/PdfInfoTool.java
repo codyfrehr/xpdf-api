@@ -50,7 +50,7 @@ import static java.util.Collections.emptyList;
  * <blockquote><pre>
  *  PdfInfoTool.builder()
  *      .executableFile(new File("~/libs/pdfinfo"))
- *      .timeoutSeconds(60)
+ *      .timeoutSeconds(5)
  *      .build();
  * </pre></blockquote>
  *

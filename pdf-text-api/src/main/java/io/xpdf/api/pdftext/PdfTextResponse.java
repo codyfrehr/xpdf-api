@@ -36,7 +36,7 @@ public class PdfTextResponse extends XpdfResponse {
     /**
      * Text file containing text from input PDF.
      *
-     * @implNote If this is a temporary file, it will be automatically deleted on JVM termination.
+     * @implNote If this file was created in a temporary directory, then it will be automatically deleted on JVM termination.
      * @since 1.0.0
      */
     private final File textFile;

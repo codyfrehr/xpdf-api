@@ -1,0 +1,33 @@
+Documentation on PNM file formats:
+pnm - https://netpbm.sourceforge.net/doc/pnm.html
+pbm - https://netpbm.sourceforge.net/doc/pbm.html
+pgm - https://netpbm.sourceforge.net/doc/pgm.html
+ppm - https://netpbm.sourceforge.net/doc/ppm.html
+
+
+How to create PDFs with PNM images on linux:
+1) get your jpg image
+2) install conversion libs
+	a) imagemagick - converts jpg to pnm (pbm P1/P4, pgm P2/P5, ppm P3/P6)
+	   sudo apt-get install imagekick
+	b) netpbm - converts pnm to ps
+	   sudo apt-get install netpbm
+	c) ghostscript - converts ps to pdf
+	   sudo apt-get install ghostscript
+2) convert jpg -> pnm
+	a) compressed pnm (P4/P5/P6)
+	   convert some.jpg some.pbm
+	   convert some.jpg some.pgm
+	   convert some.jpg some.ppm
+	b) uncompressed plain pnm (P1/P2/P3)
+	   convert some.jpg -compress none some.pbm
+	   convert some.jpg -compress none some.pgm
+	   convert some.jpg -compress none some.ppm
+3) convert pnm to ps
+   pnmtops some.pbm > some.ps
+4) convert ps to pdf
+   ps2pdf some.ps
+5) extract images
+   pdfimages -list /path/to/some.pdf path/to/images
+
+netpbm programs - https://netpbm.sourceforge.net/doc/directory.html

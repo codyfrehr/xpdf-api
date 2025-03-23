@@ -45,7 +45,6 @@ import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
-import java.nio.file.Paths
 import java.util.*
 import java.util.UUID.randomUUID
 
@@ -480,27 +479,24 @@ class PdfTextToolTest {
     @Test
     fun `should initialize text file when file not provided in request`() {
         // given
-        mockkStatic(PdfTextUtils::class)
-        every { PdfTextUtils.getPdfTextTempOutputPath().toFile().canonicalPath } returns "outPath"
-
         val randomUuid = randomUUID()
         mockkStatic(UUID::class)
         every { randomUUID() } returns randomUuid
 
-        val request = mockk<PdfTextRequest> {
-            every { textFile } returns null
-        }
-
         val textFile = mockk<File>(relaxed = true)
         val textFileName = "$randomUuid.txt"
 
-        mockkStatic(Paths::class)
-        every { Paths.get(any(), any()).toFile() } returns textFile
+        mockkStatic(PdfTextUtils::class)
+        every { PdfTextUtils.getPdfTextTempOutputPath().resolve(textFileName).toFile() } returns textFile
+
+        val request = mockk<PdfTextRequest> {
+            every { getTextFile() } returns null
+        }
 
         // when then
         pdfTextTool.initializeTextFile(request) shouldBe textFile
 
-        verify { Paths.get("outPath", textFileName) }
+        verify { textFile.deleteOnExit() }
     }
 
     @Test

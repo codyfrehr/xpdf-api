@@ -18,7 +18,6 @@ package io.xpdf.api.pdftext;
 
 import io.xpdf.api.common.XpdfTool;
 import io.xpdf.api.common.exception.*;
-import io.xpdf.api.pdftext.util.PdfTextUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -31,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -272,20 +270,20 @@ public class PdfTextTool implements XpdfTool<PdfTextRequest, PdfTextResponse> {
      *
      * @param request {@link PdfTextRequest}
      * @return text file
-     * @throws IOException if canonical path of {@link PdfTextUtils#getPdfTextTempOutputPath()} is invalid
      */
-    protected File initializeTextFile(PdfTextRequest request) throws IOException {
+    protected File initializeTextFile(PdfTextRequest request) {
         final File textFile;
         if (request.getTextFile() != null) {
             // use text file provided in request
             textFile = request.getTextFile();
         } else {
-            // create temporary text file
-            textFile = Paths.get(getPdfTextTempOutputPath().toFile().getCanonicalPath(), String.format("%s.txt", UUID.randomUUID())).toFile();
+            // create text file
+            textFile = getPdfTextTempOutputPath().resolve(String.format("%s.txt", UUID.randomUUID())).toFile();
+            // auto-delete text file
             textFile.deleteOnExit();
         }
 
-        // create output directory if not exists
+        // create directories on path if not existing
         textFile.getParentFile().mkdirs();
 
         return textFile;
