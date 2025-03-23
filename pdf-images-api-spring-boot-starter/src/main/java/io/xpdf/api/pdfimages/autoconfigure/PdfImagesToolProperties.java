@@ -1,5 +1,5 @@
 /*
- * PdfInfo API Starter - A Spring Boot starter for PdfInfo API (https://xpdf.io)
+ * PdfImages API Starter - A Spring Boot starter for PdfImages API (https://xpdf.io)
  * Copyright © 2025 xpdf.io (info@xpdf.io)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,18 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.xpdf.api.pdfinfo.autoconfigure
+package io.xpdf.api.pdfimages.autoconfigure;
 
-import io.xpdf.api.pdfinfo.PdfInfoTool
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
+import io.xpdf.api.pdfimages.PdfImagesTool;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@TestConfiguration
-@ComponentScan
-open class PdfInfoToolTestConfig {
+import java.nio.file.Path;
 
-    @Bean
-    open fun pdfInfoTool(): PdfInfoTool = PdfInfoTool.builder().build()
+/**
+ * The configurable properties of a {@link PdfImagesTool} that is autoconfigured in {@link PdfImagesToolAutoConfiguration}.
+ *
+ * @since 1.2.0
+ */
+@Data
+@ConfigurationProperties(prefix = "io.xpdf.api.pdf-images")
+public class PdfImagesToolProperties {
+
+    private Path executablePath;
+    private Integer timeoutSeconds;
 
 }
