@@ -57,7 +57,20 @@ public class PdfImagesRequest extends XpdfRequest {
     /**
      * Output image file path prefix.
      *
-     * @implNote If unassigned, a temporary directory will get created for image files, and then automatically deleted at JVM termination.
+     * <br><br> For example, given the value:
+     * <blockquote><pre>
+     *   <em>~/docs/some-path-prefix</em>
+     * </pre></blockquote>
+     *
+     * Output images will be created matching the pattern:
+     * <blockquote><pre>
+     *   <em>~/docs/some-path-prefix-0000.jpg</em>
+     *   <em>~/docs/some-path-prefix-0001.jpg</em>
+     *   <em>~/docs/some-path-prefix-0002.jpg</em>
+     *   <em>...</em>
+     * </pre></blockquote>
+     *
+     * @implNote If unassigned, image files will be created in the temporary directory, and then automatically deleted at JVM termination.
      * @since 1.2.0
      */
     private final Path imageFilePathPrefix;

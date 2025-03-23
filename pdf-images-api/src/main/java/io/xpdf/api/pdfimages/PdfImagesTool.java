@@ -280,7 +280,7 @@ public class PdfImagesTool implements XpdfTool<PdfImagesRequest, PdfImagesRespon
             imageFilePathPrefix = request.getImageFilePathPrefix();
         } else {
             // create image file path prefix
-            imageFilePathPrefix = getPdfImagesTempOutputPath().resolve(UUID.randomUUID().toString()).resolve("image");
+            imageFilePathPrefix = getPdfImagesTempOutputPath().resolve(UUID.randomUUID().toString());
             // auto-delete image directory
             imageFilePathPrefix.getParent().toFile().deleteOnExit();
         }

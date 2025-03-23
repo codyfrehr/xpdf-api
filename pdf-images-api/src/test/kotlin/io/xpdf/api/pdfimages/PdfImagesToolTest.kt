@@ -486,7 +486,7 @@ class PdfImagesToolTest {
         val imageFilePathPrefix = mockk<Path>(relaxed = true)
 
         mockkStatic(PdfImagesUtils::class)
-        every { PdfImagesUtils.getPdfImagesTempOutputPath().resolve(randomUuid).resolve("image") } returns imageFilePathPrefix
+        every { PdfImagesUtils.getPdfImagesTempOutputPath().resolve(randomUuid) } returns imageFilePathPrefix
 
         val request = mockk<PdfImagesRequest> {
             every { getImageFilePathPrefix() } returns null

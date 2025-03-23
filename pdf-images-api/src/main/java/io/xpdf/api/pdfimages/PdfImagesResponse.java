@@ -35,9 +35,9 @@ import java.util.List;
 public class PdfImagesResponse extends XpdfResponse {
 
     /**
-     * List of image files extracted from input PDF.
+     * Image files extracted from input PDF.
      *
-     * @implNote If these files are in a temporary directory, then they will be automatically deleted on JVM termination.
+     * @implNote If these files were created in a temporary directory, then they will be automatically deleted on JVM termination.
      * @since 1.2.0
      */
     private final List<File> imageFiles;

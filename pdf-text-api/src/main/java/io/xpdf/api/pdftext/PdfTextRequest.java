@@ -56,7 +56,7 @@ public class PdfTextRequest extends XpdfRequest {
     /**
      * Output text file.
      *
-     * @implNote If unassigned, a temporary file will get created, and then automatically deleted at JVM termination.
+     * @implNote If unassigned, a text file will be created in the temporary directory, and then automatically deleted at JVM termination.
      * @since 1.0.0
      */
     private final File textFile;
